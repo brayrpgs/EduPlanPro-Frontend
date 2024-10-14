@@ -27,6 +27,7 @@ body {
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); 
     width: 250px; 
     text-align: center;
+    
 }
 
 .login-logo {
@@ -61,11 +62,12 @@ input {
     position: relative;
     background: transparent; 
     transition: all 0.15s ease;
+    box-sizing: border-box;
 }
 
 input:focus {
     
-    border-bottom: 2px solid #CD1719; 
+    border-bottom: 1.5px solid #CD1719; 
     transform: translateX(0%);
 }
 
