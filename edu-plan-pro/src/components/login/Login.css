@@ -1,0 +1,103 @@
+.navbar {
+    background-color: #CD1719; 
+    height: 60px;
+}
+
+.footer {
+    background-color: #F7F7F7;
+    height: 60px;
+}
+
+.container {
+    margin-top: 60px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+}
+
+.login-box {
+    position: relative;
+    background-color: white; 
+    padding: 20px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); 
+    width: 250px; 
+    text-align: center;
+}
+
+.login-logo {
+    position: relative;
+    margin-top: -50px;
+    width: 100px; 
+    height: 220px;
+    text-align: center;
+}
+
+.input {
+    position: relative;
+    margin-bottom: 10px; 
+}
+
+label {
+    position: absolute; 
+    left: 5px; 
+    top: 20px; 
+    transition: transform 0.3s ease, color 0.2s ease;
+    color: rgba(128, 128, 128, 0.7); 
+    pointer-events: none; 
+}
+
+input {
+    width: 100%; 
+    padding: 5px 0; 
+    margin: 15px 0; 
+    border: none; 
+    border-bottom: 1px solid gray; 
+    outline: none; 
+    position: relative;
+    background: transparent; 
+    transition: all 0.15s ease;
+}
+
+input:focus {
+    
+    border-bottom: 2px solid #CD1719; 
+    transform: translateX(0%);
+}
+
+input:focus + label,
+input:not(:placeholder-shown) + label {
+    transform: translateY(-20px);
+    font-size: 11px;
+    color: #CD1719;
+}       
+
+.btn {
+    margin-top: 40px;
+    background-color: #CD1719; 
+    color: white;
+    padding: 10px; 
+    border: none; 
+    border-radius: 3px; 
+    cursor: pointer; 
+    width: 100%;
+}
+
+.btn:hover {
+    background-color: #8F1011; 
+}
+
+.forgot-password {
+    background-color: #A7A7A9; 
+    display: block;
+    margin-top: 10px;
+    padding: 7px;
+    border: none; 
+    border-radius: 3px;
+    color: white; 
+    text-decoration: none; 
+}
+
+.forgot-password:hover {
+    background-color: #747476; 
+}
