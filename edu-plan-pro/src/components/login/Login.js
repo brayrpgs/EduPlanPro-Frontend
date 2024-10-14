@@ -1,7 +1,7 @@
 import React from "react";
-import LoginIcon from "./icons/LoginIcons/LoginIcon.jsx";
-import LoginButtonEnter from "./icons/LoginIcons/LoginButtonEnter.jsx";
-import LoginButtonHelp from "./icons/LoginIcons/LoginButtonHelp.jsx";
+import LoginIcon from "../icons/LoginIcons/LoginIcon.jsx";
+import LoginButtonEnter from "../icons/LoginIcons/LoginButtonEnter.jsx";
+import LoginButtonHelp from "../icons/LoginIcons/LoginButtonHelp.jsx";
 import "./Login.css";
 
 export const Login = () => {
