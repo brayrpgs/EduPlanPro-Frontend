@@ -142,6 +142,10 @@ export const Login = () => {
           </a>
         </div>
       </div>
+      
+      <footer className="footer">
+        <p>&copy; 2024 EduPlanPro. <small>All rights reserved.</small></p>
+      </footer>
     </div>
   );
 };
