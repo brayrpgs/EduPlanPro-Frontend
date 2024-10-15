@@ -4,40 +4,14 @@
   text-decoration: none;
 }
 
-th {
+.th {
   text-decoration: underline;
   color: #CD1719 !important;
 }
 
-/* Estilos para el header */
-.header-content {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
+.input {
+  position: relative;
 
-.menu-header-container {
-  margin-left: auto; /* Empuja este div hacia la derecha */
-}
-
-/* Para mostrar el Aside */
-
-.aside {
-  position: fixed;
-  top: 0;
-  right: 0;
-  width: 300px;
-  height: 100%;
-  background-color: #333;
-  color: white;
-  padding: 20px;
-  box-shadow: -2px 0 5px rgba(0, 0, 0, 0.5);
-  transform: translateX(100%);  /* Comienza fuera de pantalla */
-  transition: transform 0.3s ease-in-out;
-}
-
-.aside.open {
-  transform: translateX(0);  /* Deslizar el aside hacia la vista */
 }
 
 

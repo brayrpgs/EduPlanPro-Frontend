@@ -1,13 +1,15 @@
+import Aside from '../aside/Aside';
+import Footer from '../footer/Footer';
 import Header from '../header/Header'; 
-//import Aside from '../aside/Aside';
 import MainTable from '../maintable/MainTable';
 
 function Main() {
   return (
     <div className="App">
-      <Header />
-       
+      <Header/>
+      <Aside/>
       <MainTable/>
+      <Footer/>
     </div>
   
   );

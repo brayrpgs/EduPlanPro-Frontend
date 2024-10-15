@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import search from '../images/search.svg';
+import search from "../images/search.svg";
 import "./MainTable.css";
 
 const dataExample = [
@@ -12,7 +12,7 @@ const dataExample = [
     NRC: "RF764",
     Ciclo: "I Ciclo",
     NumeroCreditos: 4,
-    Firma: true
+    Firma: true,
   },
   {
     id: 2,
@@ -23,7 +23,7 @@ const dataExample = [
     NRC: "MG112",
     Ciclo: "I Ciclo",
     NumeroCreditos: 3,
-    Firma: true
+    Firma: true,
   },
   {
     id: 3,
@@ -34,7 +34,7 @@ const dataExample = [
     NRC: "FG243",
     Ciclo: "II Ciclo",
     NumeroCreditos: 5,
-    Firma: false
+    Firma: false,
   },
   {
     id: 4,
@@ -45,7 +45,7 @@ const dataExample = [
     NRC: "PA311",
     Ciclo: "III Ciclo",
     NumeroCreditos: 4,
-    Firma: true
+    Firma: true,
   },
   {
     id: 5,
@@ -56,7 +56,7 @@ const dataExample = [
     NRC: "ED654",
     Ciclo: "I Ciclo",
     NumeroCreditos: 4,
-    Firma: true
+    Firma: true,
   },
   {
     id: 6,
@@ -67,7 +67,7 @@ const dataExample = [
     NRC: "BD101",
     Ciclo: "II Ciclo",
     NumeroCreditos: 3,
-    Firma: false
+    Firma: false,
   },
   {
     id: 7,
@@ -78,7 +78,7 @@ const dataExample = [
     NRC: "RC523",
     Ciclo: "III Ciclo",
     NumeroCreditos: 5,
-    Firma: true
+    Firma: true,
   },
   {
     id: 8,
@@ -89,7 +89,7 @@ const dataExample = [
     NRC: "SO785",
     Ciclo: "II Ciclo",
     NumeroCreditos: 4,
-    Firma: true
+    Firma: true,
   },
   {
     id: 9,
@@ -100,7 +100,7 @@ const dataExample = [
     NRC: "AL980",
     Ciclo: "I Ciclo",
     NumeroCreditos: 3,
-    Firma: false
+    Firma: false,
   },
   {
     id: 10,
@@ -111,8 +111,8 @@ const dataExample = [
     NRC: "IS124",
     Ciclo: "III Ciclo",
     NumeroCreditos: 5,
-    Firma: true
-  }
+    Firma: true,
+  },
 ];
 
 const MainTable = () => {
@@ -120,75 +120,112 @@ const MainTable = () => {
   const [searchTerm, setSearchTerm] = useState("");
 
   // cursos filtrados por el input de búsqueda
-  const filteredCursos = cursos.filter(curso =>
+  const filteredCursos = cursos.filter((curso) =>
     curso.NombreCurso.toLowerCase().includes(searchTerm.toLowerCase())
-  );    
+  );
   return (
+    <div>
 
-    
-    <div className="container mt-4">
-
-      {/* Campo de búsqueda */}
-      
-      <div style={{ position: 'relative' }}>
+      <div className="container mt-5, input">
         <input
           type="text"
-          className="form-control mb-4 pl-5"
+          className="form-control pl-5"
           value={searchTerm}
           onChange={(e) => setSearchTerm(e.target.value)}
           style={{
-            backgroundColor: '#CD1719',
-            color: 'white',
+            backgroundColor: "#CD1719",
+            color: "white",
           }}
         />
         <img
           src={search}
           alt="Buscar"
           style={{
-            position: 'absolute',
-            left: '50%', 
-            top: '50%',
-            transform: 'translateY(-50%)',
-            pointerEvents: 'none', 
+            position: "absolute",
+            left: "50%",
+            top: "50%",
+            transform: "translateY(-50%)",
+            pointerEvents: "none",
           }}
         />
       </div>
 
-      {/* Aquí va la paginación */}
+      <div className="container mt-3">
+        {/* Aquí va la paginación */}
 
-      <table className="table table-bordered">
-        <thead className="thead-light">
-          <tr>
-            <th>Id</th>
-            <th>Nombre Curso</th>
-            <th>Año</th>
-            <th>Profesor</th>
-            <th>Plan Estudio</th>
-            <th>NRC</th>
-            <th>Ciclo</th>
-            <th>Número Créditos</th>
-            <th>Firma</th>
-          </tr>
-        </thead>
-        <tbody>
-          {filteredCursos.map((curso) => ( // filteredCursos
-            <tr key={curso.id} style={{ color: "#CD1719" }}>
-              <td className="bg-light"><a className="a" href="#">{curso.id}</a></td>
-              <td className="bg-light"><a className="a" href="#">{curso.NombreCurso}</a> </td>
-              <td className="bg-light"><a className="a" href="#">{curso.Annio}</a></td>
-              <td className="bg-light"><a className="a" href="#">{curso.Profesor}</a></td>
-              <td className="bg-light"><a className="a" href="#">{curso.PlanEstudio}</a></td>
-              <td className="bg-light"><a className="a" href="#">{curso.NRC}</a></td>
-              <td className="bg-light"><a className="a" href="#">{curso.Ciclo}</a></td>
-              <td className="bg-light"><a className="a" href="#">{curso.NumeroCreditos}</a></td>
-              <td className="bg-light"><a className="a" href="#">{curso.Firma ? "Sí" : "No"}</a></td>
+        <table className="table table-bordered">
+          <thead className="thead-light">
+            <tr>
+              <th className="th">Id</th>
+              <th className="th">Nombre Curso</th>
+              <th className="th">Año</th>
+              <th className="th">Profesor</th>
+              <th className="th">Plan Estudio</th>
+              <th className="th">NRC</th>
+              <th className="th">Ciclo</th>
+              <th className="th">Número Créditos</th>
+              <th className="th">Firma</th>
             </tr>
-          ))}
-        </tbody>
-      </table>
+          </thead>
+          <tbody>
+            {filteredCursos.map(
+              (
+                curso // filteredCursos
+              ) => (
+                <tr key={curso.id} style={{ color: "#CD1719" }}>
+                  <td className="bg-light">
+                    <a className="a" href="#">
+                      {curso.id}
+                    </a>
+                  </td>
+                  <td className="bg-light">
+                    <a className="a" href="#">
+                      {curso.NombreCurso}
+                    </a>{" "}
+                  </td>
+                  <td className="bg-light">
+                    <a className="a" href="#">
+                      {curso.Annio}
+                    </a>
+                  </td>
+                  <td className="bg-light">
+                    <a className="a" href="#">
+                      {curso.Profesor}
+                    </a>
+                  </td>
+                  <td className="bg-light">
+                    <a className="a" href="#">
+                      {curso.PlanEstudio}
+                    </a>
+                  </td>
+                  <td className="bg-light">
+                    <a className="a" href="#">
+                      {curso.NRC}
+                    </a>
+                  </td>
+                  <td className="bg-light">
+                    <a className="a" href="#">
+                      {curso.Ciclo}
+                    </a>
+                  </td>
+                  <td className="bg-light">
+                    <a className="a" href="#">
+                      {curso.NumeroCreditos}
+                    </a>
+                  </td>
+                  <td className="bg-light">
+                    <a className="a" href="#">
+                      {curso.Firma ? "Sí" : "No"}
+                    </a>
+                  </td>
+                </tr>
+              )
+            )}
+          </tbody>
+        </table>
+      </div>
     </div>
   );
 };
-
 
 export default MainTable;
