@@ -8,10 +8,6 @@
     height: 60px;
 }
 
-body {
-    margin: 0px;
-}
-
 .container {
     margin-top: 60px;
     display: flex;
@@ -25,7 +21,7 @@ body {
     background-color: white; 
     padding: 20px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); 
-    width: 250px; 
+    width: 290px; 
     text-align: center;
     
 }
@@ -43,7 +39,7 @@ body {
     margin-bottom: 10px; 
 }
 
-label {
+.label {
     position: absolute; 
     left: 5px; 
     top: 20px; 
@@ -52,7 +48,7 @@ label {
     pointer-events: none; 
 }
 
-input {
+.inputT {
     width: 100%; 
     padding: 5px 0; 
     margin: 15px 0; 
@@ -67,7 +63,7 @@ input {
 
 input:focus {
     
-    border-bottom: 1.5px solid #CD1719; 
+    border-bottom: 1px solid #CD1719; 
     transform: translateX(0%);
 }
 

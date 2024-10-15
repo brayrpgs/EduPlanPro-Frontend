@@ -4,9 +4,12 @@ import LoginButtonEnter from "../icons/LoginIcons/LoginButtonEnter.jsx";
 import LoginButtonHelp from "../icons/LoginIcons/LoginButtonHelp.jsx";
 import axios from "axios";
 import Swal from "sweetalert2";
+import { useNavigate } from 'react-router-dom';
 import "./Login.css";
 
 export const Login = () => {
+
+  const navigate = useNavigate();
 
   const [form, setForm] = useState({
     username: "",
@@ -47,15 +50,17 @@ export const Login = () => {
         });
 
         if (response.data.code === "200") {
-          
           Swal.fire({
             title: "Acceso válido.",
             text: `Por favor, no inténtelo de nuevo.`,
             icon: "success",
             confirmButtonText: "Aceptar",
             confirmButtonColor: "#CD1719",
+          }).then((result) => {
+            if (result.isConfirmed) {
+              navigate("/main"); 
+            }
           });
-
         } else {
 
           Swal.fire({
@@ -86,7 +91,7 @@ export const Login = () => {
           </div>
 
           <div className="input">
-            <input
+            <input className="inputT"
               title="Nombre de usuario"
               name="username"
               id="username"
@@ -96,10 +101,10 @@ export const Login = () => {
               onChange={handleChange}
               required
             />
-            <label id="Lusername" htmlFor="username">Nombre de usuario *</label>
+            <label className="label" id="Lusername" htmlFor="username">Nombre de usuario *</label>
           </div>
           <div className="input">
-            <input
+            <input className="inputT"
               title="Contraseña"
               name="password"
               id="password"
@@ -109,7 +114,7 @@ export const Login = () => {
               onChange={handleChange}
               required
             />
-            <label id="Lpassword" htmlFor="password">Contraseña *</label>
+            <label className="label" id="Lpassword" htmlFor="password">Contraseña *</label>
           </div>
 
           <button className="btn" onClick={handleLogin}>
