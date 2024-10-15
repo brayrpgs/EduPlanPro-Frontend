@@ -29,7 +29,7 @@ export const Login = () => {
   };
 
   const login = async (username, password) => {
-    const url = "http://localhost:3001/login"; //Cambiar el endpoint por session 
+    const url = "http://localhost:3001/session"; 
 
     if (username.trim() === "" || password.trim() === "") {
       Swal.fire({
@@ -62,6 +62,7 @@ export const Login = () => {
               navigate("/main"); 
             }
           });
+          
         } else {
 
           Swal.fire({
