@@ -6,31 +6,8 @@ import axios from "axios";
 import Swal from "sweetalert2";
 import "./Login.css";
 
-const users = [
-  {
-    id: 1,
-    name: "Juan",
-    lastname: "Pérez",
-    username: "usuario1",
-    password: "contraseña1", // Asegúrate de manejar las contraseñas de forma segura en una API real
-  },
-  {
-    id: 2,
-    name: "María",
-    lastname: "Gómez",
-    username: "usuario2",
-    password: "contraseña2",
-  },
-  {
-    id: 3,
-    name: "Carlos",
-    lastname: "López",
-    username: "usuario3",
-    password: "contraseña3",
-  },
-];
-
 export const Login = () => {
+
   const [form, setForm] = useState({
     username: "",
     password: "",
@@ -44,54 +21,55 @@ export const Login = () => {
   };
 
   const handleLogin = () => {
-    //login(form.username, form.password);
-    pb(form.username, form.password);
-  };
-
-  const pb = (username, password) => {
-    console.log(password);
-    const user = users.find(
-      (user) => user.username === username && user.password === password
-    );
-
-    // Retornar un resultado basado en si se encontró o no el usuario
-    if (user) {
-    } else {
-      if (username.trim() === "" || password.trim() === "") {
-        Swal.fire({
-          title: "!Datos incompletos!",
-          text: `Por favor, ingresa un nombre de usuario y una contraseña.`,
-          icon: "info",
-          confirmButtonText: "Aceptar",
-          confirmButtonColor: "#CD1719",
-          
-        });
-      } else {
-        Swal.fire({
-          title: "Acceso inválido.",
-          text: `Por favor, inténtelo de nuevo.`,
-          icon: "error",
-          confirmButtonText: "Aceptar",
-          confirmButtonColor: "#CD1719",
-        });
-      }
-    }
+    login(form.username, form.password);
   };
 
   const login = async (username, password) => {
-    const url = "";
+    const url = "http://localhost:3001/login"; //Cambiar el endpoint por session 
 
-    try {
-      const response = await axios.get(url, {
-        params: {
-          username,
-          password,
-        },
+    if (username.trim() === "" || password.trim() === "") {
+      Swal.fire({
+        title: "¡Datos incompletos!",
+        text: `Por favor, ingresa un nombre de usuario y una contraseña.`,
+        icon: "info",
+        confirmButtonText: "Aceptar",
+        confirmButtonColor: "#CD1719",
       });
 
-      console.log("Respuesta:", response.data);
-    } catch (error) {
-      console.error("Error en la solicitud:", error);
+      document.getElementById('Lusername').style.color = "#E62A10";
+      document.getElementById('Lpassword').style.color = "#E62A10";
+
+    } else {
+      try {
+        const response = await axios.post(url, {
+          idcard: username,
+          password: password,
+        });
+
+        if (response.data.code === "200") {
+          
+          Swal.fire({
+            title: "Acceso válido.",
+            text: `Por favor, no inténtelo de nuevo.`,
+            icon: "success",
+            confirmButtonText: "Aceptar",
+            confirmButtonColor: "#CD1719",
+          });
+
+        } else {
+
+          Swal.fire({
+            title: "Acceso inválido.",
+            text: `Por favor, inténtelo de nuevo.`,
+            icon: "error",
+            confirmButtonText: "Aceptar",
+            confirmButtonColor: "#CD1719",
+          });
+
+        }
+      } catch (error) {
+        console.error("Error en la solicitud:", error);
+      }
     }
   };
 
@@ -109,6 +87,7 @@ export const Login = () => {
 
           <div className="input">
             <input
+              title="Nombre de usuario"
               name="username"
               id="username"
               type="text"
@@ -117,10 +96,11 @@ export const Login = () => {
               onChange={handleChange}
               required
             />
-            <label htmlFor="username">Nombre de usuario *</label>
+            <label id="Lusername" htmlFor="username">Nombre de usuario *</label>
           </div>
           <div className="input">
             <input
+              title="Contraseña"
               name="password"
               id="password"
               type="password"
@@ -129,7 +109,7 @@ export const Login = () => {
               onChange={handleChange}
               required
             />
-            <label htmlFor="password">Contraseña *</label>
+            <label id="Lpassword" htmlFor="password">Contraseña *</label>
           </div>
 
           <button className="btn" onClick={handleLogin}>
