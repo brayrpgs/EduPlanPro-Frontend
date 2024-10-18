@@ -103,3 +103,15 @@ input:not(:placeholder-shown) + label {
 .forgot-password:hover {
     background-color: #747476; 
 }
+
+.footer{
+    width: 100%; 
+    height: 30px;
+    margin-top: 30px;
+    background-color: #CD1719; 
+    color: white;
+    font-weight: bold;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
