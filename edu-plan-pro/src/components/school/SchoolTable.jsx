@@ -5,6 +5,7 @@ import deleteIcon from "../icons/ActionIcons/delete.svg";
 import DeleteModal from "../modaldelete/DeleteModal";
 import SearchInput from "../search/SearchInput";
 import FilterOffIcon from "../icons/MainIcons/FilterOffIcon";
+import UpdateModal from "../modalupdate/UpdateModalSchool"
 
 async function fetchSchoolData() {
   try {
@@ -161,7 +162,20 @@ const SchoolTable = () => {
                   </a>
                 </td>
                 <td className="bg-light">
-                  <div style={{ textAlign: "center" }}>
+                  <div style={{ textAlign: "center", display: "flex" }}>
+                    <UpdateModal  
+                        object={school} 
+                        baseUrl={"http://localhost:3001/school"} 
+                        attributeNameId={"ID_SCHOOL"}
+                        JsonToEndpoint= {["NOMBRE ESCUELA", "NOMBRE FACULTAD", "ID_SCHOOL"]}
+                        keysJsonToEndpoint = {["desc", "facu", "id"]}
+
+       /*                  desc: schoolToDelete["NOMBRE ESCUELA"],
+                        facu:schoolToDelete["NOMBRE FACULTAD"],
+                        stat: '0',
+                        id: schoolToDelete.ID_SCHOOL, */
+              
+                    />                 
                     <img
                       title="Eliminar curso."
                       src={deleteIcon}

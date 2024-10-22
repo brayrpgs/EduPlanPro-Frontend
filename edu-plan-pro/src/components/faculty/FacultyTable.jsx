@@ -5,6 +5,7 @@ import deleteIcon from "../icons/ActionIcons/delete.svg";
 import DeleteModal from "../modaldelete/DeleteModal";
 import SearchInput from "../search/SearchInput";
 import FilterOffIcon from "../icons/MainIcons/FilterOffIcon";
+import UpdateModal from "../modalupdate/UpdateModal"
 
 async function fetchFacultyData() {
   try {
@@ -146,7 +147,14 @@ const FacultyTable = () => {
                     </a>
                   </td>
                   <td className="bg-light">
-                    <div style={{ textAlign: "center" }}>
+                    <div style={{ textAlign: "center", display: "flex" }}>
+                      <UpdateModal  
+                          object={faculty} 
+                          baseUrl={"http://localhost:3001/faculty"} 
+                          attributeNameId={"ID_FACULTY"}     
+                          JsonToEndpoint= {["NOMBRE FACULTAD", "ID_FACULTY"]}
+                          keysJsonToEndpoint = {["desc", "id"]}
+                      />                  
                       <img
                         title="Eliminar facultad."
                         src={deleteIcon}
