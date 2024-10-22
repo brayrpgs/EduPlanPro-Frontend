@@ -1,14 +1,39 @@
 import Swal from "sweetalert2";
 
+const insertStyles = () => {
+  const style = `
+    <style>
+      .btn-red {
+        background-color: red !important;
+        color: white !important;          
+        border: none !important;          
+        padding: 10px 20px !important;    
+        border-radius: 5px !important;    
+        font-size: 16px !important;      
+      }
+    </style>
+  `;
+  document.head.insertAdjacentHTML("beforeend", style);
+};
+
+// Llama a esta función para insertar los estilos cuando cargues la alerta
+insertStyles();
+
 export const SweetAlertSuccess = (message) => {
 
   Swal.fire({
     position: 'center',
     icon: 'success',
     title: message,
-    showConfirmButton: false,
-    timer: 1500
-  })
+    confirmButtonText: 'Aceptar',
+    customClass: {
+      confirmButton: 'btn-red',  
+    }
+  }).then((result) => {
+    if (result.isConfirmed) {
+      window.location.reload();
+    }
+  });
  };
 
 

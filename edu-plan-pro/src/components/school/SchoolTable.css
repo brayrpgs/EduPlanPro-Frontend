@@ -2,6 +2,7 @@
 .bg-light, .a {
     color: #000000 !important;
     text-decoration: none;
+    text-align: center !important;
   }
   
   .th {
@@ -32,7 +33,17 @@
   
   .input {
     position: relative;
+    
+  }
+
+  .input-white-text {
+    background-color: #CD1719; /* Fondo rojo */
+    color: white; /* Color del texto en el input */
+  }
   
+  .input-white-text::placeholder {
+    color: white; /* Color del texto del placeholder */
+    opacity: 1;   /* Asegura que la opacidad sea total */
   }
   
   .search-input {
@@ -51,9 +62,10 @@
   }
   
   .h1{
+    position: relative;
     text-align: center;
-    margin-top: 50px;
-    margin-bottom: -40px;
+    padding-top: 50px;
+    margin-bottom: -30px;
   }
   
   .form-control::placeholder {

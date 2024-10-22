@@ -81,8 +81,8 @@ input:not(:placeholder-shown) + label {
 
 .btn {
     margin-top: 40px;
-    background-color: #CD1719; 
-    color: white;
+    background-color: #CD1719 !important; 
+    color: white !important;
     padding: 10px; 
     border: none; 
     border-radius: 3px; 

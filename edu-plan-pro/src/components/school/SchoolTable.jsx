@@ -133,12 +133,12 @@ const SchoolTable = () => {
     <div>
       <h1 className="h1">Escuelas</h1>
 
-      <div className="container mt-5 input">
+      <div className="container mt-5">
         <input
           title="Buscar escuelas."
           placeholder="Ingrese el nombre de una escuela"
           type="text"
-          className="form-control pl-5"
+          className="form-control pl-5 input2"
           onChange={(e) => handleSearch(e.target.value, "s")}
           style={{
             backgroundColor: "#CD1719",

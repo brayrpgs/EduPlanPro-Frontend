@@ -74,7 +74,7 @@
 .nav-link {
   background: none; /* Quita el fondo por defecto del botón */
   border: none; /* Quita el borde por defecto del botón */
-  color: white;
+  color: white !important;
   text-decoration: none;
   padding: 8px 16px;
   border-radius: 4px;
