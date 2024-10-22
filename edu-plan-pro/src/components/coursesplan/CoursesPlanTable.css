@@ -1,0 +1,93 @@
+/* Estilos para la tabla principal */
+.bg-light, .a {
+  color: #000000 !important;
+  text-decoration: none;
+  text-align: center;
+}
+
+.th {
+  text-decoration: none;
+  text-align: center;
+  color: #CD1719 !important;
+}
+
+.id-th {
+  width: 50px;
+  padding: 5px; 
+}
+
+.nc-th {
+  width: 200px;
+  padding: 5px; 
+}
+
+.y-th {
+  width: 150px;
+  padding: 5px; 
+}
+
+.p-th {
+  width: 175px;
+  padding: 5px; 
+}
+
+.ep-th {
+  width: 225px;
+  padding: 5px; 
+}
+
+.c-th {
+  width: 125px;
+  padding: 5px; 
+}
+
+.nrc-th {
+  width: 150px;
+  padding: 5px; 
+}
+
+.ncr-th {
+  width: 175px;
+  padding: 5px; 
+}
+
+.f-th {
+  width: 100px;
+  padding: 5px; 
+}
+
+.a-th {
+  width: 10px;
+  padding: 5px; 
+}
+
+.input {
+  position: relative;
+  
+}
+
+.search-input {
+  border: none; 
+  border-bottom: 2px solid red; 
+  background-color: transparent; 
+  color: black; 
+  outline: none;
+  width: 100%;
+}
+
+.button-filter{
+  display: flex;
+  border: none;
+  background-color: white;
+}
+
+.h1{
+  text-align: center;
+  margin-top: 50px;
+  margin-bottom: -40px;
+}
+
+.form-control::placeholder {
+  color: white; 
+  opacity: 1;   
+}
