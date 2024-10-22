@@ -86,8 +86,8 @@ const SchoolModalAdd = () => {
             setSelectedFaculty(""); // Reiniciar la selección de facultad
 
             // Cerrar el modal usando el método click
-            document.getElementById("closeModalAddSchool").click();
-            window.location.reload();
+            SweetAlertSuccess("Escuela agregada correctamente!");
+
         } catch (error) {
             console.error('Error al insertar la escuela:', error);
             SweetAlertError("Error al registrar la escuela.");

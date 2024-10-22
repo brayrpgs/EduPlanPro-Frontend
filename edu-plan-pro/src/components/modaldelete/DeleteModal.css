@@ -24,7 +24,7 @@
   }
   
   .modal-delete .confirm-button {
-    background-color: red;
+    background-color: #BB0E0E;
     color: white;
     border: none;
     padding: 10px 20px;
@@ -33,7 +33,7 @@
   }
   
   .modal-delete .cancel-button {
-    background-color: gray;
+    background-color: #A7A7A9;
     color: white;
     border: none;
     padding: 10px 20px;

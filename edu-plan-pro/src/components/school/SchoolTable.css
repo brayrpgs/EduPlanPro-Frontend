@@ -72,3 +72,10 @@
     color: white; 
     opacity: 1;   
   }
+
+  .img-search{
+    position: absolute;
+      width: 1.5rem; /* Tamaño relativo */
+    height: 1.5rem;
+    
+  }

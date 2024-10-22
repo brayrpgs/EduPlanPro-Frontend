@@ -148,16 +148,10 @@ const SchoolTable = () => {
             color: "white",
           }}
         />
-        <img
+        <img className="img-search"
           src={search}
           alt="Buscar"
-          style={{
-            position: "absolute",
-            left: "50%",
-            top: "50%",
-            transform: "translateY(-50%)",
-            pointerEvents: "none",
-          }}
+          
         />
         <button
           className="button-filter"
