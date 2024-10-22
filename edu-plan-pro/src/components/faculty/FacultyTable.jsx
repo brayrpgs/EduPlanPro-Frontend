@@ -5,6 +5,8 @@ import deleteIcon from "../icons/ActionIcons/delete.svg";
 import DeleteModal from "../modaldelete/DeleteModal";
 import SearchInput from "../search/SearchInput";
 import FilterOffIcon from "../icons/MainIcons/FilterOffIcon";
+import AddIcon from "../icons/ActionIcons/AddIcon";
+import FacultyModalAdd from "./FacultyModalAdd";
 
 async function fetchFacultyData() {
   try {
@@ -29,7 +31,7 @@ async function fetchFacultyData() {
   }
 }
 
-const FacultyTable = () => {
+  const FacultyTable = () => {
   const [faculties, setfaculties] = useState([]); 
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [facultyToDelete, setFacultyToDelete] = useState(null);
@@ -115,6 +117,11 @@ const FacultyTable = () => {
 
         <button className="button-filter" title="Restablecer filtros" onClick={handleIconClick}>
           <FilterOffIcon />
+          </button>
+
+          <button className="button-filter"  title="Agregar Facultad"  data-bs-toggle="modal" data-bs-target="#facultyModalAdd" >
+          <AddIcon color={"rgb(255, 0, 0)"}/>
+        
         </button>
       </div>
 
@@ -175,7 +182,9 @@ const FacultyTable = () => {
         onDelete={handleDelete}
         itemName={facultyToDelete ? facultyToDelete["NOMBRE FACULTAD"] : "facultad"}
       />
+    <FacultyModalAdd/>
     </div>
+
   );
 };
 
