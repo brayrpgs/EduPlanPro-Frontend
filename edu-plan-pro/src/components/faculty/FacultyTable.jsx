@@ -153,8 +153,7 @@ async function fetchFacultyData() {
 
           <button className="button-filter"  title="Agregar Facultad"  data-bs-toggle="modal" data-bs-target="#facultyModalAdd" >
           <AddIcon color={"rgb(255, 0, 0)"}/>
-        
-        </button>
+          </button>
       </div>
 
       <div className="container mt-3">

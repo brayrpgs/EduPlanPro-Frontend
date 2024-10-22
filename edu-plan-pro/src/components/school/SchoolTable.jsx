@@ -5,6 +5,8 @@ import deleteIcon from "../icons/ActionIcons/delete.svg";
 import DeleteModal from "../modaldelete/DeleteModal";
 import SearchInput from "../search/SearchInput";
 import FilterOffIcon from "../icons/MainIcons/FilterOffIcon";
+import AddIcon from "../icons/ActionIcons/AddIcon";
+import SchoolModalAdd from "./SchoolModalAdd";
 
 async function fetchSchoolData() {
   try {
@@ -22,6 +24,7 @@ async function fetchSchoolData() {
 
     // Asegúrate de que jsonResponse.data sea un array
     return Array.isArray(jsonResponse.data) ? jsonResponse.data : [];
+
   } catch (error) {
     console.error("Error al obtener los datos:", error);
     return []; // Siempre retorna un array
@@ -163,6 +166,11 @@ const SchoolTable = () => {
         >
           <FilterOffIcon />
         </button>
+
+        <button className="button-filter"  title="Agregar Escuela"  data-bs-toggle="modal" data-bs-target="#schoolModalAdd" >
+          <AddIcon color={"rgb(255, 0, 0)"}/>
+        </button>
+        
       </div>
 
       <div className="container mt-3">
@@ -248,6 +256,7 @@ const SchoolTable = () => {
         onDelete={handleDelete}
         itemName={schoolToDelete ? schoolToDelete["NOMBRE ESCUELA"] : "school"}
       />
+      <SchoolModalAdd/>
     </div>
   );
 };
