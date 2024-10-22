@@ -2,6 +2,8 @@ import React, { useState, useRef } from "react";
 import Swal from 'sweetalert2';
 import IconUpdate from '../icons/ModalUpdateIcons/IconUpdate.jsx';
 
+import FacultiesComponent from './GetAllFaculties.jsx';
+
 const UpdateModal = ({ object, baseUrl, attributeNameId, JsonToEndpoint, keysJsonToEndpoint }) => {
     const [editedObject, setEditedObject] = useState({ ...object });
     const modalRef = useRef(null);
@@ -35,6 +37,7 @@ const UpdateModal = ({ object, baseUrl, attributeNameId, JsonToEndpoint, keysJso
                 body: JSON.stringify(jsonDef),
                 credentials: 'include'
             });
+            
             if (response.ok) {
                 Swal.fire({
                     icon: 'success',
@@ -62,7 +65,7 @@ const UpdateModal = ({ object, baseUrl, attributeNameId, JsonToEndpoint, keysJso
         }
     };
 
-/*     const getAllFaculties = () => {
+/*      const getAllFaculties = () => {
         try {
             const response = fetch(`http://localhost:3001/faculty`, {
                 credentials: 'include'
@@ -162,6 +165,7 @@ const UpdateModal = ({ object, baseUrl, attributeNameId, JsonToEndpoint, keysJso
                                 ))}
                             </select> */}
 
+                         {/*    {console.log(<FacultiesComponent/>)} */}
                         </div>
                         <div className="modal-footer">
                             <button
@@ -180,6 +184,7 @@ const UpdateModal = ({ object, baseUrl, attributeNameId, JsonToEndpoint, keysJso
                             >
                                 Cerrar
                             </button>
+                            <FacultiesComponent/>
                         </div>
                     </div>
                 </div>
