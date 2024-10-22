@@ -46,8 +46,41 @@ const SchoolTable = () => {
     getSchools();
   }, []);
 
-  const handleDelete = (id) => {
-    setSchools(schools.filter((school) => school.ID_SCHOOL !== id));
+  const handleDelete = async (id) => {
+    try {
+      const response = await fetch('http://localhost:3001/school', {
+        method: 'PATCH',
+        credentials: 'include',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          id: schoolToDelete.ID_SCHOOL,
+          desc: schoolToDelete["NOMBRE ESCUELA"], 
+          stat: '0' 
+        })
+      });
+  
+      if (!response.ok) {
+        throw new Error('Error en la solicitud');
+      }
+  
+      const result = await response.json();
+      
+      if (result.code === "200") {
+        // Only update the UI if the server operation was successful
+        setSchools(schools.filter((school) => school.ID_SCHOOL !== id));
+        window.location.reload();
+        return true;
+      } else {
+        console.error('Error al eliminar:', result.data);
+        return false;
+      }
+      
+    } catch (error) {
+      console.error('Error al eliminar la escuela:', error);
+      return false;
+    }
   };
 
   const openModal = (school) => {

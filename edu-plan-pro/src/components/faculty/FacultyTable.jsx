@@ -42,8 +42,40 @@ const FacultyTable = () => {
     loadData();
   }, []); 
 
-  const handleDelete = (id) => {
-    setfaculties(faculties.filter((faculty) => faculty.ID_FACULTY !== id));
+  const handleDelete = async (id) => {
+    try {
+      const response = await fetch('http://localhost:3001/faculty', {
+        method: 'PATCH',
+        credentials: 'include',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          id: facultyToDelete.ID_FACULTY,
+          desc: facultyToDelete["NOMBRE FACULTAD"], 
+          stat: '0'
+        })
+      });
+  
+      if (!response.ok) {
+        throw new Error('Error en la solicitud');
+      }
+  
+      const result = await response.json();
+      
+      if (result.code === "200") {
+        setfaculties(faculties.filter((faculty) => faculty.ID_FACULTY !== id));
+        window.location.reload();
+        return true;
+      } else {
+        console.error('Error al eliminar:', result.data);
+        return false;
+      }
+      
+    } catch (error) {
+      console.error('Error al eliminar la facultad:', error);
+      return false;
+    }
   };
 
   const openModal = (faculty) => {
