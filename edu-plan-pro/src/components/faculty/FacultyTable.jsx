@@ -20,7 +20,6 @@ async function fetchFacultyData() {
     }
 
     const jsonResponse = await response.json();
-    console.log(jsonResponse);
 
     // Asegúrate de que jsonResponse.data sea un array
     return Array.isArray(jsonResponse.data) ? jsonResponse.data : [];
