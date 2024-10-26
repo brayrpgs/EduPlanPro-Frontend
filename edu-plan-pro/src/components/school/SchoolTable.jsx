@@ -218,7 +218,7 @@ const SchoolTable = () => {
                   <td className="bg-light">
                     <div style={{ textAlign: "center" }}>
                       <img
-                        title="Eliminar curso."
+                        title="Eliminar escuela."
                         src={deleteIcon}
                         alt="Eliminar"
                         style={{ cursor: "pointer" }}
