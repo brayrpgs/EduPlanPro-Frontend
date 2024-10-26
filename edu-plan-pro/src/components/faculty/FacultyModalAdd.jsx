@@ -3,6 +3,7 @@ import {
   SweetAlertSuccess,
   SweetAlertError,
 } from "../../assets/js/sweetalert.js";
+import "./FacultyModalAdd.css"
 
 async function fetchFacultyCreate(data) {
   try {
@@ -58,7 +59,7 @@ const FacultyModalAdd = () => {
         <div className="modal-content">
           <div className="modal-header bg-danger ">
             <h4 className="modal-title text-white" id="exampleModalLabel">
-              {"Crear Facultad"}
+              {"Agregar una facultad"}
             </h4>
             <button
               type="button"
@@ -73,14 +74,15 @@ const FacultyModalAdd = () => {
               <label htmlFor={"name"} className="form-label">
                 {"Nombre"}
               </label>
-              <input
+              <input 
                 value={data.name}
                 onChange={(e) => handleChange(e)}
                 type={"text"}
                 name={"name"}
-                className="form-control"
+                className="form-control placeholder-black"
                 id={"name"}
-                placeholder={"nombre de la facultad"}
+                placeholder={"Ingrese un nombre"}
+                
               />
               <div className="d-flex justify-content-center">
                 <button

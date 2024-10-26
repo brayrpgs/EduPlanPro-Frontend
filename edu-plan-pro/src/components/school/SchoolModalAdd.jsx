@@ -105,7 +105,7 @@ const SchoolModalAdd = () => {
         <div className="modal-content">
           <div className="modal-header bg-danger ">
             <h4 className="modal-title text-white" id="exampleModalLabel">
-              {"Crear Escuela"}
+              {"Agregar una escuela"}
             </h4>
             <button
               type="button"
@@ -138,9 +138,9 @@ const SchoolModalAdd = () => {
                 <label htmlFor="schoolName">Escuela</label>
                 <input
                   type="text"
-                  className="form-control"
+                  className="form-control placeholder-black"
                   id="schoolName"
-                  placeholder="nombre de la Escuela"
+                  placeholder="Ingrese un nombre"
                   value={schoolName}
                   onChange={(e) => setSchoolName(e.target.value)} // Captura el nombre de la escuela
                 />

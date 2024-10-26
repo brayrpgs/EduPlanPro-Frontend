@@ -210,14 +210,10 @@ const SchoolTable = () => {
               filteredSchool.map((school) => (
                 <tr key={school.ID_SCHOOL} style={{ color: "#CD1719" }}>
                   <td className="bg-light">
-                    <a className="a" href="#">
-                      {school["NOMBRE ESCUELA"]}
-                    </a>
+                    {school["NOMBRE ESCUELA"]}
                   </td>
                   <td className="bg-light">
-                    <a className="a" href="#">
-                      {school["NOMBRE FACULTAD"]}
-                    </a>
+                    {school["NOMBRE FACULTAD"]}
                   </td>
                   <td className="bg-light">
                     <div style={{ textAlign: "center" }}>

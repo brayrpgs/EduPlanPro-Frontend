@@ -178,9 +178,7 @@ async function fetchFacultyData() {
                 <tr key={faculty.ID_FACULTY} style={{ color: "#CD1719" }}>
                   
                   <td className="bg-light">
-                    <a className="a" href="#">
-                      {faculty["NOMBRE FACULTAD"]}
-                    </a>
+                    {faculty["NOMBRE FACULTAD"]}
                   </td>
                   <td className="bg-light">
                     <div style={{ textAlign: "center" }}>
@@ -198,7 +196,7 @@ async function fetchFacultyData() {
             ) : (
               <tr>
                 <td colSpan="3" style={{ textAlign: "center" }}>
-                  No se encontraron facultades.
+                  No se encontraron facultades registradas.
                 </td>
               </tr>
             )}
