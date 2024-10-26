@@ -8,8 +8,7 @@ import AddIcon from "../icons/ActionIcons/AddIcon";
 
 async function fetchTeacherData() {
   try {
-    const response = await fetch("", {
-      //Setear despues con el endpoint de brayan
+    const response = await fetch("http://localhost:3001/teacher", {
       method: "GET",
       credentials: "include",
     });
@@ -18,11 +17,10 @@ async function fetchTeacherData() {
       throw new Error("Error en la solicitud");
     }
     
-    //const jsonResponse = await response.json();
-    //const jsonResponse.data = [];
-    //return Array.isArray(jsonResponse.data) ? jsonResponse.data : [];
+    const jsonResponse = await response.json();
 
-    return [];
+    return Array.isArray(jsonResponse.data) ? jsonResponse.data : [];
+
   } catch (error) {
     console.error("Error al obtener los datos:", error);
     return [];
@@ -41,7 +39,7 @@ const TeacherTable = () => {
   useEffect(() => {
     const getTeachers = async () => {
       const data = await fetchTeacherData();
-      setTeachers(data); // Cargar los datos desde la API
+      setTeachers(data);
     };
     getTeachers();
   }, []);
@@ -67,28 +65,28 @@ const TeacherTable = () => {
 
   const filteredTeacher = teachers.filter((teacher) => {
     const matchesName = searchTerms.n
-      ? teacher[""]
+      ? teacher["NOMBRE"]
           ?.toString()
           .toLowerCase()
           .includes(searchTerms.n.toString().toLowerCase())
       : true;
 
     const matchesLastName = searchTerms.a
-      ? teacher[""]
+      ? teacher["APELLIDOS"]
           ?.toString()
           .toLowerCase()
           .includes(searchTerms.a.toString().toLowerCase())
       : true;
 
       const matchesIdCard = searchTerms.c
-      ? teacher[""]
+      ? teacher["CEDULA"]
           ?.toString()
           .toLowerCase()
           .includes(searchTerms.c.toString().toLowerCase())
       : true;
 
       const matchesEmail = searchTerms.ce
-      ? teacher[""]
+      ? teacher["CORREO"]
           ?.toString()
           .toLowerCase()
           .includes(searchTerms.ce.toString().toLowerCase())
@@ -199,13 +197,15 @@ const TeacherTable = () => {
           <tbody>
             {filteredTeacher.length > 0 ? (
               filteredTeacher.map((teacher) => (
-                <tr key={teacher.ID_teacher} style={{ color: "#CD1719" }}>
-                  <td className="bg-light">{teacher[""]}</td>
-                  <td className="bg-light">{teacher[""]}</td>
+                <tr key={teacher.ID_TEACHER} style={{ color: "#CD1719" }}>
+                  <td className="bg-light">{teacher["NOMBRE"]}</td>
+                  <td className="bg-light">{teacher["APELLIDOS"]}</td>
+                  <td className="bg-light">{teacher["CEDULA"]}</td>
+                  <td className="bg-light">{teacher["CORREO"]}</td>
                   <td className="bg-light">
                     <div style={{ textAlign: "center" }}>
                       <img
-                        title="Eliminar curso."
+                        title="Eliminar profesor."
                         src={deleteIcon}
                         alt="Eliminar"
                         style={{ cursor: "pointer" }}
