@@ -75,7 +75,7 @@ const Header = () => {
             Profesores
           </button>
           <button 
-            onClick={handleCoursePlanClick} 
+            onClick={handleUserClick} 
             className="nav-link"
           >
             Usuarios
