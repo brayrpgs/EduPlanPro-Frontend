@@ -6,6 +6,8 @@ import DeleteModal from "../modaldelete/DeleteModal";
 import SearchInput from "../search/SearchInput";
 import FilterOffIcon from "../icons/MainIcons/FilterOffIcon";
 import UpdateModal from "../modalupdate/UpdateModal"
+import AddIcon from "../icons/ActionIcons/AddIcon";
+import FacultyModalAdd from "./FacultyModalAdd";
 
 async function fetchFacultyData() {
   try {
@@ -19,7 +21,6 @@ async function fetchFacultyData() {
     }
 
     const jsonResponse = await response.json();
-    console.log(jsonResponse);
 
     // Asegúrate de que jsonResponse.data sea un array
     return Array.isArray(jsonResponse.data) ? jsonResponse.data : [];
@@ -30,7 +31,7 @@ async function fetchFacultyData() {
   }
 }
 
-const FacultyTable = () => {
+  const FacultyTable = () => {
   const [faculties, setfaculties] = useState([]); 
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [facultyToDelete, setFacultyToDelete] = useState(null);
@@ -43,8 +44,40 @@ const FacultyTable = () => {
     loadData();
   }, []); 
 
-  const handleDelete = (id) => {
-    setfaculties(faculties.filter((faculty) => faculty.ID_FACULTY !== id));
+  const handleDelete = async (id) => {
+    try {
+      const response = await fetch('http://localhost:3001/faculty', {
+        method: 'PATCH',
+        credentials: 'include',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          id: facultyToDelete.ID_FACULTY,
+          desc: facultyToDelete["NOMBRE FACULTAD"], 
+          stat: '0'
+        })
+      });
+  
+      if (!response.ok) {
+        throw new Error('Error en la solicitud');
+      }
+  
+      const result = await response.json();
+      
+      if (result.code === "200") {
+        setfaculties(faculties.filter((faculty) => faculty.ID_FACULTY !== id));
+        window.location.reload();
+        return true;
+      } else {
+        console.error('Error al eliminar:', result.data);
+        return false;
+      }
+      
+    } catch (error) {
+      console.error('Error al eliminar la facultad:', error);
+      return false;
+    }
   };
 
   const openModal = (faculty) => {
@@ -116,7 +149,11 @@ const FacultyTable = () => {
 
         <button className="button-filter" title="Restablecer filtros" onClick={handleIconClick}>
           <FilterOffIcon />
-        </button>
+          </button>
+
+          <button className="button-filter"  title="Agregar Facultad"  data-bs-toggle="modal" data-bs-target="#facultyModalAdd" >
+          <AddIcon color={"rgb(255, 0, 0)"}/>
+          </button>
       </div>
 
       <div className="container mt-3">
@@ -142,9 +179,7 @@ const FacultyTable = () => {
                 <tr key={faculty.ID_FACULTY} style={{ color: "#CD1719" }}>
                   
                   <td className="bg-light">
-                    <a className="a" href="#">
-                      {faculty["NOMBRE FACULTAD"]}
-                    </a>
+                    {faculty["NOMBRE FACULTAD"]}
                   </td>
                   <td className="bg-light">
                     <div style={{ textAlign: "center", display: "flex" }}>
@@ -169,7 +204,7 @@ const FacultyTable = () => {
             ) : (
               <tr>
                 <td colSpan="3" style={{ textAlign: "center" }}>
-                  No se encontraron facultades.
+                  No se encontraron facultades registradas.
                 </td>
               </tr>
             )}
@@ -183,7 +218,9 @@ const FacultyTable = () => {
         onDelete={handleDelete}
         itemName={facultyToDelete ? facultyToDelete["NOMBRE FACULTAD"] : "facultad"}
       />
+    <FacultyModalAdd/>
     </div>
+
   );
 };
 

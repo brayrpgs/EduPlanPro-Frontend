@@ -18,37 +18,23 @@ const Header = () => {
     }); 
   };
 
-  const handleLoginClick = () => {
-    navigate('/login');
-  };
-
   const handleCoursePlanClick = () => {
-    navigate('/coursesplan',{
-      replace: true,
-      state: {
-        logged: true  
-      }
-
-    });
+    navigate('/coursesplan');
   };
   const handleSchoolClick = () => {
-    navigate('/school',{
-      replace: true,
-      state: {
-        logged: true  
-      }
-
-    });
+    navigate('/school');
   };
 
   const handleFacultyClick = () => {
-    navigate('/faculty',{
-      replace: true,
-      state: {
-        logged: true  
-      }
+    navigate('/faculty');
+  };
 
-    });
+  const handleTeacherClick = () => {
+    navigate('/teacher');
+  };
+
+  const handleUserClick = () => {
+    navigate('/user');
   };
   
   return (
@@ -64,12 +50,6 @@ const Header = () => {
           />
         </div>
         <nav className="nav-links">
-          <button 
-            onClick={handleLoginClick} 
-            className="nav-link"
-          >
-            Login
-          </button>
           <button 
             onClick={handleSchoolClick} 
             className="nav-link"
@@ -87,6 +67,18 @@ const Header = () => {
             className="nav-link"
           >
             Planes De Estudio
+          </button>
+          <button 
+            onClick={handleTeacherClick} 
+            className="nav-link"
+          >
+            Profesores
+          </button>
+          <button 
+            onClick={handleUserClick} 
+            className="nav-link"
+          >
+            Usuarios
           </button>
         </nav>
       </div>

@@ -4,7 +4,7 @@ import deleteIcon from "../icons/ActionIcons/delete.svg";
 import DeleteModal from "../modaldelete/DeleteModal"; 
 import SearchInput from "../search/SearchInput";
 import FilterOffIcon from "../icons/MainIcons/FilterOffIcon";
-import "./CoursesPlanTable";
+import "./CoursesPlanTable.css";
 
 const dataExample = [
   {

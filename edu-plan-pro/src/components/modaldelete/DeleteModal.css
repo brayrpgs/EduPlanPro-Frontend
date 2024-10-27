@@ -1,4 +1,4 @@
-.modal-overlay {
+.modal-delete .modal-overlay {
     position: fixed;
     top: 0;
     left: 0;
@@ -11,7 +11,7 @@
     z-index: 1000; 
   }
   
-  .modal-content {
+  .modal-delete .modal-content {
     background: white;
     padding: 20px;
     border-radius: 8px;
@@ -19,12 +19,12 @@
     text-align: center;
   }
   
-  .modal-buttons {
+  .modal-delete .modal-buttons {
     margin-top: 20px;
   }
   
-  .confirm-button {
-    background-color: red;
+  .modal-delete .confirm-button {
+    background-color: #BB0E0E;
     color: white;
     border: none;
     padding: 10px 20px;
@@ -32,8 +32,8 @@
     cursor: pointer;
   }
   
-  .cancel-button {
-    background-color: gray;
+  .modal-delete .cancel-button {
+    background-color: #A7A7A9;
     color: white;
     border: none;
     padding: 10px 20px;

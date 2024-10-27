@@ -64,7 +64,6 @@ export const Login = () => {
             confirmButtonText: "Aceptar",
             confirmButtonColor: "#CD1719",
           }).then((result) => {
-            console.log(response);
             if (result.isConfirmed) {
               
               navigate("/coursesPlan"); 

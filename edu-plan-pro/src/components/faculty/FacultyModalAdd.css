@@ -1,0 +1,7 @@
+input::placeholder {
+    color: #999999  !important; 
+}
+
+.placeholder-black::placeholder {
+    color: #999999  !important; 
+}

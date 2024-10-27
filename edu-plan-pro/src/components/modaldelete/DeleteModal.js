@@ -31,6 +31,7 @@ const DeleteModal = ({ isOpen, onClose, onDelete, itemName }) => {
   };
 
   return (
+    <div className='modal-delete'>
     <div className="modal-overlay">
       <div className="modal-content">
         <h2>Eliminar {itemName}</h2>
@@ -44,6 +45,7 @@ const DeleteModal = ({ isOpen, onClose, onDelete, itemName }) => {
           </button>
         </div>
       </div>
+    </div>
     </div>
   );
 };
