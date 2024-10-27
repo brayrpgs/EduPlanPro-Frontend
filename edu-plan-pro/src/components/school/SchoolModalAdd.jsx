@@ -52,9 +52,10 @@ const SchoolModalAdd = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    // Verificar que se haya seleccionado una facultad y que el nombre de la escuela no esté vacío
-    if (!selectedFaculty || !schoolName) {
-      SweetAlertError("Por favor, completa todos los campos.");
+    // Verificar que se haya seleccionado una facultad y que el nombre de la escuela no esté vacío o tenga solo espacios en blanco
+    if (!selectedFaculty || !schoolName.trim()) {
+      SweetAlertError("Por favor, completa todos los campos correctamente.");
+     
       return;
     }
 

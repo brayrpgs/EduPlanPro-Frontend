@@ -5,6 +5,8 @@ import deleteIcon from "../icons/ActionIcons/delete.svg";
 import SearchInput from "../search/SearchInput";
 import FilterOffIcon from "../icons/MainIcons/FilterOffIcon";
 import AddIcon from "../icons/ActionIcons/AddIcon";
+import TeacherModalAdd from "./TeacherModalAdd";
+
 
 async function fetchTeacherData() {
   try {
@@ -126,8 +128,8 @@ const TeacherTable = () => {
           <FilterOffIcon />
         </button>
 
-        <button>
-          <AddIcon color={"rgb(255, 0, 0)"} />
+        <button className="button-filter"  title="Agregar Escuela"  data-bs-toggle="modal" data-bs-target="#teacherModalAdd" >
+          <AddIcon color={"rgb(255, 0, 0)"}/>
         </button>
       </div>
 
@@ -225,7 +227,9 @@ const TeacherTable = () => {
           </tbody>
         </table>
       </div>
+      <TeacherModalAdd/>
     </div>
+    
   );
 };
 
