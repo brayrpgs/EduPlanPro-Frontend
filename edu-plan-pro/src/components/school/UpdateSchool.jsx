@@ -1,13 +1,14 @@
 import React, { useState, useEffect } from "react";
 import Swal from 'sweetalert2';
 import IconUpdate from '../icons/ModalUpdateIcons/IconUpdate.jsx';
+import './UpdateSchool.css';
 
 const UpdateSchool = ({ school }) => {
     const [desc, setSchoolName] = useState('');
-    const [facu, setSelectedFacultyId] = useState(''); // para la facultad seleccionada
-    const [faculties, setFaculties] = useState([]); // para el fetch que carga las facultades
+    const [facu, setSelectedFacultyId] = useState('');
+    const [faculties, setFaculties] = useState([]);
+    const [isModalOpen, setIsModalOpen] = useState(false);
 
-    // Cargar las facultades
     useEffect(() => {
         const getFaculties = async () => {
             try {
@@ -35,7 +36,6 @@ const UpdateSchool = ({ school }) => {
         getFaculties();
     }, []);
 
-    // Inicializar los estados cuando el componente se monta o school cambia
     useEffect(() => {
         if (school) {
             setSchoolName(school['NOMBRE ESCUELA'] || '');
@@ -43,9 +43,7 @@ const UpdateSchool = ({ school }) => {
         }
     }, [school]);
 
-    if (!school) {
-        return null;
-    }
+    if (!school) return null;
 
     const updateSchool = async e => {
         e.preventDefault();
@@ -53,7 +51,7 @@ const UpdateSchool = ({ school }) => {
             const body = {
                 desc,
                 facu,
-                'stat':1,
+                'stat': 1,
                 'id': school.ID_SCHOOL
             };
 
@@ -72,12 +70,13 @@ const UpdateSchool = ({ school }) => {
                     showConfirmButton: false,
                     timer: 1500
                 });
+                setIsModalOpen(false);
+                setTimeout(() => {
+                    window.location.reload();
+                }, 1500);
             } else {
                 throw new Error('Error al actualizar la escuela');
             }
-            setTimeout(() => {
-                window.location.reload();
-            }, 1500);
         } catch (err) {
             Swal.fire({
                 icon: 'error',
@@ -95,94 +94,82 @@ const UpdateSchool = ({ school }) => {
         }
     }
 
+    const closeModal = () => {
+        setIsModalOpen(false);
+        resetFields();
+    }
+
     return (
         <div>
             <button 
                 type="button" 
-                className="btn btn-warning" 
-                data-bs-toggle="modal" 
-                data-bs-target={`#id${school.ID_SCHOOL}`}
-                style={{marginTop: 0}}
+                className="update-button"
+                onClick={() => setIsModalOpen(true)}
             >
                 <IconUpdate />
             </button>
 
-            <div 
-                className="modal fade" 
-                id={`id${school.ID_SCHOOL}`} 
-                tabIndex="-1" 
-                aria-labelledby="exampleModalLabel" 
-                aria-hidden="true" 
-            >
-                <div className="modal-dialog">
-                    <div className="modal-content">
-                        {/* Cabecera del modal */}
-                        <div className="modal-header">
-                            <h5 className="modal-title" id="exampleModalLabel">
-                                Actualizar Escuela
-                            </h5>
-                            <button 
-                                type="button" 
-                                className="btn-close" 
-                                data-bs-dismiss="modal" 
-                                aria-label="Close" 
-                                onClick={resetFields}
-                            ></button>
-                        </div>
-
-                        {/* Cuerpo del modal */}
-                        <div className="modal-body">
-                            <div className="mb-3">
-                                <label className="form-label">Nombre de la Escuela</label>
-                                <input 
-                                    type="text" 
-                                    className="form-control" 
-                                    value={desc} 
-                                    onChange={e => setSchoolName(e.target.value)} 
-                                />
-                            </div>
-                            <div className="mb-3">
-                                <label className="form-label">Facultad</label>
-                                <select 
-                                    className="form-select"
-                                    value={facu}
-                                    onChange={e => setSelectedFacultyId(e.target.value)}
+            {isModalOpen && (
+                <div className="modal-overlay" onClick={closeModal}>
+                    <div className="modal-container" onClick={e => e.stopPropagation()}>
+                        <div className="modal-content">
+                            <div className="modal-header">
+                                <h2>Actualizar Escuela</h2>
+                                <button 
+                                    type="button" 
+                                    className="close-button"
+                                    onClick={closeModal}
                                 >
-                                    <option value="">Seleccione una facultad</option>
-                                    {faculties.map(faculty => (
-                                        <option 
-                                            key={faculty.ID_FACULTY} 
-                                            value={faculty.ID_FACULTY}
-                                        >
-                                            {faculty['NOMBRE FACULTAD']}
-                                        </option>
-                                    ))}
-                                </select>
+                                    ×
+                                </button>
                             </div>
-                        </div>
 
-                        {/* Pie del modal */}
-                        <div className="modal-footer">
-                            <button 
-                                type="button" 
-                                className="btn btn-warning" 
-                                data-bs-dismiss="modal" 
-                                onClick={e => updateSchool(e)}
-                            >
-                                Guardar Cambios
-                            </button>
-                            <button 
-                                type="button" 
-                                className="btn btn-danger" 
-                                data-bs-dismiss="modal" 
-                                onClick={resetFields}
-                            >
-                                Cancelar
-                            </button>
+                            <div className="modal-body">
+                                <div className="form-group">
+                                    <label>Nombre de la Escuela</label>
+                                    <input 
+                                        type="text" 
+                                        value={desc} 
+                                        onChange={e => setSchoolName(e.target.value)} 
+                                    />
+                                    <label className="label-select">Facultad</label>
+                                    <select 
+                                        value={facu}
+                                        onChange={e => setSelectedFacultyId(e.target.value)}
+                                    >
+                                        <option value="">Seleccione una facultad</option>
+                                        {faculties.map(faculty => (
+                                            <option 
+                                                key={faculty.ID_FACULTY} 
+                                                value={faculty.ID_FACULTY}
+                                            >
+                                                {faculty['NOMBRE FACULTAD']}
+                                            </option>
+                                        ))}
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div className="modal-footer">
+                                <button 
+                                    type="button" 
+                                    className="save-button"
+                                    onClick={updateSchool}
+                                >
+                                    Guardar Cambios
+                                </button>
+                                <button 
+                                    type="button" 
+                                    className="cancel-button"
+                                    onClick={closeModal}
+                                >
+                                    Cancelar
+                                </button>
+                            </div>
                         </div>
                     </div>
                 </div>
-            </div>
+            )}
         </div>
     );
 }

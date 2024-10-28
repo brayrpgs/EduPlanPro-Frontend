@@ -7,7 +7,7 @@ import SearchInput from "../search/SearchInput";
 import FilterOffIcon from "../icons/MainIcons/FilterOffIcon";
 import AddIcon from "../icons/ActionIcons/AddIcon";
 import FacultyModalAdd from "./FacultyModalAdd";
-import UpdateFaculty from "../modalupdate/UpdateFaculty"
+import UpdateFaculty from "./UpdateFaculty"
 
 async function fetchFacultyData() {
   try {

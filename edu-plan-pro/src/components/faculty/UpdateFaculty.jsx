@@ -1,20 +1,20 @@
 import React, { useState, useEffect } from "react";
 import Swal from 'sweetalert2';
 import IconUpdate from '../icons/ModalUpdateIcons/IconUpdate.jsx';
+import './UpdateFaculty.css';
 
 const UpdateFaculty = ({ faculty }) => {
     const [desc, setNombreFacultad] = useState('');
+    const [isModalOpen, setIsModalOpen] = useState(false);
 
-    // Inicializar los estados cuando el componente se monta o faculty cambia
     useEffect(() => {
         if (faculty) {
             setNombreFacultad(faculty['NOMBRE FACULTAD'] || '');
         }
     }, [faculty]);
 
-    // Validar que faculty existe antes de proceder
     if (!faculty) {
-        return null; 
+        return null;
     }
 
     const updateFaculty = async e => {
@@ -22,8 +22,8 @@ const UpdateFaculty = ({ faculty }) => {
         try {
             const body = {
                 desc,
-                'id':faculty.ID_FACULTY,
-                'stat':1        
+                'id': faculty.ID_FACULTY,
+                'stat': 1
             };
 
             const response = await fetch(`http://localhost:3001/faculty`, {
@@ -41,10 +41,11 @@ const UpdateFaculty = ({ faculty }) => {
                     showConfirmButton: false,
                     timer: 1500
                 });
+                setIsModalOpen(false);
             } else {
                 throw new Error('Error al actualizar la facultad');
             }
-
+            
             setTimeout(() => {
                 window.location.reload();
             }, 1500);
@@ -64,70 +65,55 @@ const UpdateFaculty = ({ faculty }) => {
         }
     }
 
+    const handleCloseModal = () => {
+        setIsModalOpen(false);
+        resetFields();
+    }
+
     return (
         <div>
             <button 
-                type="button" 
-                className="btn btn-warning" 
-                data-bs-toggle="modal" 
-                data-bs-target={`#id${faculty.ID_FACULTY}`}
-                style={{marginTop:0}}
+                className="update-button"
+                onClick={() => setIsModalOpen(true)}
             >
                 <IconUpdate />
             </button>
 
-            <div 
-                className="modal fade" 
-                id={`id${faculty.ID_FACULTY}`} 
-                tabIndex="-1" 
-                aria-labelledby="exampleModalLabel" 
-                aria-hidden="true" 
-                onClick={resetFields}
-            >
-                <div className="modal-dialog">
-                    <div className="modal-content">
-                        {/* Cabecera del modal */}
-                        <div className="modal-header">
-                            <h5 className="modal-title" id="exampleModalLabel">
-                                Actualizar Facultad
-                            </h5>
-                            <button 
-                                type="button" 
-                                className="btn-close" 
-                                data-bs-dismiss="modal" 
-                                aria-label="Close" 
-                                onClick={resetFields}
-                            ></button>
-                        </div>
+            {isModalOpen && (
+                <div className="modal-overlay" onClick={handleCloseModal}>
+                    <div className="modal-container" onClick={e => e.stopPropagation()}>
+                        <div className="modal-content">
+                            <div className="modal-header">
+                                <h2>Actualizar Facultad</h2>
+                                <button 
+                                    className="close-button"
+                                    onClick={handleCloseModal}
+                                >
+                                    ×
+                                </button>
+                            </div>
 
-                        {/* Cuerpo del modal */}
-                        <div className="modal-body">
-                            <div className="mb-3">
-                                <label className="form-label">Nombre de la Facultad</label>
+                            <div className="modal-body">
+                                <div className="form-group">
+                                    <label>Nombre de la Facultad</label>
                                     <input 
                                         type="text" 
-                                        className="form-control" 
                                         value={desc} 
                                         onChange={e => setNombreFacultad(e.target.value)} 
                                     />
                                 </div>
                             </div>
 
-                            {/* Pie del modal */}
                             <div className="modal-footer">
                                 <button 
-                                    type="button" 
-                                    className="btn btn-warning" 
-                                    data-bs-dismiss="modal" 
-                                    onClick={e => updateFaculty(e)}
+                                    className="save-button"
+                                    onClick={updateFaculty}
                                 >
                                     Guardar Cambios
                                 </button>
                                 <button 
-                                    type="button" 
-                                    className="btn btn-danger" 
-                                    data-bs-dismiss="modal" 
-                                    onClick={resetFields}
+                                    className="cancel-button"
+                                    onClick={handleCloseModal}
                                 >
                                     Cancelar
                                 </button>
@@ -135,8 +121,9 @@ const UpdateFaculty = ({ faculty }) => {
                         </div>
                     </div>
                 </div>
-            </div>
-        );
-    }
+            )}
+        </div>
+    );
+}
 
-    export default UpdateFaculty;
+export default UpdateFaculty;
