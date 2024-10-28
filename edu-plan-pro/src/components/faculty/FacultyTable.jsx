@@ -5,9 +5,9 @@ import deleteIcon from "../icons/ActionIcons/delete.svg";
 import DeleteModal from "../modaldelete/DeleteModal";
 import SearchInput from "../search/SearchInput";
 import FilterOffIcon from "../icons/MainIcons/FilterOffIcon";
-import UpdateModal from "../modalupdate/UpdateModal"
 import AddIcon from "../icons/ActionIcons/AddIcon";
 import FacultyModalAdd from "./FacultyModalAdd";
+import UpdateFaculty from "../modalupdate/UpdateFaculty"
 
 async function fetchFacultyData() {
   try {
@@ -182,14 +182,10 @@ async function fetchFacultyData() {
                     {faculty["NOMBRE FACULTAD"]}
                   </td>
                   <td className="bg-light">
-                    <div style={{ textAlign: "center", display: "flex" }}>
-                      <UpdateModal  
-                          object={faculty} 
-                          baseUrl={"http://localhost:3001/faculty"} 
-                          attributeNameId={"ID_FACULTY"}     
-                          JsonToEndpoint= {["NOMBRE FACULTAD", "ID_FACULTY"]}
-                          keysJsonToEndpoint = {["desc", "id"]}
-                      />                  
+                    <div style={{ textAlign: "center", display: "flex", justifyContent: "center" }}>
+                      <UpdateFaculty  
+                        faculty={faculty} 
+                      />       
                       <img
                         title="Eliminar facultad."
                         src={deleteIcon}

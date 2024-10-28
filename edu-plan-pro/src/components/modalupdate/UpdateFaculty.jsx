@@ -45,9 +45,9 @@ const UpdateFaculty = ({ faculty }) => {
                 throw new Error('Error al actualizar la facultad');
             }
 
-/*             setTimeout(() => {
+            setTimeout(() => {
                 window.location.reload();
-            }, 1500); */
+            }, 1500);
         } catch (err) {
             Swal.fire({
                 icon: 'error',
@@ -68,9 +68,10 @@ const UpdateFaculty = ({ faculty }) => {
         <div>
             <button 
                 type="button" 
-                className="btn" 
+                className="btn btn-warning" 
                 data-bs-toggle="modal" 
                 data-bs-target={`#id${faculty.ID_FACULTY}`}
+                style={{marginTop:0}}
             >
                 <IconUpdate />
             </button>
