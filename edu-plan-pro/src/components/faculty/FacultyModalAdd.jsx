@@ -3,7 +3,7 @@ import {
   SweetAlertSuccess,
   SweetAlertError,
 } from "../../assets/js/sweetalert.js";
-import "./FacultyModalAdd.css"
+import "./FacultyModalAdd.css";
 
 async function fetchFacultyCreate(data) {
   try {
@@ -27,7 +27,7 @@ async function fetchFacultyCreate(data) {
     return jsonResponse.data;
   } catch (error) {
     console.error("Error al crear la facultad:", error);
-    SweetAlertError(`Error al crear la facultad :${error.message}`);
+    SweetAlertError(`Error al crear la facultad: ${error.message}`);
   }
 }
 
@@ -42,14 +42,19 @@ const FacultyModalAdd = () => {
       [e.target.name]: e.target.value,
     });
   };
+
   const handleSubmit = (e) => {
     e.preventDefault();
+    if (data.name.trim() === "") {
+      SweetAlertError("Verifique Datos Ingresados.");
+      return;
+    }
     fetchFacultyCreate(data);
   };
 
   return (
     <div
-      className="modal fade "
+      className="modal fade"
       id={"facultyModalAdd"}
       tabIndex={-1}
       aria-labelledby="exampleModalLabel"
@@ -74,7 +79,7 @@ const FacultyModalAdd = () => {
               <label htmlFor={"name"} className="form-label">
                 {"Nombre"}
               </label>
-              <input 
+              <input
                 value={data.name}
                 onChange={(e) => handleChange(e)}
                 type={"text"}
@@ -82,7 +87,6 @@ const FacultyModalAdd = () => {
                 className="form-control placeholder-black"
                 id={"name"}
                 placeholder={"Ingrese un nombre"}
-                
               />
               <div className="d-flex justify-content-center">
                 <button
