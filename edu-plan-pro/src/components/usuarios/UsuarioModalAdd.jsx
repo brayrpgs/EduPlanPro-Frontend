@@ -1,11 +1,10 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { SweetAlertSuccess, SweetAlertError } from "../../assets/js/sweetalert.js";
 
-async function fetchTeacherCreate(data) {
+//funcionn donde se envia los datos del formulario mas el string de los datos de la sesion
+async function fetchUsuarioCreate(data) {
   try {
-
-    
-    const response = await fetch("http://localhost:3001/teacher", {
+    const response = await fetch("http://localhost:3001/user", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -19,7 +18,7 @@ async function fetchTeacherCreate(data) {
     }
 
     const jsonResponse = await response.json();
-    document.getElementById("closeTeacherModalAdd").click();
+    document.getElementById("closeUsuarioModalAdd").click();
     SweetAlertSuccess(jsonResponse.data || "Registro exitoso!");
 
     return jsonResponse.data;
@@ -28,17 +27,28 @@ async function fetchTeacherCreate(data) {
     SweetAlertError(`Error al crear el docente: ${error.message}`);
   }
 }
-
-const TeacherModalAdd = () => {
+//incializa las variables, ademas le paso quemado el rol
+const UsuarioModalAdd = () => {
   const [data, setData] = useState({
     name: "",
     secName: "",
     idcard: "",
-    email: "",
+    pass:"",
+    idRol:"5",
   });
 
-  const [error, setError] = useState(""); // Estado para el mensaje de error
-  const [firstSubmit, setFirstSubmit] = useState(true); // Estado para verificar el primer envío
+  const [error, setError] = useState("");
+  const [firstSubmit, setFirstSubmit] = useState(true);
+/*
+  useEffect(() => {
+    // Limpia los campos al abrir el modal
+    setData({
+      name: "",
+      secName: "",
+      idcard: "",
+      pass: "",
+    });
+  }, []);*/
 
   const handleChange = (e) => {
     setData({
@@ -57,33 +67,32 @@ const TeacherModalAdd = () => {
       return false;
     }
     if (data.idcard.trim() === "") {
-      setError("Cédula vacía");
+      setError("Cédula inválida");
       return false;
     }
-    if (data.email.trim() === "") {
-      setError("Correo vacío");
+    if (data.pass.trim() === "" || data.pass.length < 4) {
+      setError("Contraseña no cumple requsitos minimos");
       return false;
     }
 
-    setError(""); // Sin errores
+    setError("");
     return true;
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setFirstSubmit(false); // Se marca que se ha intentado enviar por primera vez
+    setFirstSubmit(false);
     if (handleValidate()) {
-      // Procede con la creación si pasa la validación
-      fetchTeacherCreate(data);
+      fetchUsuarioCreate(data);
     } else {
-      SweetAlertError("Verifique Datos Ingresados"); // Muestra el error si falla la validación
+      SweetAlertError("Verifique Datos Ingresados.");
     }
   };
 
   return (
     <div
       className="modal fade"
-      id="teacherModalAdd"
+      id="usuarioModalAdd"
       tabIndex={-1}
       aria-labelledby="exampleModalLabel"
       aria-hidden="true"
@@ -92,18 +101,18 @@ const TeacherModalAdd = () => {
         <div className="modal-content">
           <div className="modal-header bg-danger">
             <h4 className="modal-title text-white" id="exampleModalLabel">
-              Agregar un Docente
+              Agregar un usuario
             </h4>
             <button
               type="button"
               className="btn-close bg-white"
               data-bs-dismiss="modal"
               aria-label="Close"
-              id="closeTeacherModalAdd"
+              id="closeUsuarioModalAdd"
             ></button>
           </div>
           <div className="modal-body">
-            <form onSubmit={handleSubmit}>
+            <form onSubmit={handleSubmit} autoComplete="off">
               <div className="form-group">
                 <label htmlFor="name" className="form-label">Nombre</label>
                 <input
@@ -114,6 +123,7 @@ const TeacherModalAdd = () => {
                   className="form-control placeholder-black"
                   id="name"
                   placeholder="Ingrese un nombre"
+                  autoComplete="off"
                 />
               </div>
 
@@ -127,6 +137,7 @@ const TeacherModalAdd = () => {
                   className="form-control placeholder-black"
                   id="secName"
                   placeholder="Ingrese Apellidos"
+                  autoComplete="off"
                 />
               </div>
 
@@ -140,19 +151,21 @@ const TeacherModalAdd = () => {
                   className="form-control placeholder-black"
                   id="idcard"
                   placeholder="Ingrese la cédula"
+                  autoComplete="new-password"
                 />
               </div>
 
               <div className="form-group mt-3">
-                <label htmlFor="email" className="form-label">Email</label>
+                <label htmlFor="pass" className="form-label">Contraseña</label>
                 <input
-                  value={data.email}
+                  value={data.pass}
                   onChange={handleChange}
-                  type="email"
-                  name="email"
+                  type="password"
+                  name="pass"
                   className="form-control placeholder-black"
-                  id="email"
-                  placeholder="Ingrese el correo electrónico"
+                  id="pass"
+                  placeholder="Ingrese la contraseña"
+                  autoComplete="new-password"
                 />
               </div>
 
@@ -171,4 +184,4 @@ const TeacherModalAdd = () => {
   );
 };
 
-export default TeacherModalAdd;
+export default UsuarioModalAdd;

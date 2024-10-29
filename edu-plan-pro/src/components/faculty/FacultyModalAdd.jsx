@@ -46,7 +46,7 @@ const FacultyModalAdd = () => {
   const handleSubmit = (e) => {
     e.preventDefault();
     if (data.name.trim() === "") {
-      SweetAlertError("El campo vacío.");
+      SweetAlertError("Verifique Datos Ingresados.");
       return;
     }
     fetchFacultyCreate(data);
