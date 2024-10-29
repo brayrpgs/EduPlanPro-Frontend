@@ -6,7 +6,6 @@ import SearchInput from "../search/SearchInput";
 import FilterOffIcon from "../icons/MainIcons/FilterOffIcon";
 import AddIcon from "../icons/ActionIcons/AddIcon";
 import TeacherModalAdd from "./TeacherModalAdd";
-import UsuarioModalAdd from "../usuarios/UsuarioModalAdd";
 
 
 async function fetchTeacherData() {
@@ -132,9 +131,6 @@ const TeacherTable = () => {
         <button className="button-filter"  title="Agregar Escuela"  data-bs-toggle="modal" data-bs-target="#teacherModalAdd" >
           <AddIcon color={"rgb(255, 0, 0)"}/>
         </button>
-        <button className="button-filter"  title="Agregar Usuario"  data-bs-toggle="modal" data-bs-target="#usuarioModalAdd" >
-          <AddIcon color={"rgb(255, 0, 0)"}/>
-        </button>
       </div>
 
       <div className="container mt-3">
@@ -232,7 +228,6 @@ const TeacherTable = () => {
         </table>
       </div>
       <TeacherModalAdd/>
-      <UsuarioModalAdd/>
     </div>
     
   );

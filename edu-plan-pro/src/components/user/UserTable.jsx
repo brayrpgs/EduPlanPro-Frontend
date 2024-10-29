@@ -5,6 +5,7 @@ import deleteIcon from "../icons/ActionIcons/delete.svg";
 import SearchInput from "../search/SearchInput";
 import FilterOffIcon from "../icons/MainIcons/FilterOffIcon";
 import AddIcon from "../icons/ActionIcons/AddIcon";
+import UserModalAdd from "./UserModalAdd.jsx";
 
 async function fetchUserData() {
   try {
@@ -115,8 +116,8 @@ const UserTable = () => {
           <FilterOffIcon />
         </button>
 
-        <button>
-          <AddIcon color={"rgb(255, 0, 0)"} />
+        <button className="button-filter"  title="Agregar Usuario"  data-bs-toggle="modal" data-bs-target="#userModalAdd" >
+          <AddIcon color={"rgb(255, 0, 0)"}/>
         </button>
       </div>
 
@@ -201,6 +202,7 @@ const UserTable = () => {
           </tbody>
         </table>
       </div>
+      <UserModalAdd/>
     </div>
   );
 };

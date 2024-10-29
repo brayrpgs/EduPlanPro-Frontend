@@ -28,7 +28,7 @@ async function fetchUsuarioCreate(data) {
   }
 }
 //incializa las variables, ademas le paso quemado el rol
-const UsuarioModalAdd = () => {
+const UserModalAdd = () => {
   const [data, setData] = useState({
     name: "",
     secName: "",
@@ -92,7 +92,7 @@ const UsuarioModalAdd = () => {
   return (
     <div
       className="modal fade"
-      id="usuarioModalAdd"
+      id="userModalAdd"
       tabIndex={-1}
       aria-labelledby="exampleModalLabel"
       aria-hidden="true"
@@ -184,4 +184,4 @@ const UsuarioModalAdd = () => {
   );
 };
 
-export default UsuarioModalAdd;
+export default UserModalAdd;
