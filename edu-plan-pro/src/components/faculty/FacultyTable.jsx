@@ -7,6 +7,7 @@ import SearchInput from "../search/SearchInput";
 import FilterOffIcon from "../icons/MainIcons/FilterOffIcon";
 import AddIcon from "../icons/ActionIcons/AddIcon";
 import FacultyModalAdd from "./FacultyModalAdd";
+import UpdateFaculty from "./UpdateFaculty"
 
 async function fetchFacultyData() {
   try {
@@ -181,7 +182,10 @@ async function fetchFacultyData() {
                     {faculty["NOMBRE FACULTAD"]}
                   </td>
                   <td className="bg-light">
-                    <div style={{ textAlign: "center" }}>
+                    <div style={{ textAlign: "center", display: "flex", justifyContent: "center" }}>
+                      <UpdateFaculty  
+                        faculty={faculty} 
+                      />       
                       <img
                         title="Eliminar facultad."
                         src={deleteIcon}

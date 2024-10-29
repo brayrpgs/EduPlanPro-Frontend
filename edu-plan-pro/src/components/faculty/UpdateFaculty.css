@@ -1,0 +1,148 @@
+/* UpdateFaculty.css */
+
+.update-button {
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 8px;
+    transition: opacity 0.2s;
+}
+
+.update-button:hover {
+    opacity: 0.8;
+}
+
+.modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+}
+
+.modal-container {
+    background-color: white;
+    border-radius: 8px;
+    width: 90%;
+    max-width: 500px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+.modal-content {
+    display: flex;
+    flex-direction: column;
+    gap: 50px;
+}
+
+.modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    /* Aumentamos el padding vertical */
+    padding: 24px 32px;
+    border-bottom: 1px solid #eee;
+    background-color: #BB0E0E;
+}
+
+.modal-header h2 {
+    margin: 0;
+    font-size: 1.25rem;
+    color: white;
+    margin: 12px 12px;
+}
+
+.close-button {
+    background: none;
+    border: none;
+    font-size: 24px;
+    cursor: pointer;
+    color: #666;
+    padding: 0;
+    width: 32px;
+    height: 32px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    transition: background-color 0.2s;
+    /* Añadimos margen izquierdo para separarlo del título */
+    margin-left: 16px;
+}
+
+.close-button:hover {
+    background-color: #f0f0f0;
+}
+
+.modal-body {
+    padding: 32px;
+}
+
+.form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+}
+
+.form-group label {
+    font-weight: 500;
+    color: #444;
+    font-size: 1.1rem;
+}
+
+.form-group input {
+    padding: 12px 16px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    font-size: 1rem;
+    transition: border-color 0.2s;
+}
+
+.form-group input:focus {
+    outline: none;
+    border-color: #2196f3;
+}
+
+.modal-footer {
+    display: flex;
+    justify-content: flex-end;
+    gap: 24px;
+    padding: 24px 32px;
+    border-top: 1px solid #eee;
+    margin: 24px 24px;
+}
+
+.save-button, .cancel-button {
+    /* Aumentamos el padding en ambos ejes */
+    padding: 12px 24px;
+    margin-right: 24px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-weight: 500;
+    transition: opacity 0.2s;
+    /* Aumentamos el tamaño del texto */
+    font-size: 1rem;
+}
+
+.save-button {
+    background-color: #ffc107;
+    color: #000;
+}
+
+.save-button:hover {
+    opacity: 0.9;
+}
+
+.cancel-button {
+    background-color: #dc3545;
+    color: white;
+}
+
+.cancel-button:hover {
+    opacity: 0.9;
+}

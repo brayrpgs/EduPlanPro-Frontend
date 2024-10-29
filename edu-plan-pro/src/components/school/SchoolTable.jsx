@@ -5,6 +5,7 @@ import deleteIcon from "../icons/ActionIcons/delete.svg";
 import DeleteModal from "../modaldelete/DeleteModal";
 import SearchInput from "../search/SearchInput";
 import FilterOffIcon from "../icons/MainIcons/FilterOffIcon";
+import UpdateSchool from "./UpdateSchool";
 import AddIcon from "../icons/ActionIcons/AddIcon";
 import SchoolModalAdd from "./SchoolModalAdd";
 
@@ -134,7 +135,7 @@ const SchoolTable = () => {
   return (
     <div>
       <h1 className="h1">Escuelas</h1>
-
+  
       <div className="container mt-5">
         <input
           title="Buscar escuelas."
@@ -147,11 +148,7 @@ const SchoolTable = () => {
             color: "white",
           }}
         />
-        <img className="img-search"
-          src={search}
-          alt="Buscar"
-          
-        />
+        <img className="img-search" src={search} alt="Buscar" />
         <button
           className="button-filter"
           title="Restablecer filtros"
@@ -159,23 +156,24 @@ const SchoolTable = () => {
         >
           <FilterOffIcon />
         </button>
-
-        <button className="button-filter"  title="Agregar Escuela"  data-bs-toggle="modal" data-bs-target="#schoolModalAdd" >
-          <AddIcon color={"rgb(255, 0, 0)"}/>
+  
+        <button
+          className="button-filter"
+          title="Agregar Escuela"
+          data-bs-toggle="modal"
+          data-bs-target="#schoolModalAdd"
+        >
+          <AddIcon color={"rgb(255, 0, 0)"} />
         </button>
-        
       </div>
-
+  
       <div className="container mt-3">
         <table className="table table-bordered">
           <thead className="thead-light">
             <tr>
               <th className="th s-th">
                 Escuela
-                <div
-                  title="Filtrar por escuela."
-                  style={{ position: "relative" }}
-                >
+                <div title="Filtrar por escuela." style={{ position: "relative" }}>
                   <SearchInput
                     onSearch={(value) => handleSearch(value, "s")}
                     inputClassName="search-input pl-3"
@@ -184,10 +182,7 @@ const SchoolTable = () => {
               </th>
               <th className="th f-th">
                 Facultad
-                <div
-                  title="Filtrar por facultad."
-                  style={{ position: "relative" }}
-                >
+                <div title="Filtrar por facultad." style={{ position: "relative" }}>
                   <SearchInput
                     onSearch={(value) => handleSearch(value, "f")}
                     inputClassName="search-input pl-3"
@@ -209,16 +204,15 @@ const SchoolTable = () => {
             {filteredSchool.length > 0 ? (
               filteredSchool.map((school) => (
                 <tr key={school.ID_SCHOOL} style={{ color: "#CD1719" }}>
+                  <td className="bg-light">{school["NOMBRE ESCUELA"]}</td>
+                  <td className="bg-light">{school["NOMBRE FACULTAD"]}</td>
                   <td className="bg-light">
-                    {school["NOMBRE ESCUELA"]}
-                  </td>
-                  <td className="bg-light">
-                    {school["NOMBRE FACULTAD"]}
-                  </td>
-                  <td className="bg-light">
-                    <div style={{ textAlign: "center" }}>
+                    <div style={{ textAlign: "center", display: "flex", justifyContent: "center" }}>
+                      <UpdateSchool  
+                        school={school} 
+                      />    
                       <img
-                        title="Eliminar escuela."
+                        title="Eliminar curso."
                         src={deleteIcon}
                         alt="Eliminar"
                         style={{ cursor: "pointer" }}
@@ -228,26 +222,19 @@ const SchoolTable = () => {
                   </td>
                 </tr>
               ))
-            ) : (
-              <tr>
-                <td colSpan="3" style={{ textAlign: "center" }}>
-                  No se encontraron escuelas.
-                </td>
-              </tr>
-            )}
+            ) : null}
           </tbody>
         </table>
       </div>
-
+  
       <DeleteModal
         isOpen={isModalOpen}
         onClose={closeModal}
         onDelete={handleDelete}
         itemName={schoolToDelete ? schoolToDelete["NOMBRE ESCUELA"] : "school"}
       />
-      <SchoolModalAdd/>
+      <SchoolModalAdd />
     </div>
-  );
-};
-
+  )};
+  
 export default SchoolTable;
