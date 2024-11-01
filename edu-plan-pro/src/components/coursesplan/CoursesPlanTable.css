@@ -8,7 +8,7 @@
 .th {
   text-decoration: none;
   text-align: center;
-  color: #CD1719 !important;
+  color: #A31E32 !important;
 }
 
 .id-th {
@@ -68,7 +68,7 @@
 
 .search-input {
   border: none; 
-  border-bottom: 2px solid red; 
+  border-bottom: 2px solid #F5382A; 
   background-color: transparent; 
   color: black;  
   outline: none;

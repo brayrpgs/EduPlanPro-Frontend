@@ -7,75 +7,72 @@ import SearchInput from "../search/SearchInput";
 import FilterOffIcon from "../icons/MainIcons/FilterOffIcon";
 import AddIcon from "../icons/ActionIcons/AddIcon";
 import FacultyModalAdd from "./FacultyModalAdd";
-import UpdateFaculty from "./UpdateFaculty"
+import UpdateFaculty from "./UpdateFaculty";
 
 async function fetchFacultyData() {
   try {
-    const response = await fetch('http://localhost:3001/faculty', {
-      method: 'GET',
-      credentials: 'include'
+    const response = await fetch("http://localhost:3001/faculty", {
+      method: "GET",
+      credentials: "include",
     });
 
     if (!response.ok) {
-      throw new Error('Error en la solicitud');
+      throw new Error("Error en la solicitud");
     }
 
     const jsonResponse = await response.json();
-
-    // Asegúrate de que jsonResponse.data sea un array
     return Array.isArray(jsonResponse.data) ? jsonResponse.data : [];
-    
   } catch (error) {
-    console.error('Error al obtener los datos:', error);
-    return []; // Siempre retorna un array
+    console.error("Error al obtener los datos:", error);
+    return [];
   }
 }
 
-  const FacultyTable = () => {
-  const [faculties, setfaculties] = useState([]); 
+const FacultyTable = () => {
+  const [faculties, setFaculties] = useState([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [facultyToDelete, setFacultyToDelete] = useState(null);
-  
+  const [filteredFaculty, setFilteredFaculty] = useState([]);
+
   useEffect(() => {
     const loadData = async () => {
       const data = await fetchFacultyData();
-      setfaculties(data); 
+      setFilteredFaculty(data);
     };
     loadData();
-  }, []); 
+  }, []);
 
   const handleDelete = async (id) => {
     try {
-      const response = await fetch('http://localhost:3001/faculty', {
-        method: 'PATCH',
-        credentials: 'include',
+      const response = await fetch("http://localhost:3001/faculty", {
+        method: "PATCH",
+        credentials: "include",
         headers: {
-          'Content-Type': 'application/json',
+          "Content-Type": "application/json",
         },
         body: JSON.stringify({
           id: facultyToDelete.ID_FACULTY,
-          desc: facultyToDelete["NOMBRE FACULTAD"], 
-          stat: '0'
-        })
+          desc: facultyToDelete["NOMBRE FACULTAD"],
+          stat: "0",
+        }),
       });
-  
+
       if (!response.ok) {
-        throw new Error('Error en la solicitud');
+        throw new Error("Error en la solicitud");
       }
-  
+
       const result = await response.json();
-      
+
       if (result.code === "200") {
-        setfaculties(faculties.filter((faculty) => faculty.ID_FACULTY !== id));
+        setFaculties(faculties.filter((faculty) => faculty.ID_FACULTY !== id));
         window.location.reload();
         return true;
       } else {
-        console.error('Error al eliminar:', result.data);
+        console.error("Error al eliminar:", result.data);
         return false;
       }
-      
     } catch (error) {
-      console.error('Error al eliminar la facultad:', error);
+      console.error("Error al eliminar la facultad:", error);
       return false;
     }
   };
@@ -90,28 +87,33 @@ async function fetchFacultyData() {
     setFacultyToDelete(null);
   };
 
-  const [searchTerms, setSearchTerms] = useState({
-    f: ''
-  });
+  const handleSearch = async (value) => {
+    if (value) {
+      try {
+        const response = await fetch(
+          `http://localhost:3001/searchfaculty?name=search&data=${value}`,
+          {
+            method: "GET",
+            credentials: "include",
+          }
+        );
 
-  const handleSearch = (value, column) => {
-    switch (column) {
-      case 'f':
-        setSearchTerms((prev) => ({ ...prev, f: value }));
-        break;
-      default:
-        break;
+        const data = await response.json();
+        if (data.code === "200") {
+          setFilteredFaculty(data.data);
+        } else {
+          console.log(data.code);
+          setFilteredFaculty([]);
+        }
+      } catch (error) {
+        console.error("Error al buscar en el servidor:", error);
+      }
+    } else {
+      // Si no hay valor de búsqueda, volver a cargar todos los datos
+      const data = await fetchFacultyData();
+      setFilteredFaculty(data);
     }
   };
-
-  const filteredFaculty = faculties.filter((faculty) => {
-
-    const matchesFaculty = searchTerms.f
-      ? faculty["NOMBRE FACULTAD"]?.toString().toLowerCase().includes(searchTerms.f.toString().toLowerCase())
-      : true;
-
-    return matchesFaculty;
-  });
 
   const handleIconClick = () => {
     window.location.reload();
@@ -121,102 +123,129 @@ async function fetchFacultyData() {
 
   return (
     <div>
-      <h1 className="h1">Facultades</h1>
+      <h1 className="h1-faculty">Facultades</h1>
+      <div className="faculty-container">
+        <div className="container mt-5, input">
+          <input
+            title="Buscar facultades."
+            placeholder="Ingrese el nombre de una facultad"
+            type="text"
+            className="form-control pl-5"
+            onKeyDown={(e) => {
+              if (e.key === "Enter" || e.key === "Tab") {
+                handleSearch(e.target.value);
+              }
+            }}
+            onBlur={(e) => handleSearch(e.target.value)}
+            style={{
+              backgroundColor: "#A31E32",
+              color: "white",
+            }}
+          />
+          <img
+            src={search}
+            alt="Buscar"
+            style={{
+              position: "absolute",
+              left: "50%",
+              top: "50%",
+              transform: "translateY(-50%)",
+              pointerEvents: "none",
+            }}
+          />
 
-      <div className="container mt-5, input">
-        <input
-          title="Buscar facultades."
-          placeholder="Ingrese el nombre de una facultad"
-          type="text"
-          className="form-control pl-5"
-          onChange={(e) => handleSearch(e.target.value, 'f')}
-          style={{
-            backgroundColor: "#CD1719",
-            color: "white",
-          }}
-        />
-        <img
-          src={search}
-          alt="Buscar"
-          style={{
-            position: "absolute",
-            left: "50%",
-            top: "50%",
-            transform: "translateY(-50%)",
-            pointerEvents: "none",
-          }}
-        />
-
-        <button className="button-filter" title="Restablecer filtros" onClick={handleIconClick}>
-          <FilterOffIcon />
+          <button
+            className="button-filter"
+            title="Restablecer filtros"
+            onClick={handleIconClick}
+          >
+            <FilterOffIcon />
           </button>
 
-          <button className="button-filter"  title="Agregar Facultad"  data-bs-toggle="modal" data-bs-target="#facultyModalAdd" >
-          <AddIcon color={"rgb(255, 0, 0)"}/>
+          <button
+            className="button-filter"
+            title="Agregar Facultad"
+            data-bs-toggle="modal"
+            data-bs-target="#facultyModalAdd"
+          >
+            <AddIcon/>
           </button>
-      </div>
+        </div>
 
-      <div className="container mt-3">
-        <table className="table table-bordered">
-          <thead className="thead-light">
-            <tr>
-              
-              <th className="th f-th">Facultad
-                <div title="Filtrar por facultad." style={{ position: 'relative' }}>
-                  <SearchInput onSearch={(value) => handleSearch(value, 'f')} inputClassName="search-input pl-3" />
-                </div>
-              </th>
-              <th className="th a-th">Acciones
-                <div style={{ position: 'relative' }}>
-                  <SearchInput disabled={disableInputSearch} inputClassName="search-input pl-3" />
-                </div>
-              </th>
-            </tr>
-          </thead>
-          <tbody>
-            {filteredFaculty.length > 0 ? (
-              filteredFaculty.map((faculty) => (
-                <tr key={faculty.ID_FACULTY} style={{ color: "#CD1719" }}>
-                  
-                  <td className="bg-light">
-                    {faculty["NOMBRE FACULTAD"]}
-                  </td>
-                  <td className="bg-light">
-                    <div style={{ textAlign: "center", display: "flex", justifyContent: "center" }}>
-                      <UpdateFaculty  
-                        faculty={faculty} 
-                      />       
-                      <img
-                        title="Eliminar facultad."
-                        src={deleteIcon}
-                        alt="Eliminar"
-                        style={{ cursor: "pointer" }}
-                        onClick={() => openModal(faculty)}
-                      />
-                    </div>
+        <div className="container mt-3">
+          <table className="table table-bordered">
+            <thead className="thead-light">
+              <tr>
+                <th className="th f-th">
+                  Facultad
+                  <div
+                    title="Filtrar por facultad."
+                    style={{ position: "relative" }}
+                  >
+                    <SearchInput
+                      onSearch={(value) => handleSearch(value)}
+                      inputClassName="search-input pl-3"
+                    />
+                  </div>
+                </th>
+                <th className="th a-th">
+                  Acciones
+                  <div style={{ position: "relative" }}>
+                    <SearchInput
+                      disabled={disableInputSearch}
+                      inputClassName="search-input pl-3"
+                    />
+                  </div>
+                </th>
+              </tr>
+            </thead>
+            <tbody>
+              {filteredFaculty.length > 0 ? (
+                filteredFaculty.map((faculty) => (
+                  <tr key={faculty.ID_FACULTY} >
+                    <td className="bg-light">{faculty["NOMBRE FACULTAD"]}</td>
+                    <td className="bg-light">
+                      <div
+                        style={{
+                          textAlign: "center",
+                          display: "flex",
+                          justifyContent: "center",
+                        }}
+                      >
+                        <UpdateFaculty faculty={faculty} />
+                        <img
+                          title="Eliminar facultad."
+                          src={deleteIcon}
+                          alt="Eliminar"
+                          style={{ cursor: "pointer" }}
+                          onClick={() => openModal(faculty)}
+                        />
+                      </div>
+                    </td>
+                  </tr>
+                ))
+              ) : (
+                <tr>
+                  <td colSpan="3" style={{ textAlign: "center" }}>
+                    No se encontraron facultades registradas.
                   </td>
                 </tr>
-              ))
-            ) : (
-              <tr>
-                <td colSpan="3" style={{ textAlign: "center" }}>
-                  No se encontraron facultades registradas.
-                </td>
-              </tr>
-            )}
-          </tbody>
-        </table>
+              )}
+            </tbody>
+          </table>
+        </div>
+
+        <DeleteModal
+          isOpen={isModalOpen}
+          onClose={closeModal}
+          onDelete={handleDelete}
+          itemName={
+            facultyToDelete ? facultyToDelete["NOMBRE FACULTAD"] : "facultad"
+          }
+        />
+        <FacultyModalAdd />
       </div>
-
-      <DeleteModal
-        isOpen={isModalOpen}
-        onClose={closeModal}
-        onDelete={handleDelete}
-        itemName={facultyToDelete ? facultyToDelete["NOMBRE FACULTAD"] : "facultad"}
-      />
-    <FacultyModalAdd/>
     </div>
-
   );
 };
 

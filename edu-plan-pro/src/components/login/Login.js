@@ -5,8 +5,8 @@ import LoginButtonHelp from "../icons/LoginIcons/LoginButtonHelp.jsx";
 import axios from "axios";
 import Swal from "sweetalert2";
 import { useNavigate } from 'react-router-dom';
-import "./Login.css";
 import Footer from "../footer/Footer.js";
+import "./Login.css";
 
 export const Login = () => {
 
@@ -37,7 +37,9 @@ export const Login = () => {
         text: `Por favor, ingresa un nombre de usuario y una contraseña.`,
         icon: "info",
         confirmButtonText: "Aceptar",
-        confirmButtonColor: "#CD1719",
+        customClass: {
+          confirmButton: 'custom-confirm-button'
+        }
       });
 
       document.getElementById('Lusername').style.color = "#E62A10";
@@ -62,7 +64,10 @@ export const Login = () => {
             title: "Acceso válido.",
             icon: "success",
             confirmButtonText: "Aceptar",
-            confirmButtonColor: "#CD1719",
+            customClass: {
+              confirmButton: 'custom-confirm-button',
+              icon: 'custom-success-icon'
+            },
           }).then((result) => {
             if (result.isConfirmed) {
               
@@ -77,7 +82,10 @@ export const Login = () => {
             text: `Por favor, inténtelo de nuevo.`,
             icon: "error",
             confirmButtonText: "Aceptar",
-            confirmButtonColor: "#CD1719",
+            customClass: {
+              confirmButton: 'custom-confirm-button',
+              icon: 'custom-error-icon'
+            }
           });
 
         }
@@ -93,7 +101,7 @@ export const Login = () => {
         <nav className="navbar"></nav>
       </header>
 
-      <div className="container">
+      <div className="login-container">
         <div className="login-box">
           <div className="login-logo">
           <img className="img" src={logo_final} alt="Login Icon" />

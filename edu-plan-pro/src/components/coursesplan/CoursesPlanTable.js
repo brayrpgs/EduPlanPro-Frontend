@@ -247,7 +247,7 @@ const disableInputSearch = true;
             className="form-control pl-5"
             onChange={(e) => handleSearch(e.target.value, 'nc')}  
             style={{
-              backgroundColor: "#CD1719",
+              backgroundColor: "#A31E32",
               color: "white",
               
             }}

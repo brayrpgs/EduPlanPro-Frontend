@@ -21,13 +21,10 @@ async function fetchSchoolData() {
     }
 
     const jsonResponse = await response.json();
-
-    // Asegúrate de que jsonResponse.data sea un array
     return Array.isArray(jsonResponse.data) ? jsonResponse.data : [];
-
   } catch (error) {
     console.error("Error al obtener los datos:", error);
-    return []; // Siempre retorna un array
+    return [];
   }
 }
 
@@ -35,18 +32,23 @@ const SchoolTable = () => {
   const [schools, setSchools] = useState([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [schoolToDelete, setSchoolToDelete] = useState(null);
-  const [searchTerms, setSearchTerms] = useState({
-    s: "",
-    f: "",
-  });
+  const [filteredSchool, setFilteredSchool] = useState([]);
+
+  const [schoolValue, setSchoolValue] = useState("");
+  const [facultyValue, setFacultyValue] = useState("");
 
   useEffect(() => {
-    const getSchools = async () => {
+    const loadData = async () => {
       const data = await fetchSchoolData();
-      setSchools(data); // Cargar los datos desde la API
+      setFilteredSchool(data);
     };
-    getSchools();
+    loadData();
   }, []);
+
+  useEffect(() => {
+    const combinedValue = `${schoolValue} ${facultyValue}`.trim();
+    handleSearch(combinedValue);
+  }, [schoolValue, facultyValue]);
 
   const handleDelete = async (id) => {
     try {
@@ -71,7 +73,6 @@ const SchoolTable = () => {
       const result = await response.json();
 
       if (result.code === "200") {
-        // Only update the UI if the server operation was successful
         setSchools(schools.filter((school) => school.ID_SCHOOL !== id));
         window.location.reload();
         return true;
@@ -95,36 +96,33 @@ const SchoolTable = () => {
     setSchoolToDelete(null);
   };
 
-  const handleSearch = (value, column) => {
-    switch (column) {
-      case "s":
-        setSearchTerms((prev) => ({ ...prev, s: value }));
-        break;
-      case "f":
-        setSearchTerms((prev) => ({ ...prev, f: value }));
-        break;
-      default:
-        break;
+  const handleSearch = async (value) => {
+    if (value) {
+      try {
+        const response = await fetch(
+          `http://localhost:3001/searchschool?name=search&data=${value}`,
+          {
+            method: "GET",
+            credentials: "include",
+          }
+        );
+
+        const data = await response.json();
+        if (data.code === "200") {
+          setFilteredSchool(data.data);
+        } else {
+          console.log(data.code);
+          setFilteredSchool([]);
+        }
+      } catch (error) {
+        console.error("Error al buscar en el servidor:", error);
+      }
+    } else {
+      // Si no hay valor de búsqueda, volver a cargar todos los datos
+      const data = await fetchSchoolData();
+      setFilteredSchool(data);
     }
   };
-
-  const filteredSchool = schools.filter((school) => {
-    const matchesSchool = searchTerms.s
-      ? school["NOMBRE ESCUELA"]
-          ?.toString()
-          .toLowerCase()
-          .includes(searchTerms.s.toString().toLowerCase())
-      : true;
-
-    const matchesFaculty = searchTerms.f
-      ? school["NOMBRE FACULTAD"]
-          ?.toString()
-          .toLowerCase()
-          .includes(searchTerms.f.toString().toLowerCase())
-      : true;
-
-    return matchesSchool && matchesFaculty;
-  });
 
   const handleIconClick = () => {
     window.location.reload();
@@ -134,107 +132,133 @@ const SchoolTable = () => {
 
   return (
     <div>
-      <h1 className="h1">Escuelas</h1>
-  
-      <div className="container mt-5">
-        <input
-          title="Buscar escuelas."
-          placeholder="Ingrese el nombre de una escuela"
-          type="text"
-          className="form-control pl-5 input2"
-          onChange={(e) => handleSearch(e.target.value, "s")}
-          style={{
-            backgroundColor: "#CD1719",
-            color: "white",
-          }}
-        />
-        <img className="img-search" src={search} alt="Buscar" />
-        <button
-          className="button-filter"
-          title="Restablecer filtros"
-          onClick={handleIconClick}
-        >
-          <FilterOffIcon />
-        </button>
-  
-        <button
-          className="button-filter"
-          title="Agregar Escuela"
-          data-bs-toggle="modal"
-          data-bs-target="#schoolModalAdd"
-        >
-          <AddIcon color={"rgb(255, 0, 0)"} />
-        </button>
-      </div>
-  
-      <div className="container mt-3">
-        <table className="table table-bordered">
-          <thead className="thead-light">
-            <tr>
-              <th className="th s-th">
-                Escuela
-                <div title="Filtrar por escuela." style={{ position: "relative" }}>
-                  <SearchInput
-                    onSearch={(value) => handleSearch(value, "s")}
-                    inputClassName="search-input pl-3"
-                  />
-                </div>
-              </th>
-              <th className="th f-th">
-                Facultad
-                <div title="Filtrar por facultad." style={{ position: "relative" }}>
-                  <SearchInput
-                    onSearch={(value) => handleSearch(value, "f")}
-                    inputClassName="search-input pl-3"
-                  />
-                </div>
-              </th>
-              <th className="th a-th">
-                Acciones
-                <div style={{ position: "relative" }}>
-                  <SearchInput
-                    disabled={disableInputSearch}
-                    inputClassName="search-input pl-3"
-                  />
-                </div>
-              </th>
-            </tr>
-          </thead>
-          <tbody>
-            {filteredSchool.length > 0 ? (
-              filteredSchool.map((school) => (
-                <tr key={school.ID_SCHOOL} style={{ color: "#CD1719" }}>
-                  <td className="bg-light">{school["NOMBRE ESCUELA"]}</td>
-                  <td className="bg-light">{school["NOMBRE FACULTAD"]}</td>
-                  <td className="bg-light">
-                    <div style={{ textAlign: "center", display: "flex", justifyContent: "center" }}>
-                      <UpdateSchool  
-                        school={school} 
-                      />    
-                      <img
-                        title="Eliminar curso."
-                        src={deleteIcon}
-                        alt="Eliminar"
-                        style={{ cursor: "pointer" }}
-                        onClick={() => openModal(school)}
-                      />
-                    </div>
+      <h1 className="h1-school">Escuelas</h1>
+
+      <div className="school-container">
+        <div className="container mt-5">
+          <input
+            title="Buscar escuelas."
+            placeholder="Ingrese el nombre de una escuela"
+            type="text"
+            className="form-control pl-5 input2"
+            onKeyDown={(e) => {
+              if (e.key === "Enter" || e.key === "Tab") {
+                setSchoolValue(e.target.value);
+              }
+            }}
+            onBlur={(e) => setSchoolValue(e.target.value)}
+            style={{
+              backgroundColor: "#A31E32",
+              color: "white",
+            }}
+          />
+          <img className="img-search" src={search} alt="Buscar" />
+          <button
+            className="button-filter"
+            title="Restablecer filtros"
+            onClick={handleIconClick}
+          >
+            <FilterOffIcon />
+          </button>
+
+          <button
+            className="button-filter"
+            title="Agregar Escuela"
+            data-bs-toggle="modal"
+            data-bs-target="#schoolModalAdd"
+          >
+            <AddIcon />
+          </button>
+        </div>
+
+        <div className="container mt-3">
+          <table className="table table-bordered">
+            <thead className="thead-light">
+              <tr>
+                <th className="th s-th">
+                  Escuela
+                  <div
+                    title="Filtrar por escuela."
+                    style={{ position: "relative" }}
+                  >
+                    <SearchInput
+                      onSearch={(value) => setSchoolValue(value)}
+                      inputClassName="search-input pl-3"
+                    />
+                  </div>
+                </th>
+                <th className="th f-th">
+                  Facultad
+                  <div
+                    title="Filtrar por facultad."
+                    style={{ position: "relative" }}
+                  >
+                    <SearchInput
+                      onSearch={(value) => setFacultyValue(value)}
+                      inputClassName="search-input pl-3"
+                    />
+                  </div>
+                </th>
+                <th className="th a-th">
+                  Acciones
+                  <div style={{ position: "relative" }}>
+                    <SearchInput
+                      disabled={disableInputSearch}
+                      inputClassName="search-input pl-3"
+                    />
+                  </div>
+                </th>
+              </tr>
+            </thead>
+            <tbody>
+              {filteredSchool.length > 0 ? (
+                filteredSchool.map((school) => (
+                  <tr key={school.ID_SCHOOL} style={{ color: "#CD1719" }}>
+                    <td className="bg-light">{school["NOMBRE ESCUELA"]}</td>
+                    <td className="bg-light">{school["NOMBRE FACULTAD"]}</td>
+                    <td className="bg-light">
+                      <div
+                        style={{
+                          textAlign: "center",
+                          display: "flex",
+                          justifyContent: "center",
+                        }}
+                      >
+                        <UpdateSchool school={school} />
+                        <img
+                          title="Eliminar curso."
+                          src={deleteIcon}
+                          alt="Eliminar"
+                          style={{ cursor: "pointer" }}
+                          onClick={() => openModal(school)}
+                        />
+                      </div>
+                    </td>
+                  </tr>
+                ))
+              ) : (
+                <tr>
+                  <td colSpan="3" style={{ textAlign: "center" }}>
+                    No se encontraron escuelas registradas.
                   </td>
                 </tr>
-              ))
-            ) : null}
-          </tbody>
-        </table>
+              )}
+            </tbody>
+          </table>
+        </div>
+
+        <DeleteModal
+          isOpen={isModalOpen}
+          onClose={closeModal}
+          onDelete={handleDelete}
+          itemName={
+            schoolToDelete ? schoolToDelete["NOMBRE ESCUELA"] : "school"
+          }
+        />
+        <SchoolModalAdd />
       </div>
-  
-      <DeleteModal
-        isOpen={isModalOpen}
-        onClose={closeModal}
-        onDelete={handleDelete}
-        itemName={schoolToDelete ? schoolToDelete["NOMBRE ESCUELA"] : "school"}
-      />
-      <SchoolModalAdd />
     </div>
-  )};
-  
+  );
+};
+
 export default SchoolTable;

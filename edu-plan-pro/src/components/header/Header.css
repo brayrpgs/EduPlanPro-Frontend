@@ -1,5 +1,5 @@
 .header {
-  background: linear-gradient(to right, rgb(252, 252, 252) 3%, rgba(183, 0, 0, 0.945) 15%); /* Parte izquierda oscura y parte derecha clara */
+  background: linear-gradient(to right, rgb(252, 252, 252) 3%, #A31E32 15%); /* Parte izquierda oscura y parte derecha clara */
   display: flex;
   justify-content: space-between;
   align-items: center;
