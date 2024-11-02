@@ -43,14 +43,6 @@
   position: relative;
 }
 
-.search-input {
-  border: none;
-  border-bottom: 2px solid #f5382a !important;
-  background-color: transparent;
-  color: black;
-  outline: none;
-  width: 100%;
-}
 
 .button-filter {
   display: flex;

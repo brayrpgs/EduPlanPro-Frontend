@@ -27,3 +27,17 @@
   .aside.open {
     right: 0;
   }
+
+  .swal-button-largeV1 {
+    
+    width: 420px;
+    margin: 5px 0;
+
+  }
+
+  .swal-button-largeV2 {
+    
+    width: 200px;
+    margin: 5px;
+
+  }

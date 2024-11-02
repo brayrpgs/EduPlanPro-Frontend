@@ -17,11 +17,10 @@ async function fetchUserData() {
     if (!response.ok) {
       throw new Error("Error en la solicitud");
     }
-    
+
     const jsonResponse = await response.json();
 
     return Array.isArray(jsonResponse.data) ? jsonResponse.data : [];
-
   } catch (error) {
     console.error("Error al obtener los datos:", error);
     return [];
@@ -75,7 +74,7 @@ const UserTable = () => {
           .includes(searchTerms.a.toString().toLowerCase())
       : true;
 
-      const matchesIdCard = searchTerms.c
+    const matchesIdCard = searchTerms.c
       ? User["IDCARD"]
           ?.toString()
           .toLowerCase()
@@ -93,116 +92,122 @@ const UserTable = () => {
 
   return (
     <div>
-      <h1 className="h1">Usuarios</h1>
+      <h1 className="h1-user">Usuarios</h1>
 
-      <div className="container mt-5">
-        <input
-          title="Buscar usuarios."
-          placeholder="Ingrese el nombre de un usuario"
-          type="text"
-          className="form-control pl-5 input2"
-          onChange={(e) => handleSearch(e.target.value, "n")}
-          style={{
-            backgroundColor: "#CD1719",
-            color: "white",
-          }}
-        />
-        <img className="img-search" src={search} alt="Buscar" />
-        <button
-          className="button-filter"
-          title="Restablecer filtros"
-          onClick={handleIconClick}
-        >
-          <FilterOffIcon />
-        </button>
+      <div className="user-container">
+        <div className="container mt-5">
+          <input
+            title="Buscar usuarios."
+            placeholder="Ingrese el nombre de un usuario"
+            type="text"
+            className="form-control pl-5 input2"
+            onChange={(e) => handleSearch(e.target.value, "n")}
+            style={{
+              backgroundColor: "#a31e32",
+              color: "white",
+            }}
+          />
+          <img className="img-search" src={search} alt="Buscar" />
+          <button
+            className="button-filter"
+            title="Restablecer filtros"
+            onClick={handleIconClick}
+          >
+            <FilterOffIcon />
+          </button>
 
-        <button className="button-filter"  title="Agregar Usuario"  data-bs-toggle="modal" data-bs-target="#userModalAdd" >
-          <AddIcon color={"rgb(255, 0, 0)"}/>
-        </button>
-      </div>
+          <button
+            className="button-filter"
+            title="Agregar Usuario"
+            data-bs-toggle="modal"
+            data-bs-target="#userModalAdd"
+          >
+            <AddIcon />
+          </button>
+        </div>
 
-      <div className="container mt-3">
-        <table className="table table-bordered">
-          <thead className="thead-light">
-            <tr>
-              <th className="th s-th">
-                Nombre
-                <div
-                  title="Filtrar por nombre."
-                  style={{ position: "relative" }}
-                >
-                  <SearchInput
-                    onSearch={(value) => handleSearch(value, "n")}
-                    inputClassName="search-input pl-3"
-                  />
-                </div>
-              </th>
-              <th className="th f-th">
-                Apellidos
-                <div
-                  title="Filtrar por apellidos."
-                  style={{ position: "relative" }}
-                >
-                  <SearchInput
-                    onSearch={(value) => handleSearch(value, "a")}
-                    inputClassName="search-input pl-3"
-                  />
-                </div>
-              </th>
-              <th className="th f-th">
-                Cédula
-                <div
-                  title="Filtrar por cédula."
-                  style={{ position: "relative" }}
-                >
-                  <SearchInput
-                    onSearch={(value) => handleSearch(value, "c")}
-                    inputClassName="search-input pl-3"
-                  />
-                </div>
-              </th>
-              <th className="th a-th">
-                Acciones
-                <div style={{ position: "relative" }}>
-                  <SearchInput
-                    disabled={disableInputSearch}
-                    inputClassName="search-input pl-3"
-                  />
-                </div>
-              </th>
-            </tr>
-          </thead>
-          <tbody>
-            {filteredUser.length > 0 ? (
-              filteredUser.map((User) => (
-                <tr key={User.ID_USER} style={{ color: "#CD1719" }}>
-                  <td className="bg-light">{User["DSC_NAME"]}</td>
-                  <td className="bg-light">{User["DSC_SECOND_NAME"]}</td>
-                  <td className="bg-light">{User["IDCARD"]}</td>
-                  <td className="bg-light">
-                    <div style={{ textAlign: "center" }}>
-                      <img
-                        title="Eliminar usuario."
-                        src={deleteIcon}
-                        alt="Eliminar"
-                        style={{ cursor: "pointer" }}
-                        
-                      />
-                    </div>
+        <div className="container mt-3">
+          <table className="table table-bordered">
+            <thead className="thead-light">
+              <tr>
+                <th className="th s-th">
+                  Nombre
+                  <div
+                    title="Filtrar por nombre."
+                    style={{ position: "relative" }}
+                  >
+                    <SearchInput
+                      onSearch={(value) => handleSearch(value, "n")}
+                      inputClassName="search-input pl-3"
+                    />
+                  </div>
+                </th>
+                <th className="th f-th">
+                  Apellidos
+                  <div
+                    title="Filtrar por apellidos."
+                    style={{ position: "relative" }}
+                  >
+                    <SearchInput
+                      onSearch={(value) => handleSearch(value, "a")}
+                      inputClassName="search-input pl-3"
+                    />
+                  </div>
+                </th>
+                <th className="th f-th">
+                  Cédula
+                  <div
+                    title="Filtrar por cédula."
+                    style={{ position: "relative" }}
+                  >
+                    <SearchInput
+                      onSearch={(value) => handleSearch(value, "c")}
+                      inputClassName="search-input pl-3"
+                    />
+                  </div>
+                </th>
+                <th className="th a-th">
+                  Acciones
+                  <div style={{ position: "relative" }}>
+                    <SearchInput
+                      disabled={disableInputSearch}
+                      inputClassName="search-input pl-3"
+                    />
+                  </div>
+                </th>
+              </tr>
+            </thead>
+            <tbody>
+              {filteredUser.length > 0 ? (
+                filteredUser.map((User) => (
+                  <tr key={User.ID_USER} style={{ color: "#CD1719" }}>
+                    <td className="bg-light">{User["DSC_NAME"]}</td>
+                    <td className="bg-light">{User["DSC_SECOND_NAME"]}</td>
+                    <td className="bg-light">{User["IDCARD"]}</td>
+                    <td className="bg-light">
+                      <div style={{ textAlign: "center" }}>
+                        <img
+                          title="Eliminar usuario."
+                          src={deleteIcon}
+                          alt="Eliminar"
+                          style={{ cursor: "pointer" }}
+                        />
+                      </div>
+                    </td>
+                  </tr>
+                ))
+              ) : (
+                <tr>
+                  <td colSpan="5" style={{ textAlign: "center" }}>
+                    No se encontraron usuarios.
                   </td>
                 </tr>
-              ))
-            ) : (
-              <tr>
-                <td colSpan="5" style={{ textAlign: "center" }}>
-                  No se encontraron usuarios.
-                </td>
-              </tr>
-            )}
-          </tbody>
-        </table>
+              )}
+            </tbody>
+          </table>
+        </div>
+        <UserModalAdd />
       </div>
-      <UserModalAdd/>
     </div>
   );
 };
