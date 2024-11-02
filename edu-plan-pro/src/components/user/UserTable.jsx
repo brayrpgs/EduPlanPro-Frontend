@@ -20,7 +20,7 @@ async function fetchUserData() {
     }
 
     const jsonResponse = await response.json();
-
+    console.log(jsonResponse)
     return Array.isArray(jsonResponse.data) ? jsonResponse.data : [];
   } catch (error) {
     console.error("Error al obtener los datos:", error);
@@ -62,21 +62,21 @@ const UserTable = () => {
 
   const filteredUser = Users.filter((User) => {
     const matchesName = searchTerms.n
-      ? User["DSC_NAME"]
+      ? User["NOMBRE"]
           ?.toString()
           .toLowerCase()
           .includes(searchTerms.n.toString().toLowerCase())
       : true;
 
     const matchesLastName = searchTerms.a
-      ? User["DSC_SECOND_NAME"]
+      ? User["APELLIDOS"]
           ?.toString()
           .toLowerCase()
           .includes(searchTerms.a.toString().toLowerCase())
       : true;
 
     const matchesIdCard = searchTerms.c
-      ? User["IDCARD"]
+      ? User["IDENTIFICACION"]
           ?.toString()
           .toLowerCase()
           .includes(searchTerms.c.toString().toLowerCase())
@@ -171,9 +171,9 @@ const UserTable = () => {
               {filteredUser.length > 0 ? (
                 filteredUser.map((User) => (
                   <tr key={User.ID_USER} style={{ color: "#CD1719" }}>
-                    <td className="bg-light">{User["DSC_NAME"]}</td>
-                    <td className="bg-light">{User["DSC_SECOND_NAME"]}</td>
-                    <td className="bg-light">{User["IDCARD"]}</td>
+                    <td className="bg-light">{User["NOMBRE"]}</td>
+                    <td className="bg-light">{User["APELLIDOS"]}</td>
+                    <td className="bg-light">{User["IDENTIFICACION"]}</td>
                     <td className="bg-light">
                       <div style={{ textAlign: "center" }}>
                         <img

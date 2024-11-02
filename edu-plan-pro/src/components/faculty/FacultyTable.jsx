@@ -9,10 +9,12 @@ import AddIcon from "../icons/ActionIcons/AddIcon";
 import FacultyModalAdd from "./FacultyModalAdd";
 import UpdateFaculty from "./UpdateFaculty";
 import MainSearch from '../search/MainSearch'
+import Pagination from "../pagination/Pagination";
 
-async function fetchFacultyData() {
+async function getInfoPage () {
+
   try {
-    const response = await fetch("http://localhost:3001/faculty", {
+    const response = await fetch("http://localhost:3001/searchfaculty?name=info-page", {
       method: "GET",
       credentials: "include",
     });
@@ -22,7 +24,34 @@ async function fetchFacultyData() {
     }
 
     const jsonResponse = await response.json();
-    return Array.isArray(jsonResponse.data) ? jsonResponse.data : [];
+    const { data, code } = jsonResponse;
+
+    const totalRecords = data.totalRecords; 
+    const totalPages = data.totalPages;  
+
+    return { totalRecords, totalPages };
+    
+  } catch (error) {
+    console.error("Error al obtener los datos:", error);
+    return null;
+  }
+
+}
+
+async function fetchFacultyData() {
+  try {
+    const response = await fetch("http://localhost:3001/searchfaculty?name=search-page&numPage=1&search=", {
+      method: "GET",
+      credentials: "include",
+    });
+
+    if (!response.ok) {
+      throw new Error("Error en la solicitud");
+    }
+
+    const jsonResponse = await response.json();
+    console.log(jsonResponse.data.rows)
+    return Array.isArray(jsonResponse.data.rows) ? jsonResponse.data : [];
   } catch (error) {
     console.error("Error al obtener los datos:", error);
     return [];
@@ -35,13 +64,21 @@ const FacultyTable = () => {
   const [facultyToDelete, setFacultyToDelete] = useState(null);
   const [filteredFaculty, setFilteredFaculty] = useState([]);
 
+  const [infoPage, setInfoPage] = useState({ totalRecords: 0, totalPages: 0});
+
   useEffect(() => {
     const loadData = async () => {
       const data = await fetchFacultyData();
-      setFilteredFaculty(data);
+      const info = await getInfoPage(); 
+      setInfoPage(info); 
+      setFilteredFaculty(data.rows);
     };
     loadData();
   }, []);
+
+  useEffect(() => {
+    console.log("infoPage ha cambiado:", filteredFaculty); // Esto mostrará el valor actualizado
+  }, [faculties]);
 
   const handleDelete = async (id) => {
     try {
@@ -232,6 +269,7 @@ const FacultyTable = () => {
           }
         />
         <FacultyModalAdd />
+        <Pagination totalItems={infoPage.totalRecords} itemsPerPage={'8'} currentPage={0}/>
       </div>
     </div>
   );
