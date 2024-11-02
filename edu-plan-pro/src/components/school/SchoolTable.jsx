@@ -8,6 +8,7 @@ import FilterOffIcon from "../icons/MainIcons/FilterOffIcon";
 import UpdateSchool from "./UpdateSchool";
 import AddIcon from "../icons/ActionIcons/AddIcon";
 import SchoolModalAdd from "./SchoolModalAdd";
+import MainSearch from "../search/MainSearch";
 
 async function fetchSchoolData() {
   try {
@@ -135,24 +136,9 @@ const SchoolTable = () => {
       <h1 className="h1-school">Escuelas</h1>
 
       <div className="school-container">
-        <div className="container mt-5">
-          <input
-            title="Buscar escuelas."
-            placeholder="Ingrese el nombre de una escuela"
-            type="text"
-            className="form-control pl-5 input2"
-            onKeyDown={(e) => {
-              if (e.key === "Enter" || e.key === "Tab") {
-                setSchoolValue(e.target.value);
-              }
-            }}
-            onBlur={(e) => setSchoolValue(e.target.value)}
-            style={{
-              backgroundColor: "#A31E32",
-              color: "white",
-            }}
-          />
-          <img className="img-search" src={search} alt="Buscar" />
+        <div className="container mt-5" title="Buscar escuelas.">
+          
+          <MainSearch placeholder={"Ingrese el nombre de una escuela"} onSearch={handleSearch}/>
           <button
             className="button-filter"
             title="Restablecer filtros"

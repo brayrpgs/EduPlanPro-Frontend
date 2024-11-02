@@ -6,6 +6,7 @@ import SearchInput from "../search/SearchInput";
 import FilterOffIcon from "../icons/MainIcons/FilterOffIcon";
 import AddIcon from "../icons/ActionIcons/AddIcon";
 import UserModalAdd from "./UserModalAdd.jsx";
+import MainSearch from "../search/MainSearch.jsx";
 
 async function fetchUserData() {
   try {
@@ -95,19 +96,8 @@ const UserTable = () => {
       <h1 className="h1-user">Usuarios</h1>
 
       <div className="user-container">
-        <div className="container mt-5">
-          <input
-            title="Buscar usuarios."
-            placeholder="Ingrese el nombre de un usuario"
-            type="text"
-            className="form-control pl-5 input2"
-            onChange={(e) => handleSearch(e.target.value, "n")}
-            style={{
-              backgroundColor: "#a31e32",
-              color: "white",
-            }}
-          />
-          <img className="img-search" src={search} alt="Buscar" />
+        <div className="container mt-5" title="Buscar usuarios.">
+        <MainSearch placeholder={"Ingrese el nombre de un usuario"} /*onSearch={handleSearch}*//>
           <button
             className="button-filter"
             title="Restablecer filtros"

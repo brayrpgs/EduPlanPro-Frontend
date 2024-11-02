@@ -6,6 +6,7 @@ import SearchInput from "../search/SearchInput";
 import FilterOffIcon from "../icons/MainIcons/FilterOffIcon";
 import AddIcon from "../icons/ActionIcons/AddIcon";
 import TeacherModalAdd from "./TeacherModalAdd";
+import MainSearch from "../search/MainSearch";
 
 async function fetchTeacherData() {
   try {
@@ -105,20 +106,9 @@ const TeacherTable = () => {
     <div>
       <h1 className="h1-teacher">Profesores</h1>
 
-      <div className="teacher-container">
+      <div className="teacher-container" title="Buscar profesores.">
         <div className="container mt-5">
-          <input
-            title="Buscar profesores."
-            placeholder="Ingrese el nombre de un profesor"
-            type="text"
-            className="form-control pl-5 input2"
-            onChange={(e) => handleSearch(e.target.value, "n")}
-            style={{
-              backgroundColor: "#a31e32",
-              color: "white",
-            }}
-          />
-          <img className="img-search" src={search} alt="Buscar" />
+         <MainSearch placeholder={"Ingrese el nombre de un profesor"} /*onSearch={handleSearch}*//>
           <button
             className="button-filter"
             title="Restablecer filtros"

@@ -8,6 +8,7 @@ import FilterOffIcon from "../icons/MainIcons/FilterOffIcon";
 import AddIcon from "../icons/ActionIcons/AddIcon";
 import FacultyModalAdd from "./FacultyModalAdd";
 import UpdateFaculty from "./UpdateFaculty";
+import MainSearch from '../search/MainSearch'
 
 async function fetchFacultyData() {
   try {
@@ -125,23 +126,10 @@ const FacultyTable = () => {
     <div>
       <h1 className="h1-faculty">Facultades</h1>
       <div className="faculty-container">
-        <div className="container mt-5, input">
-          <input
-            title="Buscar facultades."
-            placeholder="Ingrese el nombre de una facultad"
-            type="text"
-            className="form-control pl-5"
-            onKeyDown={(e) => {
-              if (e.key === "Enter" || e.key === "Tab") {
-                handleSearch(e.target.value);
-              }
-            }}
-            onBlur={(e) => handleSearch(e.target.value)}
-            style={{
-              backgroundColor: "#A31E32",
-              color: "white",
-            }}
-          />
+        <div className="container mt-5, input " title="Buscar facultades.">
+          
+          <MainSearch placeholder={"Ingrese el nombre de una facultad"} onSearch={handleSearch}/>
+
           <img
             src={search}
             alt="Buscar"
