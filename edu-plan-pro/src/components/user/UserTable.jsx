@@ -1,11 +1,13 @@
 import React, { useState, useEffect } from "react";
 import "./UserTable.css";
 import search from "../images/search.svg";
+import UpdateIcon from '../icons/ModalUpdateIcons/IconUpdate';
 import deleteIcon from "../icons/ActionIcons/delete.svg";
 import SearchInput from "../search/SearchInput";
 import FilterOffIcon from "../icons/MainIcons/FilterOffIcon";
 import AddIcon from "../icons/ActionIcons/AddIcon";
 import UserModalAdd from "./UserModalAdd.jsx";
+import UpdateUser from "./UpdateUser.jsx";
 
 async function fetchUserData() {
   try {
@@ -30,6 +32,8 @@ async function fetchUserData() {
 
 const UserTable = () => {
   const [Users, setUsers] = useState([]);
+  const [isEditModalOpen, setIsEditModalOpen] = useState(false);
+  const [selectedUser, setSelectedUser] = useState(null);
   const [searchTerms, setSearchTerms] = useState({
     n: "",
     a: "",
@@ -59,6 +63,21 @@ const UserTable = () => {
         break;
     }
   };
+
+  const handleEditUser = (user) => {
+    setSelectedUser(user);
+    setIsEditModalOpen(true);
+  };
+
+  const handleCloseModal = () => {
+    setIsEditModalOpen(false);
+    setSelectedUser(null);
+  };
+
+  const handleUpdateSuccess = () => {
+    fetchUserData().then(data => setUsers(data));
+  };
+
 
   const filteredUser = Users.filter((User) => {
     const matchesName = searchTerms.n
@@ -181,6 +200,16 @@ const UserTable = () => {
                   <td className="bg-light">{User["IDCARD"]}</td>
                   <td className="bg-light">
                     <div style={{ textAlign: "center" }}>
+                    <div 
+                        onClick={() => handleEditUser(User)}
+                        style={{ 
+                          display: 'inline-block', 
+                          cursor: 'pointer', 
+                          marginRight: '10px'
+                        }}
+                      >
+                        <UpdateIcon />
+                      </div>
                       <img
                         title="Eliminar usuario."
                         src={deleteIcon}
@@ -203,6 +232,12 @@ const UserTable = () => {
         </table>
       </div>
       <UserModalAdd/>
+      <UpdateUser
+        isOpen={isEditModalOpen}
+        user={selectedUser}
+        onClose={handleCloseModal}
+        onUpdate={handleUpdateSuccess}
+      />
     </div>
   );
 };
