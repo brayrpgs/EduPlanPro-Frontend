@@ -9,47 +9,42 @@ import UpdateSchool from "./UpdateSchool";
 import AddIcon from "../icons/ActionIcons/AddIcon";
 import SchoolModalAdd from "./SchoolModalAdd";
 import MainSearch from "../search/MainSearch";
-
-async function fetchSchoolData() {
-  try {
-    const response = await fetch("http://localhost:3001/school", {
-      method: "GET",
-      credentials: "include",
-    });
-
-    if (!response.ok) {
-      throw new Error("Error en la solicitud");
-    }
-
-    const jsonResponse = await response.json();
-    return Array.isArray(jsonResponse.data) ? jsonResponse.data : [];
-  } catch (error) {
-    console.error("Error al obtener los datos:", error);
-    return [];
-  }
-}
+import Pagination from "../pagination/Pagination";
 
 const SchoolTable = () => {
   const [schools, setSchools] = useState([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [schoolToDelete, setSchoolToDelete] = useState(null);
   const [filteredSchool, setFilteredSchool] = useState([]);
+  const [searchTerm, setSearchTerm] = useState("");     
+  const [searchTerm2, setSearchTerm2] = useState("");
+  const [currentPage, setCurrentPage] = useState(1);
+  const [totalItems, setTotalItems] = useState(0);
 
-  const [schoolValue, setSchoolValue] = useState("");
-  const [facultyValue, setFacultyValue] = useState("");
+  const loadSchoolData = async (page) => {
+    const searchQuery = `&search=${searchTerm}&search2=${searchTerm2}`;
+    const response = await fetch(
+      `http://localhost:3001/searchschool?name=search-page&numPage=${page}${searchQuery}`,
+      {
+        method: "GET",
+        credentials: "include",
+      }
+    );
+
+    if (!response.ok) {
+      console.error("Error en la solicitud");
+      return;
+    }
+
+    const jsonResponse = await response.json();
+    setFilteredSchool(jsonResponse.data.rows || []);
+    setTotalItems(jsonResponse.data.totalMatches || 0);
+  };
 
   useEffect(() => {
-    const loadData = async () => {
-      const data = await fetchSchoolData();
-      setFilteredSchool(data);
-    };
-    loadData();
-  }, []);
+    loadSchoolData(currentPage);
+  }, [currentPage, searchTerm, searchTerm2]);
 
-  useEffect(() => {
-    const combinedValue = `${schoolValue} ${facultyValue}`.trim();
-    handleSearch(combinedValue);
-  }, [schoolValue, facultyValue]);
 
   const handleDelete = async (id) => {
     try {
@@ -74,9 +69,19 @@ const SchoolTable = () => {
       const result = await response.json();
 
       if (result.code === "200") {
-        setSchools(schools.filter((school) => school.ID_SCHOOL !== id));
-        window.location.reload();
+        const updatedSchools = schools.filter(
+          (school) => school.ID_SCHOOL !== id
+        );
+        setSchools(updatedSchools);
+
+        const remainingItems = totalItems - 1;
+        const lastPage = Math.ceil(remainingItems / 8);
+        setCurrentPage(Math.min(currentPage, lastPage));
+
+        loadSchoolData(Math.min(currentPage, lastPage));
+
         return true;
+
       } else {
         console.error("Error al eliminar:", result.data);
         return false;
@@ -97,36 +102,24 @@ const SchoolTable = () => {
     setSchoolToDelete(null);
   };
 
-  const handleSearch = async (value) => {
-    if (value) {
-      try {
-        const response = await fetch(
-          `http://localhost:3001/searchschool?name=search&data=${value}`,
-          {
-            method: "GET",
-            credentials: "include",
-          }
-        );
+  const handlePageChange = (page) => {
+    setCurrentPage(page);
+  };
 
-        const data = await response.json();
-        if (data.code === "200") {
-          setFilteredSchool(data.data);
-        } else {
-          console.log(data.code);
-          setFilteredSchool([]);
-        }
-      } catch (error) {
-        console.error("Error al buscar en el servidor:", error);
-      }
-    } else {
-      // Si no hay valor de búsqueda, volver a cargar todos los datos
-      const data = await fetchSchoolData();
-      setFilteredSchool(data);
-    }
+  const handleSearch = (value) => {
+    setSearchTerm(value);
+    setCurrentPage(1); // Reinicia a la página 1 al buscar
+  };
+
+  const handleSearch2 = (value) => {
+    setSearchTerm2(value);
+    setCurrentPage(1); // Reinicia a la página 1 al buscar
   };
 
   const handleIconClick = () => {
-    window.location.reload();
+    setSearchTerm(""); // Restablecer la búsqueda
+    setSearchTerm2(""); // Restablecer el segundo término de búsqueda
+    setCurrentPage(1); // Reiniciar a la página 1
   };
 
   const disableInputSearch = true;
@@ -168,7 +161,7 @@ const SchoolTable = () => {
                     style={{ position: "relative" }}
                   >
                     <SearchInput
-                      onSearch={(value) => setSchoolValue(value)}
+                      onSearch={(value) => handleSearch(value)}
                       inputClassName="search-input pl-3"
                     />
                   </div>
@@ -180,7 +173,7 @@ const SchoolTable = () => {
                     style={{ position: "relative" }}
                   >
                     <SearchInput
-                      onSearch={(value) => setFacultyValue(value)}
+                      onSearch={(value) => handleSearch2(value)}
                       inputClassName="search-input pl-3"
                     />
                   </div>
@@ -242,6 +235,12 @@ const SchoolTable = () => {
           }
         />
         <SchoolModalAdd />
+        <Pagination
+          totalItems={totalItems}
+          itemsPerPage={"8"}
+          currentPage={currentPage}
+          onPageChange={handlePageChange}
+        />
       </div>
     </div>
   );

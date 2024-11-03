@@ -29,11 +29,7 @@ export const SweetAlertSuccess = (message) => {
     customClass: {
       confirmButton: 'btn-red',  
     }
-  }).then((result) => {
-    if (result.isConfirmed) {
-      window.location.reload();
-    }
-  });
+  })
  };
 
 

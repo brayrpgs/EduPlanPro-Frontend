@@ -31,7 +31,7 @@ async function fetchFacultyCreate(data) {
   }
 }
 
-const FacultyModalAdd = () => {
+const FacultyModalAdd = ({ onAdd }) => {
   const [data, setData] = useState({
     name: "",
   });
@@ -49,7 +49,10 @@ const FacultyModalAdd = () => {
       SweetAlertError("Verifique Datos Ingresados.");
       return;
     }
-    fetchFacultyCreate(data);
+    const newFaculty = fetchFacultyCreate(data);
+    if (newFaculty) {
+      onAdd(); 
+    }
   };
 
   return (

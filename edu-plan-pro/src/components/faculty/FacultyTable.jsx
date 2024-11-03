@@ -11,10 +11,19 @@ import UpdateFaculty from "./UpdateFaculty";
 import MainSearch from "../search/MainSearch";
 import Pagination from "../pagination/Pagination";
 
-async function fetchFacultyData(page) {
-  try {
+const FacultyTable = () => {
+  const [faculties, setFaculties] = useState([]);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [facultyToDelete, setFacultyToDelete] = useState(null);
+  const [filteredFaculty, setFilteredFaculty] = useState([]);
+  const [searchTerm, setSearchTerm] = useState("");
+  const [currentPage, setCurrentPage] = useState(1);
+  const [totalItems, setTotalItems] = useState(0);
+
+  const loadFacultyData = async (page) => {
+    const searchQuery = searchTerm ? `&search=${searchTerm}` : "&search=";
     const response = await fetch(
-      `http://localhost:3001/searchfaculty?name=search-page&numPage=${page}&search=`,
+      `http://localhost:3001/searchfaculty?name=search-page&numPage=${page}${searchQuery}`,
       {
         method: "GET",
         credentials: "include",
@@ -22,66 +31,26 @@ async function fetchFacultyData(page) {
     );
 
     if (!response.ok) {
-      throw new Error("Error en la solicitud");
+      console.error("Error en la solicitud");
+      return;
     }
 
     const jsonResponse = await response.json();
-
-    return Array.isArray(jsonResponse.data.rows) ? jsonResponse.data : [];
-  } catch (error) {
-    console.error("Error al obtener los datos:", error);
-    return [];
-  }
-}
-
-const FacultyTable = () => {
-  const [faculties, setFaculties] = useState([]);
-  const [isModalOpen, setIsModalOpen] = useState(false);
-  const [facultyToDelete, setFacultyToDelete] = useState(null);
-  const [filteredFaculty, setFilteredFaculty] = useState([]);
-
-  const [searchTerm, setSearchTerm] = useState("");
-  const [infoPage, setInfoPage] = useState([]);
-  const [currentPage, setCurrentPage] = useState(1);
-  const [totalItems, setTotalItems] = useState(0);
-
-  useEffect(() => {
-    const loadData = async () => {
-      const data = await fetchFacultyData(currentPage);
-      setFilteredFaculty(data.rows);
-    };
-    loadData();
-  }, []);
-
-  const loadFacultyData = async (page) => {
-    const data = await fetchFacultyData(page);
-    setInfoPage(data.rows);
-    setFilteredFaculty(data.rows);
-    setTotalItems(data.totalMatches);
+    
+    setFilteredFaculty(jsonResponse.data.rows || []);
+    setTotalItems(jsonResponse.data.totalMatches || 0);
   };
 
   useEffect(() => {
     loadFacultyData(currentPage);
-  }, [currentPage], [searchTerm]);
+  }, [currentPage, searchTerm]); // Agrega searchTerm a la lista de dependencias
 
-  const handlePageChange = async (page) => {
+  const handleAddFaculty = () => {
+    loadFacultyData(currentPage); 
+  };
+
+  const handlePageChange = (page) => {
     setCurrentPage(page);
-
-    if (searchTerm) {
-      // Si hay un término de búsqueda activo, busca en la página correspondiente de los resultados de búsqueda
-      const response = await fetch(
-        `http://localhost:3001/searchfaculty?name=search-page&numPage=${page}&search=${searchTerm}`,
-        {
-          method: "GET",
-          credentials: "include",
-        }
-      );
-      const jsonResponse = await response.json();
-      setFilteredFaculty(jsonResponse.data.rows);
-    } else {
-      // Si no hay búsqueda activa, carga los datos de la página seleccionada
-      loadFacultyData(page);
-    }
   };
 
   const handleDelete = async (id) => {
@@ -106,8 +75,17 @@ const FacultyTable = () => {
       const result = await response.json();
 
       if (result.code === "200") {
-        setFaculties(faculties.filter((faculty) => faculty.ID_FACULTY !== id));
-        window.location.reload();
+        const updatedFaculties = faculties.filter(
+          (faculty) => faculty.ID_FACULTY !== id
+        );
+        setFaculties(updatedFaculties);
+
+        const remainingItems = totalItems - 1;
+        const lastPage = Math.ceil(remainingItems / 8);
+        setCurrentPage(Math.min(currentPage, lastPage));
+
+        loadFacultyData(Math.min(currentPage, lastPage));
+
         return true;
       } else {
         console.error("Error al eliminar:", result.data);
@@ -129,42 +107,13 @@ const FacultyTable = () => {
     setFacultyToDelete(null);
   };
 
-  const handleSearch = async (value) => {
+  const handleSearch = (value) => {
     setSearchTerm(value);
-    if (value) {
-      try {
-        const response = await fetch(
-          `http://localhost:3001/searchfaculty?name=search-page&numPage=1&search=${value}`,
-          {
-            method: "GET",
-            credentials: "include",
-          }
-        );
-
-        const jsonResponse = await response.json();
-
-        const data = Array.isArray(jsonResponse.data.rows)
-          ? jsonResponse.data
-          : [];
-
-        if (jsonResponse.code === "200") {
-          setFilteredFaculty(data.rows);
-          setTotalItems(data.totalMatches);
-          setCurrentPage(1);
-        } else {
-          console.log(jsonResponse.code);
-          setFilteredFaculty([]);
-        }
-      } catch (error) {
-        console.error("Error al buscar en el servidor:", error);
-      }
-    } else {
-      loadFacultyData(1);
-    }
+    setCurrentPage(1); // Reinicia a la página 1 al buscar
   };
 
   const handleIconClick = () => {
-    window.location.reload();
+      window.location.reload();
   };
 
   const disableInputSearch = true;
@@ -280,7 +229,7 @@ const FacultyTable = () => {
             facultyToDelete ? facultyToDelete["NOMBRE FACULTAD"] : "facultad"
           }
         />
-        <FacultyModalAdd />
+        <FacultyModalAdd onAdd={handleAddFaculty}/>
         <Pagination
           totalItems={totalItems}
           itemsPerPage={"8"}

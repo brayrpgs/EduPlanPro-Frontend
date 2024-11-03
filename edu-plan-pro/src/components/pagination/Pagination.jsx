@@ -1,4 +1,9 @@
-import React from 'react';
+import React from "react";
+import NextPage from "../icons/PaginationIcons/NextPage";
+import PreviousPage from "../icons/PaginationIcons/PreviousPage";
+import FirstPage from "../icons/PaginationIcons/FirstPage"
+import LastPage from "../icons/PaginationIcons/LastPage"
+import "./Pagination.css"
 
 function Pagination({ totalItems, itemsPerPage, currentPage, onPageChange }) {
   const totalPages = Math.ceil(totalItems / itemsPerPage);
@@ -22,10 +27,10 @@ function Pagination({ totalItems, itemsPerPage, currentPage, onPageChange }) {
     const pages = [];
     for (let i = startPage; i <= endPage; i++) {
       pages.push(
-        <button
+        <button title={`Página ${i}`}
           key={i}
           onClick={() => handlePageChange(i)}
-          style={{ fontWeight: currentPage === i ? 'bold' : 'normal' }}
+          className={currentPage === i ? "selected" : ""}
         >
           {i}
         </button>
@@ -35,23 +40,32 @@ function Pagination({ totalItems, itemsPerPage, currentPage, onPageChange }) {
   };
 
   return (
-    <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-      <button onClick={() => handlePageChange(1)} disabled={currentPage === 1}>
-        Primera
+    <div className="pagination-container">
+      <button title="Primera página" onClick={() => handlePageChange(1)} disabled={currentPage === 1}>
+        <FirstPage/>
       </button>
-      <button onClick={() => handlePageChange(currentPage - 1)} disabled={currentPage === 1}>
-        Anterior
+      <button title="Página anterior"
+        onClick={() => handlePageChange(currentPage - 1)}
+        disabled={currentPage === 1}
+      >
+        <PreviousPage />
       </button>
 
       {startPage > 1 && <span>...</span>}
       {generatePageButtons()}
       {endPage < totalPages && <span>...</span>}
 
-      <button onClick={() => handlePageChange(currentPage + 1)} disabled={currentPage === totalPages}>
-        Siguiente
+      <button title="Página siguiente"
+        onClick={() => handlePageChange(currentPage + 1)}
+        disabled={currentPage === totalPages}
+      >
+        <NextPage />
       </button>
-      <button onClick={() => handlePageChange(totalPages)} disabled={currentPage === totalPages}>
-        Última
+      <button title="Última página"
+        onClick={() => handlePageChange(totalPages)}
+        disabled={currentPage === totalPages}
+      >
+        <LastPage />
       </button>
     </div>
   );
