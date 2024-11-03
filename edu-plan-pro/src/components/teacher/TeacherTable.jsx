@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import "./TeacherTable.css";
 import search from "../images/search.svg";
-import UpdateIcon from '../icons/ModalUpdateIcons/IconUpdate'; 
+import UpdateIcon from '../icons/ModalUpdateIcons/IconUpdate';
 import TeacherEditModal from './UpdateTeacher.jsx';
 import deleteIcon from "../icons/ActionIcons/delete.svg";
 import SearchInput from "../search/SearchInput";
@@ -69,50 +69,50 @@ const TeacherTable = () => {
   const filteredTeacher = teachers.filter((teacher) => {
     const matchesName = searchTerms.n
       ? teacher["NOMBRE"]
-          ?.toString()
-          .toLowerCase()
-          .includes(searchTerms.n.toString().toLowerCase())
+        ?.toString()
+        .toLowerCase()
+        .includes(searchTerms.n.toString().toLowerCase())
       : true;
 
     const matchesLastName = searchTerms.a
       ? teacher["APELLIDOS"]
-          ?.toString()
-          .toLowerCase()
-          .includes(searchTerms.a.toString().toLowerCase())
+        ?.toString()
+        .toLowerCase()
+        .includes(searchTerms.a.toString().toLowerCase())
       : true;
 
     const matchesIdCard = searchTerms.c
       ? teacher["CEDULA"]
-          ?.toString()
-          .toLowerCase()
-          .includes(searchTerms.c.toString().toLowerCase())
+        ?.toString()
+        .toLowerCase()
+        .includes(searchTerms.c.toString().toLowerCase())
       : true;
 
     const matchesEmail = searchTerms.ce
       ? teacher["CORREO"]
-          ?.toString()
-          .toLowerCase()
-          .includes(searchTerms.ce.toString().toLowerCase())
+        ?.toString()
+        .toLowerCase()
+        .includes(searchTerms.ce.toString().toLowerCase())
       : true;
 
     return matchesName && matchesLastName && matchesIdCard && matchesEmail;
   });
-const [isEditModalOpen, setIsEditModalOpen] = useState(false);
-const [selectedTeacher, setSelectedTeacher] = useState(null);
+  const [isEditModalOpen, setIsEditModalOpen] = useState(false);
+  const [selectedTeacher, setSelectedTeacher] = useState(null);
 
-const handleEditTeacher = (teacher) => {
-  setSelectedTeacher(teacher);
-  setIsEditModalOpen(true);
-};
+  const handleEditTeacher = (teacher) => {
+    setSelectedTeacher(teacher);
+    setIsEditModalOpen(true);
+  };
 
-const handleCloseModal = () => {
-  setIsEditModalOpen(false);
-  setSelectedTeacher(null);
-};
+  const handleCloseModal = () => {
+    setIsEditModalOpen(false);
+    setSelectedTeacher(null);
+  };
 
-const handleUpdateSuccess = () => {
-  fetchTeacherData().then(data => setTeachers(data));
-};
+  const handleUpdateSuccess = () => {
+    fetchTeacherData().then(data => setTeachers(data));
+  };
 
   const handleIconClick = () => {
     window.location.reload();
@@ -126,7 +126,7 @@ const handleUpdateSuccess = () => {
 
       <div className="teacher-container" title="Buscar profesores.">
         <div className="container mt-5">
-         <MainSearch placeholder={"Ingrese el nombre de un profesor"} /*onSearch={handleSearch}*//>
+          <MainSearch placeholder={"Ingrese el nombre de un profesor"} /*onSearch={handleSearch}*/ />
           <button
             className="button-filter"
             title="Restablecer filtros"
@@ -145,117 +145,118 @@ const handleUpdateSuccess = () => {
           </button>
         </div>
 
-      <div className="container mt-3">
-        <table className="table table-bordered">
-          <thead className="thead-light">
-            <tr>
-              <th className="th s-th">
-                Nombre
-                <div
-                  title="Filtrar por nombre."
-                  style={{ position: "relative" }}
-                >
-                  <SearchInput
-                    onSearch={(value) => handleSearch(value, "n")}
-                    inputClassName="search-input pl-3"
-                  />
-                </div>
-              </th>
-              <th className="th f-th">
-                Apellidos
-                <div
-                  title="Filtrar por apellidos."
-                  style={{ position: "relative" }}
-                >
-                  <SearchInput
-                    onSearch={(value) => handleSearch(value, "a")}
-                    inputClassName="search-input pl-3"
-                  />
-                </div>
-              </th>
-              <th className="th f-th">
-                Cédula
-                <div
-                  title="Filtrar por cédula."
-                  style={{ position: "relative" }}
-                >
-                  <SearchInput
-                    onSearch={(value) => handleSearch(value, "c")}
-                    inputClassName="search-input pl-3"
-                  />
-                </div>
-              </th>
-              <th className="th f-th">
-                Correo electrónico
-                <div
-                  title="Filtrar por correo electrónico."
-                  style={{ position: "relative" }}
-                >
-                  <SearchInput
-                    onSearch={(value) => handleSearch(value, "ce")}
-                    inputClassName="search-input pl-3"
-                  />
-                </div>
-              </th>
-              <th className="th a-th">
-                Acciones
-                <div style={{ position: "relative" }}>
-                  <SearchInput
-                    disabled={disableInputSearch}
-                    inputClassName="search-input pl-3"
-                  />
-                </div>
-              </th>
-            </tr>
-          </thead>
-          <tbody>
-            {filteredTeacher.length > 0 ? (
-              filteredTeacher.map((teacher) => (
-                <tr key={teacher.ID_TEACHER} style={{ color: "#CD1719" }}>
-                  <td className="bg-light">{teacher["NOMBRE"]}</td>
-                  <td className="bg-light">{teacher["APELLIDOS"]}</td>
-                  <td className="bg-light">{teacher["CEDULA"]}</td>
-                  <td className="bg-light">{teacher["CORREO"]}</td>
-                  <td className="bg-light">
-                    <div style={{ textAlign: "center" }}>
-                    <div 
-  onClick={() => handleEditTeacher(teacher)}
-  style={{ 
-    display: 'inline-block', 
-    cursor: 'pointer', 
-    marginRight: '10px'
-  }}
->
-  <UpdateIcon />
+        <div className="container mt-3">
+          <table className="table table-bordered">
+            <thead className="thead-light">
+              <tr>
+                <th className="th s-th">
+                  Nombre
+                  <div
+                    title="Filtrar por nombre."
+                    style={{ position: "relative" }}
+                  >
+                    <SearchInput
+                      onSearch={(value) => handleSearch(value, "n")}
+                      inputClassName="search-input pl-3"
+                    />
                   </div>
-                      <img
-                        title="Eliminar profesor."
-                        src={deleteIcon}
-                        alt="Eliminar"
-                        style={{ cursor: "pointer" }}
-                        
-                      />
-                    </div>
+                </th>
+                <th className="th f-th">
+                  Apellidos
+                  <div
+                    title="Filtrar por apellidos."
+                    style={{ position: "relative" }}
+                  >
+                    <SearchInput
+                      onSearch={(value) => handleSearch(value, "a")}
+                      inputClassName="search-input pl-3"
+                    />
+                  </div>
+                </th>
+                <th className="th f-th">
+                  Cédula
+                  <div
+                    title="Filtrar por cédula."
+                    style={{ position: "relative" }}
+                  >
+                    <SearchInput
+                      onSearch={(value) => handleSearch(value, "c")}
+                      inputClassName="search-input pl-3"
+                    />
+                  </div>
+                </th>
+                <th className="th f-th">
+                  Correo electrónico
+                  <div
+                    title="Filtrar por correo electrónico."
+                    style={{ position: "relative" }}
+                  >
+                    <SearchInput
+                      onSearch={(value) => handleSearch(value, "ce")}
+                      inputClassName="search-input pl-3"
+                    />
+                  </div>
+                </th>
+                <th className="th a-th">
+                  Acciones
+                  <div style={{ position: "relative" }}>
+                    <SearchInput
+                      disabled={disableInputSearch}
+                      inputClassName="search-input pl-3"
+                    />
+                  </div>
+                </th>
+              </tr>
+            </thead>
+            <tbody>
+              {filteredTeacher.length > 0 ? (
+                filteredTeacher.map((teacher) => (
+                  <tr key={teacher.ID_TEACHER} style={{ color: "#CD1719" }}>
+                    <td className="bg-light">{teacher["NOMBRE"]}</td>
+                    <td className="bg-light">{teacher["APELLIDOS"]}</td>
+                    <td className="bg-light">{teacher["CEDULA"]}</td>
+                    <td className="bg-light">{teacher["CORREO"]}</td>
+                    <td className="bg-light">
+                      <div style={{ textAlign: "center" }}>
+                        <div
+                          onClick={() => handleEditTeacher(teacher)}
+                          style={{
+                            display: 'inline-block',
+                            cursor: 'pointer',
+                            marginRight: '10px'
+                          }}
+                        >
+                          <UpdateIcon />
+                        </div>
+                        <img
+                          title="Eliminar profesor."
+                          src={deleteIcon}
+                          alt="Eliminar"
+                          style={{ cursor: "pointer" }}
+
+                        />
+                      </div>
+                    </td>
+                  </tr>
+                ))
+              ) : (
+                <tr>
+                  <td colSpan="5" style={{ textAlign: "center" }}>
+                    No se encontraron profesores.
                   </td>
                 </tr>
-              ))
-            ) : (
-              <tr>
-                <td colSpan="5" style={{ textAlign: "center" }}>
-                  No se encontraron profesores.
-                </td>
-              </tr>
-            )}
-          </tbody>
-        </table>
+              )}
+            </tbody>
+          </table>
+        </div>
+        <TeacherModalAdd />
+        <TeacherEditModal
+          isOpen={isEditModalOpen}
+          teacher={selectedTeacher}
+          onClose={handleCloseModal}
+          onUpdate={handleUpdateSuccess}
+        />
       </div>
-      <TeacherModalAdd/>
-      <TeacherEditModal
-      isOpen={isEditModalOpen}
-      teacher={selectedTeacher}
-      onClose={handleCloseModal}
-      onUpdate={handleUpdateSuccess}
-    />
     </div>
   );
 };
