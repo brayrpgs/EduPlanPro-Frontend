@@ -8,7 +8,7 @@ import SearchInput from "../search/SearchInput";
 import FilterOffIcon from "../icons/MainIcons/FilterOffIcon";
 import AddIcon from "../icons/ActionIcons/AddIcon";
 import TeacherModalAdd from "./TeacherModalAdd";
-
+import MainSearch from "../search/MainSearch";
 
 async function fetchTeacherData() {
   try {
@@ -20,11 +20,10 @@ async function fetchTeacherData() {
     if (!response.ok) {
       throw new Error("Error en la solicitud");
     }
-    
+
     const jsonResponse = await response.json();
 
     return Array.isArray(jsonResponse.data) ? jsonResponse.data : [];
-
   } catch (error) {
     console.error("Error al obtener los datos:", error);
     return [];
@@ -82,14 +81,14 @@ const TeacherTable = () => {
           .includes(searchTerms.a.toString().toLowerCase())
       : true;
 
-      const matchesIdCard = searchTerms.c
+    const matchesIdCard = searchTerms.c
       ? teacher["CEDULA"]
           ?.toString()
           .toLowerCase()
           .includes(searchTerms.c.toString().toLowerCase())
       : true;
 
-      const matchesEmail = searchTerms.ce
+    const matchesEmail = searchTerms.ce
       ? teacher["CORREO"]
           ?.toString()
           .toLowerCase()
@@ -123,33 +122,28 @@ const handleUpdateSuccess = () => {
 
   return (
     <div>
-      <h1 className="h1">Profesores</h1>
+      <h1 className="h1-teacher">Profesores</h1>
 
-      <div className="container mt-5">
-        <input
-          title="Buscar profesores."
-          placeholder="Ingrese el nombre de un profesor"
-          type="text"
-          className="form-control pl-5 input2"
-          onChange={(e) => handleSearch(e.target.value, "n")}
-          style={{
-            backgroundColor: "#CD1719",
-            color: "white",
-          }}
-        />
-        <img className="img-search" src={search} alt="Buscar" />
-        <button
-          className="button-filter"
-          title="Restablecer filtros"
-          onClick={handleIconClick}
-        >
-          <FilterOffIcon />
-        </button>
+      <div className="teacher-container" title="Buscar profesores.">
+        <div className="container mt-5">
+         <MainSearch placeholder={"Ingrese el nombre de un profesor"} /*onSearch={handleSearch}*//>
+          <button
+            className="button-filter"
+            title="Restablecer filtros"
+            onClick={handleIconClick}
+          >
+            <FilterOffIcon />
+          </button>
 
-        <button className="button-filter"  title="Agregar Escuela"  data-bs-toggle="modal" data-bs-target="#teacherModalAdd" >
-          <AddIcon color={"rgb(255, 0, 0)"}/>
-        </button>
-      </div>
+          <button
+            className="button-filter"
+            title="Agregar Escuela"
+            data-bs-toggle="modal"
+            data-bs-target="#teacherModalAdd"
+          >
+            <AddIcon />
+          </button>
+        </div>
 
       <div className="container mt-3">
         <table className="table table-bordered">
@@ -263,7 +257,6 @@ const handleUpdateSuccess = () => {
       onUpdate={handleUpdateSuccess}
     />
     </div>
-    
   );
 };
 

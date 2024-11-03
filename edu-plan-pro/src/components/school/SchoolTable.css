@@ -88,4 +88,7 @@
   position: absolute;
   width: 1.5rem; /* Tamaño relativo */
   height: 1.5rem;
+  transform: translateX(12px);
+  
 }
+

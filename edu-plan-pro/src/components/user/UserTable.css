@@ -5,10 +5,19 @@
     text-align: center !important;
   }
   
+  .user-container {
+    margin-top: 12px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    flex-direction: column;
+  }
+
   .th {
     text-decoration: none;
     text-align: center;
-    color: #CD1719 !important;
+    color: #a31e32 !important;
   }
   
   .id-th {
@@ -37,7 +46,7 @@
   }
 
   .input-white-text {
-    background-color: #CD1719; /* Fondo rojo */
+    background-color: #a31e32; /* Fondo rojo */
     color: white; /* Color del texto en el input */
   }
   
@@ -48,7 +57,7 @@
   
   .search-input {
     border: none; 
-    border-bottom: 2px solid red; 
+    border-bottom: 2px solid #a31e32; 
     background-color: transparent; 
     color: black; 
     outline: none;
@@ -61,11 +70,10 @@
     background-color: white;
   }
   
-  .h1{
-    position: relative;
+  .h1-user {
     text-align: center;
-    padding-top: 50px;
-    margin-bottom: -30px;
+    margin-top: 40px;
+    margin-bottom: -40px;
   }
   
   .form-control::placeholder {

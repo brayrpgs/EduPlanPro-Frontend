@@ -18,9 +18,6 @@ const Header = () => {
     }); 
   };
 
-  const handleCoursePlanClick = () => {
-    navigate('/coursesplan');
-  };
   const handleSchoolClick = () => {
     navigate('/school');
   };
@@ -61,12 +58,6 @@ const Header = () => {
             className="nav-link"
           >
             Facultades
-          </button>
-          <button 
-            onClick={handleCoursePlanClick} 
-            className="nav-link"
-          >
-            Planes De Estudio
           </button>
           <button 
             onClick={handleTeacherClick} 

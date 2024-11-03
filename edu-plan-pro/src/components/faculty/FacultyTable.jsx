@@ -8,39 +8,50 @@ import FilterOffIcon from "../icons/MainIcons/FilterOffIcon";
 import AddIcon from "../icons/ActionIcons/AddIcon";
 import FacultyModalAdd from "./FacultyModalAdd";
 import UpdateFaculty from "./UpdateFaculty";
-
-async function fetchFacultyData() {
-  try {
-    const response = await fetch("http://localhost:3001/faculty", {
-      method: "GET",
-      credentials: "include",
-    });
-
-    if (!response.ok) {
-      throw new Error("Error en la solicitud");
-    }
-
-    const jsonResponse = await response.json();
-    return Array.isArray(jsonResponse.data) ? jsonResponse.data : [];
-  } catch (error) {
-    console.error("Error al obtener los datos:", error);
-    return [];
-  }
-}
+import MainSearch from "../search/MainSearch";
+import Pagination from "../pagination/Pagination";
 
 const FacultyTable = () => {
   const [faculties, setFaculties] = useState([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [facultyToDelete, setFacultyToDelete] = useState(null);
   const [filteredFaculty, setFilteredFaculty] = useState([]);
+  const [searchTerm, setSearchTerm] = useState("");
+  const [currentPage, setCurrentPage] = useState(1);
+  const [totalItems, setTotalItems] = useState(0);
+
+  const loadFacultyData = async (page) => {
+    const searchQuery = searchTerm ? `&search=${searchTerm}` : "&search=";
+    const response = await fetch(
+      `http://localhost:3001/searchfaculty?name=search-page&numPage=${page}${searchQuery}`,
+      {
+        method: "GET",
+        credentials: "include",
+      }
+    );
+
+    if (!response.ok) {
+      console.error("Error en la solicitud");
+      return;
+    }
+
+    const jsonResponse = await response.json();
+    
+    setFilteredFaculty(jsonResponse.data.rows || []);
+    setTotalItems(jsonResponse.data.totalMatches || 0);
+  };
 
   useEffect(() => {
-    const loadData = async () => {
-      const data = await fetchFacultyData();
-      setFilteredFaculty(data);
-    };
-    loadData();
-  }, []);
+    loadFacultyData(currentPage);
+  }, [currentPage, searchTerm]); // Agrega searchTerm a la lista de dependencias
+
+  const handleAddFaculty = () => {
+    loadFacultyData(currentPage); 
+  };
+
+  const handlePageChange = (page) => {
+    setCurrentPage(page);
+  };
 
   const handleDelete = async (id) => {
     try {
@@ -64,8 +75,17 @@ const FacultyTable = () => {
       const result = await response.json();
 
       if (result.code === "200") {
-        setFaculties(faculties.filter((faculty) => faculty.ID_FACULTY !== id));
-        window.location.reload();
+        const updatedFaculties = faculties.filter(
+          (faculty) => faculty.ID_FACULTY !== id
+        );
+        setFaculties(updatedFaculties);
+
+        const remainingItems = totalItems - 1;
+        const lastPage = Math.ceil(remainingItems / 8);
+        setCurrentPage(Math.min(currentPage, lastPage));
+
+        loadFacultyData(Math.min(currentPage, lastPage));
+
         return true;
       } else {
         console.error("Error al eliminar:", result.data);
@@ -87,36 +107,13 @@ const FacultyTable = () => {
     setFacultyToDelete(null);
   };
 
-  const handleSearch = async (value) => {
-    if (value) {
-      try {
-        const response = await fetch(
-          `http://localhost:3001/searchfaculty?name=search&data=${value}`,
-          {
-            method: "GET",
-            credentials: "include",
-          }
-        );
-
-        const data = await response.json();
-        if (data.code === "200") {
-          setFilteredFaculty(data.data);
-        } else {
-          console.log(data.code);
-          setFilteredFaculty([]);
-        }
-      } catch (error) {
-        console.error("Error al buscar en el servidor:", error);
-      }
-    } else {
-      // Si no hay valor de búsqueda, volver a cargar todos los datos
-      const data = await fetchFacultyData();
-      setFilteredFaculty(data);
-    }
+  const handleSearch = (value) => {
+    setSearchTerm(value);
+    setCurrentPage(1); // Reinicia a la página 1 al buscar
   };
 
   const handleIconClick = () => {
-    window.location.reload();
+      window.location.reload();
   };
 
   const disableInputSearch = true;
@@ -125,23 +122,12 @@ const FacultyTable = () => {
     <div>
       <h1 className="h1-faculty">Facultades</h1>
       <div className="faculty-container">
-        <div className="container mt-5, input">
-          <input
-            title="Buscar facultades."
-            placeholder="Ingrese el nombre de una facultad"
-            type="text"
-            className="form-control pl-5"
-            onKeyDown={(e) => {
-              if (e.key === "Enter" || e.key === "Tab") {
-                handleSearch(e.target.value);
-              }
-            }}
-            onBlur={(e) => handleSearch(e.target.value)}
-            style={{
-              backgroundColor: "#A31E32",
-              color: "white",
-            }}
+        <div className="container mt-5, input " title="Buscar facultades.">
+          <MainSearch
+            placeholder={"Ingrese el nombre de una facultad"}
+            onSearch={handleSearch}
           />
+
           <img
             src={search}
             alt="Buscar"
@@ -168,7 +154,7 @@ const FacultyTable = () => {
             data-bs-toggle="modal"
             data-bs-target="#facultyModalAdd"
           >
-            <AddIcon/>
+            <AddIcon />
           </button>
         </div>
 
@@ -202,7 +188,7 @@ const FacultyTable = () => {
             <tbody>
               {filteredFaculty.length > 0 ? (
                 filteredFaculty.map((faculty) => (
-                  <tr key={faculty.ID_FACULTY} >
+                  <tr key={faculty.ID_FACULTY}>
                     <td className="bg-light">{faculty["NOMBRE FACULTAD"]}</td>
                     <td className="bg-light">
                       <div
@@ -243,7 +229,13 @@ const FacultyTable = () => {
             facultyToDelete ? facultyToDelete["NOMBRE FACULTAD"] : "facultad"
           }
         />
-        <FacultyModalAdd />
+        <FacultyModalAdd onAdd={handleAddFaculty}/>
+        <Pagination
+          totalItems={totalItems}
+          itemsPerPage={"8"}
+          currentPage={currentPage}
+          onPageChange={handlePageChange}
+        />
       </div>
     </div>
   );

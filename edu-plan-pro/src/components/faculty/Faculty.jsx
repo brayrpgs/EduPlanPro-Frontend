@@ -4,6 +4,7 @@ import Header from '../header/Header';
 import FacultyTable from './FacultyTable';
 
 function Faculty() {
+  
   return (
     <div className="App">
       <Header/>

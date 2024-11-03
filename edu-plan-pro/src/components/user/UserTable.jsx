@@ -8,6 +8,7 @@ import FilterOffIcon from "../icons/MainIcons/FilterOffIcon";
 import AddIcon from "../icons/ActionIcons/AddIcon";
 import UserModalAdd from "./UserModalAdd.jsx";
 import UpdateUser from "./UpdateUser.jsx";
+import MainSearch from "../search/MainSearch.jsx";
 
 async function fetchUserData() {
   try {
@@ -19,11 +20,10 @@ async function fetchUserData() {
     if (!response.ok) {
       throw new Error("Error en la solicitud");
     }
-    
+
     const jsonResponse = await response.json();
-
+    console.log(jsonResponse)
     return Array.isArray(jsonResponse.data) ? jsonResponse.data : [];
-
   } catch (error) {
     console.error("Error al obtener los datos:", error);
     return [];
@@ -81,21 +81,21 @@ const UserTable = () => {
 
   const filteredUser = Users.filter((User) => {
     const matchesName = searchTerms.n
-      ? User["DSC_NAME"]
+      ? User["NOMBRE"]
           ?.toString()
           .toLowerCase()
           .includes(searchTerms.n.toString().toLowerCase())
       : true;
 
     const matchesLastName = searchTerms.a
-      ? User["DSC_SECOND_NAME"]
+      ? User["APELLIDOS"]
           ?.toString()
           .toLowerCase()
           .includes(searchTerms.a.toString().toLowerCase())
       : true;
 
-      const matchesIdCard = searchTerms.c
-      ? User["IDCARD"]
+    const matchesIdCard = searchTerms.c
+      ? User["IDENTIFICACION"]
           ?.toString()
           .toLowerCase()
           .includes(searchTerms.c.toString().toLowerCase())
@@ -112,33 +112,28 @@ const UserTable = () => {
 
   return (
     <div>
-      <h1 className="h1">Usuarios</h1>
+      <h1 className="h1-user">Usuarios</h1>
 
-      <div className="container mt-5">
-        <input
-          title="Buscar usuarios."
-          placeholder="Ingrese el nombre de un usuario"
-          type="text"
-          className="form-control pl-5 input2"
-          onChange={(e) => handleSearch(e.target.value, "n")}
-          style={{
-            backgroundColor: "#CD1719",
-            color: "white",
-          }}
-        />
-        <img className="img-search" src={search} alt="Buscar" />
-        <button
-          className="button-filter"
-          title="Restablecer filtros"
-          onClick={handleIconClick}
-        >
-          <FilterOffIcon />
-        </button>
+      <div className="user-container">
+        <div className="container mt-5" title="Buscar usuarios.">
+        <MainSearch placeholder={"Ingrese el nombre de un usuario"} /*onSearch={handleSearch}*//>
+          <button
+            className="button-filter"
+            title="Restablecer filtros"
+            onClick={handleIconClick}
+          >
+            <FilterOffIcon />
+          </button>
 
-        <button className="button-filter"  title="Agregar Usuario"  data-bs-toggle="modal" data-bs-target="#userModalAdd" >
-          <AddIcon color={"rgb(255, 0, 0)"}/>
-        </button>
-      </div>
+          <button
+            className="button-filter"
+            title="Agregar Usuario"
+            data-bs-toggle="modal"
+            data-bs-target="#userModalAdd"
+          >
+            <AddIcon />
+          </button>
+        </div>
 
       <div className="container mt-3">
         <table className="table table-bordered">

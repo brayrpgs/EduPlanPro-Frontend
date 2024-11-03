@@ -35,8 +35,10 @@ export const Login = () => {
       Swal.fire({
         title: "¡Datos incompletos!",
         text: `Por favor, ingresa un nombre de usuario y una contraseña.`,
-        icon: "info",
+        icon: "warning",
+        iconColor: '#0C71C3',
         confirmButtonText: "Aceptar",
+        confirmButtonColor: "#A31E32",
         customClass: {
           confirmButton: 'custom-confirm-button'
         }
@@ -63,10 +65,11 @@ export const Login = () => {
           Swal.fire({
             title: "Acceso válido.",
             icon: "success",
+            iconColor: "#7CDA24",
             confirmButtonText: "Aceptar",
+            confirmButtonColor: "#A31E32",
             customClass: {
               confirmButton: 'custom-confirm-button',
-              icon: 'custom-success-icon'
             },
           }).then((result) => {
             if (result.isConfirmed) {
@@ -81,10 +84,11 @@ export const Login = () => {
             title: "Acceso inválido.",
             text: `Por favor, inténtelo de nuevo.`,
             icon: "error",
+            iconColor: "#A31E32",
             confirmButtonText: "Aceptar",
+            confirmButtonColor: "#A31E32",
             customClass: {
               confirmButton: 'custom-confirm-button',
-              icon: 'custom-error-icon'
             }
           });
 
