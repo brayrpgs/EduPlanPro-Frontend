@@ -3,8 +3,6 @@ import { SweetAlertSuccess, SweetAlertError } from "../../assets/js/sweetalert.j
 
 async function fetchTeacherCreate(data) {
   try {
-
-    
     const response = await fetch("http://localhost:3001/teacher", {
       method: "POST",
       headers: {
@@ -19,26 +17,31 @@ async function fetchTeacherCreate(data) {
     }
 
     const jsonResponse = await response.json();
-    document.getElementById("closeTeacherModalAdd").click();
-    SweetAlertSuccess(jsonResponse.data || "Registro exitoso!");
 
+    if (jsonResponse.code === "500") {
+      SweetAlertError("Correo ya registrado.");
+      return;
+    } else if (jsonResponse.code === "501") {
+      SweetAlertError("Campos inválidos.");
+      return;
+    }
+
+    document.getElementById("closeTeacherModalAdd").click();
+    SweetAlertSuccess("Registro exitoso!");
     return jsonResponse.data;
   } catch (error) {
-    console.error("Error al crear el docente:", error);
-    SweetAlertError(`Error al crear el docente: ${error.message}`);
+    console.error("Error al crear docente:", error);
+    SweetAlertError(`Error al crear docente: ${error.message}`);
   }
 }
-
-const TeacherModalAdd = () => {
+//aca es sumamente respetar este orden de eventos para no icurrir en errores XD recordar att David
+ const TeacherModalAdd = () => {
   const [data, setData] = useState({
     name: "",
     secName: "",
     idcard: "",
     email: "",
   });
-
-  const [error, setError] = useState(""); // Estado para el mensaje de error
-  const [firstSubmit, setFirstSubmit] = useState(true); // Estado para verificar el primer envío
 
   const handleChange = (e) => {
     setData({
@@ -47,38 +50,46 @@ const TeacherModalAdd = () => {
     });
   };
 
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    if (handleValidate()) {
+      // Procede con la creación si pasa la validación
+      await fetchTeacherCreate(data);
+    } else {
+      // Los errores se manejan dentro de handleValidate
+    }
+  };
+
   const handleValidate = () => {
     if (data.name.trim() === "") {
-      setError("Nombre vacío");
+      SweetAlertError("Nombre vacío");
+      return false;
+    }
+    if (/\d/.test(data.name)) {
+      SweetAlertError("El nombre no puede llevar números");
       return false;
     }
     if (data.secName.trim() === "") {
-      setError("Apellido vacío");
+      SweetAlertError("Apellido vacío");
+      return false;
+    }
+    if (/\d/.test(data.secName)) {
+      SweetAlertError("El apellido no puede llevar números");
       return false;
     }
     if (data.idcard.trim() === "") {
-      setError("Cédula vacía");
+      SweetAlertError("Cédula vacía");
       return false;
     }
     if (data.email.trim() === "") {
-      setError("Correo vacío");
+      SweetAlertError("Correo vacío");
       return false;
     }
 
-    setError(""); // Sin errores
-    return true;
+    return true; // Sin errores
   };
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    setFirstSubmit(false); // Se marca que se ha intentado enviar por primera vez
-    if (handleValidate()) {
-      // Procede con la creación si pasa la validación
-      fetchTeacherCreate(data);
-    } else {
-      SweetAlertError("Verifique Datos Ingresados"); // Muestra el error si falla la validación
-    }
-  };
+
 
   return (
     <div
@@ -161,8 +172,6 @@ const TeacherModalAdd = () => {
                   Guardar
                 </button>
               </div>
-
-              {error && <p className="text-danger text-center mt-3">{error}</p>}
             </form>
           </div>
         </div>

@@ -18,22 +18,6 @@ const Header = () => {
     }); 
   };
 
-  const handleSchoolClick = () => {
-    navigate('/school');
-  };
-
-  const handleFacultyClick = () => {
-    navigate('/faculty');
-  };
-
-  const handleTeacherClick = () => {
-    navigate('/teacher');
-  };
-
-  const handleUserClick = () => {
-    navigate('/user');
-  };
-  
   return (
     <header className="header">
       <div className="header-content">
@@ -46,32 +30,6 @@ const Header = () => {
             style={{ cursor: 'pointer' }} 
           />
         </div>
-        <nav className="nav-links">
-          <button 
-            onClick={handleSchoolClick} 
-            className="nav-link"
-          >
-            Escuelas
-          </button>
-          <button 
-            onClick={handleFacultyClick} 
-            className="nav-link"
-          >
-            Facultades
-          </button>
-          <button 
-            onClick={handleTeacherClick} 
-            className="nav-link"
-          >
-            Profesores
-          </button>
-          <button 
-            onClick={handleUserClick} 
-            className="nav-link"
-          >
-            Usuarios
-          </button>
-        </nav>
       </div>
     </header>
   );

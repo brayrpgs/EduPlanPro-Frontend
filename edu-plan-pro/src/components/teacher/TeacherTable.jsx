@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import "./TeacherTable.css";
 import search from "../images/search.svg";
+import DeleteModal from "../modaldelete/DeleteModal"
 import deleteIcon from "../icons/ActionIcons/delete.svg";
 import SearchInput from "../search/SearchInput";
 import FilterOffIcon from "../icons/MainIcons/FilterOffIcon";
@@ -68,6 +69,57 @@ const TeacherTable = () => {
   const handleEmail = (value) => {
     setEmail(value);
     setCurrentPage(1); // Reinicia a la página 1 al buscar
+  };
+
+  const handleDelete = async () => {
+    try {
+      const response = await fetch("http://localhost:3001/teacher", {
+        method: "PATCH",
+        credentials: "include",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          id: teacherToDelete.ID_TEACHER, 
+          name: teacherToDelete.NOMBRE,
+          secName: teacherToDelete.APELLIDOS ,
+          idcard: teacherToDelete.CEDULA,
+          "email": teacherToDelete.CORREO,
+          stat: "0", 
+        }),
+      });
+
+      if (!response.ok) {
+        throw new Error("Error en la solicitud");
+      }
+
+      const result = await response.json();
+
+      if (result.code === "200") {
+        // Actualizar la lista de profesores después de eliminar
+        const updatedTeachers = teachers.filter(
+          (teacher) => teacher.ID_TEACHER !== teacherToDelete.ID_TEACHER
+        );
+        setTeachers(updatedTeachers);
+        return true;
+      } else {
+        console.error("Error al eliminar:", result.data);
+        return false;
+      }
+    } catch (error) {
+      console.error("Error al eliminar el profesor:", error);
+      return false;
+    }
+  };
+
+  const openModal = (teacher) => {
+    setTeacherToDelete(teacher);
+    setIsModalOpen(true);
+  };
+
+  const closeModal = () => {
+    setIsModalOpen(false);
+    setTeacherToDelete(null);
   };
 
   const handleIconClick = () => {
@@ -183,6 +235,7 @@ const TeacherTable = () => {
                           src={deleteIcon}
                           alt="Eliminar"
                           style={{ cursor: "pointer" }}
+                          onClick={() => openModal(teacher)}
                         />
                       </div>
                     </td>
@@ -199,6 +252,12 @@ const TeacherTable = () => {
           </table>
         </div>
         <TeacherModalAdd />
+        <DeleteModal
+          isOpen={isModalOpen}
+          onClose={closeModal}
+          onDelete={handleDelete}
+          itemName={teacherToDelete ? `${teacherToDelete["NOMBRE"]} ${teacherToDelete["APELLIDOS"]}` : "profesor"}
+        />
         <Pagination
           totalItems={totalItems}
           itemsPerPage={"8"}

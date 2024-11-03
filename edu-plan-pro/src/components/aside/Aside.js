@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import accountCircle from "../images/account_circle.svg";
 import menuIcon from "../icons/AsideIcons/MenuWhite.svg";
 import closeIcon from "../icons/AsideIcons/CloseBlack.svg";
@@ -8,6 +8,8 @@ import "./Aside.css";
 
 const Aside = () => {
   const [isOpen, setIsOpen] = useState(false);
+  const [showPersonasSubMenu, setShowPersonasSubMenu] = useState(false);
+  const [showEscuelasSubMenu, setShowEscuelasSubMenu] = useState(false);
   const navigate = useNavigate();
 
   const toggleAside = () => {
@@ -49,8 +51,7 @@ const Aside = () => {
             timerProgressBar: true,
             willOpen: () => {
               Swal.showLoading();
-            },         
-
+            },
           });
           navigate("/login");
         } else {
@@ -68,6 +69,13 @@ const Aside = () => {
         );
       }
     }
+  };
+  const togglePersonasSubMenu = () => {
+    setShowPersonasSubMenu(!showPersonasSubMenu);
+  };
+
+  const toggleEscuelasSubMenu = () => {
+    setShowEscuelasSubMenu(!showEscuelasSubMenu);
   };
 
   return (
@@ -92,17 +100,15 @@ const Aside = () => {
           />
           <h2
             className="mb-1 fs-6"
-            style={{
-              color: "black",
-              fontWeight: "bold",
-              textDecoration: "none",
-            }}
+            style={{ color: "black", fontWeight: "bold" }}
           >
             Adan Carranza
           </h2>
         </div>
-
+        
         <ul className="nav flex-column text-center">
+          {/* Menú de Opciones */}
+
           <li className="nav-item mb-3">
             <button
               className="btn-link"
@@ -147,7 +153,98 @@ const Aside = () => {
             >
               Preferencias
             </button>
+          </li> 
+
+          <li className="nav-item mb-3">
+            <span
+              style={{ color: "black", fontWeight: "bold", cursor: "pointer" }}
+              onClick={togglePersonasSubMenu}
+            >
+              Personas
+            </span>
+            {showPersonasSubMenu && (
+              <ul className="nav flex-column text-center">
+                <li className="nav-item mb-1">
+                  <Link
+                    to="/user" // Ruta para Usuarios, esta contenido dentro de link ...simplemnete naveg entre rutas
+                    className="btn-link"
+                    style={{
+                      color: "black",
+                      fontWeight: "normal",
+                      textDecoration: "none",
+                      background: "none",
+                      border: "none",
+                      cursor: "pointer",
+                    }}
+                  >
+                    Usuarios
+                  </Link>
+                </li>
+                <li className="nav-item mb-1">
+                  <Link
+                    to="/teacher" // Ruta para Profesores, esta contenido dentro de link ...simplemnete naveg entre rutas
+                    className="btn-link"
+                    style={{
+                      color: "black",
+                      fontWeight: "normal",
+                      textDecoration: "none",
+                      background: "none",
+                      border: "none",
+                      cursor: "pointer",
+                    }}
+                  >
+                    Profesores
+                  </Link>
+                </li>
+              </ul>
+            )}
           </li>
+
+          <li className="nav-item mb-3">
+            <span
+              style={{ color: "black", fontWeight: "bold", cursor: "pointer" }}
+              onClick={toggleEscuelasSubMenu}
+            >
+              Facultad
+            </span>
+            {showEscuelasSubMenu && (
+              <ul className="nav flex-column text-center">
+                <li className="nav-item mb-1">
+                  <Link
+                    to="/school" // Ruta para Escuelas,  esta contenido dentro de link ...simplemnete naveg entre rutas
+                    className="btn-link"
+                    style={{
+                      color: "black",
+                      fontWeight: "normal",
+                      textDecoration: "none",
+                      background: "none",
+                      border: "none",
+                      cursor: "pointer",
+                    }}
+                  >
+                    Escuelas
+                  </Link>
+                </li>
+                <li className="nav-item mb-1">
+                  <Link
+                    to="/faculty" // Ruta para Facultades esta contenido dentro de link ...simplemnete naveg entre rutas
+                    className="btn-link"
+                    style={{
+                      color: "black",
+                      fontWeight: "normal",
+                      textDecoration: "none",
+                      background: "none",
+                      border: "none",
+                      cursor: "pointer",
+                    }}
+                  >
+                    Facultades
+                  </Link>
+                </li>
+              </ul>
+            )}
+          </li>
+
           <li className="nav-item mb-3">
             <button
               className="btn-link"
@@ -159,7 +256,7 @@ const Aside = () => {
                 border: "none",
                 cursor: "pointer",
               }}
-              onClick={handleLogout}
+              onClick={handleLogout} //llama la funcion cerrar
             >
               Salir
             </button>

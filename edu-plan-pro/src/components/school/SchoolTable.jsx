@@ -202,6 +202,7 @@ const SchoolTable = () => {
                         }}
                       >
                         <UpdateSchool school={school} />
+                        
                         <img
                           title="Eliminar curso."
                           src={deleteIcon}

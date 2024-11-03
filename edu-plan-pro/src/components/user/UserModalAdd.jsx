@@ -1,7 +1,25 @@
 import { useState, useEffect } from "react";
 import { SweetAlertSuccess, SweetAlertError } from "../../assets/js/sweetalert.js";
 
-//funcionn donde se envia los datos del formulario mas el string de los datos de la sesion
+async function fetchRoles() {
+  try {
+    const response = await fetch("http://localhost:3001/rol", {
+      method: "GET",
+      credentials: "include",
+    });
+
+    if (!response.ok) {
+      throw new Error("Error en la solicitud");
+    }
+
+    const jsonResponse = await response.json();
+    return Array.isArray(jsonResponse.data) ? jsonResponse.data : [];
+  } catch (error) {
+    console.error("Error al obtener los roles:", error);
+    return [];
+  }
+}
+
 async function fetchUsuarioCreate(data) {
   try {
     const response = await fetch("http://localhost:3001/user", {
@@ -18,37 +36,63 @@ async function fetchUsuarioCreate(data) {
     }
 
     const jsonResponse = await response.json();
-    document.getElementById("closeUsuarioModalAdd").click();
-    SweetAlertSuccess(jsonResponse.data || "Registro exitoso!");
 
+    if (jsonResponse.code === "501") {
+      SweetAlertError("Campos Invalidos.");
+      return;
+    }
+
+    document.getElementById("closeUserModalAdd").click();
+    SweetAlertSuccess("Registro exitoso!");
     return jsonResponse.data;
   } catch (error) {
-    console.error("Error al crear el docente:", error);
-    SweetAlertError(`Error al crear el docente: ${error.message}`);
+    console.error("Error al crear el usuario:", error);
+    SweetAlertError(`Error al crear el usuario: ${error.message}`);
   }
 }
-//incializa las variables, ademas le paso quemado el rol
+
 const UserModalAdd = () => {
   const [data, setData] = useState({
     name: "",
     secName: "",
     idcard: "",
-    pass:"",
-    idRol:"5",
+    pass: "",
+    idRol: "", 
   });
 
+  const [roles, setRoles] = useState([]);
   const [error, setError] = useState("");
   const [firstSubmit, setFirstSubmit] = useState(true);
-/*
+
   useEffect(() => {
-    // Limpia los campos al abrir el modal
-    setData({
-      name: "",
-      secName: "",
-      idcard: "",
-      pass: "",
-    });
-  }, []);*/
+    const loadRoles = async () => {
+      const fetchedRoles = await fetchRoles();
+      setRoles(fetchedRoles);
+    };
+    loadRoles();
+  }, []);
+
+  useEffect(() => {
+    const modal = document.getElementById("userModalAdd");
+
+    const handleModalOpen = () => {
+      setData({
+        name: "",
+        secName: "",
+        idcard: "",
+        pass: "",
+        idRol: "", 
+      });
+      setError("");
+      setFirstSubmit(true);
+    };
+    //se usa para restablecer el formulario cada vez que se abre el modal
+    modal.addEventListener("show.bs.modal", handleModalOpen);
+
+    return () => {
+      modal.removeEventListener("show.bs.modal", handleModalOpen);
+    };
+  }, []);
 
   const handleChange = (e) => {
     setData({
@@ -56,14 +100,37 @@ const UserModalAdd = () => {
       [e.target.name]: e.target.value,
     });
   };
+  //enviar a traves del post y se realiza un parseo al id rol para que vaya int
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setFirstSubmit(false);
 
+    if (handleValidate()) {
+      const formattedData = {
+        ...data,
+        idRol: parseInt(data.idRol, 10),
+      };
+      fetchUsuarioCreate(formattedData);
+    } else {
+      SweetAlertError("Verifique Datos Ingresados.");
+    }
+  };
+  //validaciones basicas
   const handleValidate = () => {
     if (data.name.trim() === "") {
       setError("Nombre vacío");
       return false;
     }
+    if (/\d/.test(data.name)) {
+      setError("El nombre no debe contener números");
+      return false;
+    }
     if (data.secName.trim() === "") {
       setError("Apellido vacío");
+      return false;
+    }
+    if (/\d/.test(data.secName)) {
+      setError("El apellido no debe contener números");
       return false;
     }
     if (data.idcard.trim() === "") {
@@ -71,22 +138,16 @@ const UserModalAdd = () => {
       return false;
     }
     if (data.pass.trim() === "" || data.pass.length < 4) {
-      setError("Contraseña no cumple requsitos minimos");
+      setError("Contraseña no cumple requisitos mínimos");
+      return false;
+    }
+    if (data.idRol === "") {
+      setError("Seleccione un rol");
       return false;
     }
 
     setError("");
     return true;
-  };
-
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    setFirstSubmit(false);
-    if (handleValidate()) {
-      fetchUsuarioCreate(data);
-    } else {
-      SweetAlertError("Verifique Datos Ingresados.");
-    }
   };
 
   return (
@@ -108,7 +169,7 @@ const UserModalAdd = () => {
               className="btn-close bg-white"
               data-bs-dismiss="modal"
               aria-label="Close"
-              id="closeUsuarioModalAdd"
+              id="closeUserModalAdd"
             ></button>
           </div>
           <div className="modal-body">
@@ -153,6 +214,26 @@ const UserModalAdd = () => {
                   placeholder="Ingrese la cédula"
                   autoComplete="new-password"
                 />
+              </div>
+
+              <div className="form-group mt-3">
+                <label htmlFor="roleSelect" className="form-label">Rol</label>
+                <select
+                  className="form-control"
+                  id="roleSelect"
+                  name="idRol"
+                  value={data.idRol}
+                  onChange={handleChange}
+                >
+                  <option value="" disabled>
+                    Seleccione rol
+                  </option>
+                  {roles.map((role) => (
+                    <option key={role.ID_ROL} value={role.ID_ROL}>
+                      {role.NOMBRE}
+                    </option>
+                  ))}
+                </select>
               </div>
 
               <div className="form-group mt-3">
