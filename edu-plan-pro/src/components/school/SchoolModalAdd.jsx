@@ -62,22 +62,23 @@ const SchoolModalAdd = () => {
     // Crear el objeto con los datos a enviar
     const schoolData = {
       desc: schoolName, // Nombre de la escuela
-      id: selectedFaculty, // ID de la facultad seleccionada, Recordar que es necesario para insertar en tabla School
+      id: parseInt(selectedFaculty), // ID de la facultad seleccionada, Recordar que es necesario para insertar en tabla School
     };
 
     try {
+      
       const response = await fetch("http://localhost:3001/school", {
         // URL de tu API para insertar escuela
         method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
         credentials: "include",
+        headers: {
+          "Content-Type": "application/json", // Indicar que se envían datos JSON
+        },
         body: JSON.stringify(schoolData), // Enviar los datos como JSON
       });
 
       const jsonResponse = await response.json(); // Obtener la respuesta del servidor
-
+      console.log(jsonResponse);
       if (!response.ok) {
         throw new Error(jsonResponse.data || "Error al insertar la escuela");
       }

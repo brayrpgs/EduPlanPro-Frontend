@@ -117,9 +117,7 @@ const SchoolTable = () => {
   };
 
   const handleIconClick = () => {
-    setSearchTerm(""); // Restablecer la búsqueda
-    setSearchTerm2(""); // Restablecer el segundo término de búsqueda
-    setCurrentPage(1); // Reiniciar a la página 1
+    window.location.reload(); 
   };
 
   const disableInputSearch = true;
