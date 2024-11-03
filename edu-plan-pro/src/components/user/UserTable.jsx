@@ -7,83 +7,64 @@ import FilterOffIcon from "../icons/MainIcons/FilterOffIcon";
 import AddIcon from "../icons/ActionIcons/AddIcon";
 import UserModalAdd from "./UserModalAdd.jsx";
 import MainSearch from "../search/MainSearch.jsx";
+import Pagination from "../pagination/Pagination.jsx";
 
-async function fetchUserData() {
-  try {
-    const response = await fetch("http://localhost:3001/user", {
-      method: "GET",
-      credentials: "include",
-    });
+
+const UserTable = () => {
+  
+  const [users, setUsers] = useState([]);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [userToDelete, setUserToDelete] = useState(null);
+  const [filteredUser, setFilteredUser] = useState([]);
+  const [nameUser, setNameUser] = useState("");
+  const [secName, setSecName] = useState("");
+  const [idCard, setIdCard] = useState("");
+  const [currentPage, setCurrentPage] = useState(1);
+  const [totalItems, setTotalItems] = useState(0);
+
+  const loadUserData = async (page) => {
+    const searchQuery = `&nameUser=${nameUser}&secName=${secName}&idCard=${idCard}`;
+    const response = await fetch(
+      `http://localhost:3001/searchuser?name=search-page&numPage=${page}${searchQuery}`,
+      {
+        method: "GET",
+        credentials: "include",
+      }
+    );
 
     if (!response.ok) {
-      throw new Error("Error en la solicitud");
+      console.error("Error en la solicitud");
+      return;
     }
 
     const jsonResponse = await response.json();
     console.log(jsonResponse)
-    return Array.isArray(jsonResponse.data) ? jsonResponse.data : [];
-  } catch (error) {
-    console.error("Error al obtener los datos:", error);
-    return [];
-  }
-}
-
-const UserTable = () => {
-  const [Users, setUsers] = useState([]);
-  const [searchTerms, setSearchTerms] = useState({
-    n: "",
-    a: "",
-    a: "",
-  });
-
-  useEffect(() => {
-    const getUsers = async () => {
-      const data = await fetchUserData();
-      setUsers(data);
-    };
-    getUsers();
-  }, []);
-
-  const handleSearch = (value, column) => {
-    switch (column) {
-      case "n":
-        setSearchTerms((prev) => ({ ...prev, n: value }));
-        break;
-      case "a":
-        setSearchTerms((prev) => ({ ...prev, a: value }));
-        break;
-      case "c":
-        setSearchTerms((prev) => ({ ...prev, c: value }));
-        break;
-      default:
-        break;
-    }
+    setFilteredUser(jsonResponse.data.rows || []);
+    setTotalItems(jsonResponse.data.totalMatches || 0);
   };
 
-  const filteredUser = Users.filter((User) => {
-    const matchesName = searchTerms.n
-      ? User["NOMBRE"]
-          ?.toString()
-          .toLowerCase()
-          .includes(searchTerms.n.toString().toLowerCase())
-      : true;
+  useEffect(() => {
+    loadUserData(currentPage);
+  }, [currentPage, nameUser, secName, idCard]);
 
-    const matchesLastName = searchTerms.a
-      ? User["APELLIDOS"]
-          ?.toString()
-          .toLowerCase()
-          .includes(searchTerms.a.toString().toLowerCase())
-      : true;
+  const handlePageChange = (page) => {
+    setCurrentPage(page);
+  };
 
-    const matchesIdCard = searchTerms.c
-      ? User["IDENTIFICACION"]
-          ?.toString()
-          .toLowerCase()
-          .includes(searchTerms.c.toString().toLowerCase())
-      : true;
+  const handleNameUser = (value) => {
+    setNameUser(value);
+    setCurrentPage(1); // Reinicia a la página 1 al buscar
+  };
 
-    return matchesName && matchesLastName && matchesIdCard;
-  });
+  const handleSecName = (value) => {
+    setSecName(value);
+    setCurrentPage(1); // Reinicia a la página 1 al buscar
+  };
+
+  const handleIdCard = (value) => {
+    setIdCard(value);
+    setCurrentPage(1); // Reinicia a la página 1 al buscar
+  };
 
   const handleIconClick = () => {
     window.location.reload();
@@ -97,7 +78,7 @@ const UserTable = () => {
 
       <div className="user-container">
         <div className="container mt-5" title="Buscar usuarios.">
-        <MainSearch placeholder={"Ingrese el nombre de un usuario"} /*onSearch={handleSearch}*//>
+        <MainSearch placeholder={"Ingrese el nombre de un usuario"} onSearch={handleNameUser}/>
           <button
             className="button-filter"
             title="Restablecer filtros"
@@ -127,7 +108,7 @@ const UserTable = () => {
                     style={{ position: "relative" }}
                   >
                     <SearchInput
-                      onSearch={(value) => handleSearch(value, "n")}
+                      onSearch={(value) => handleNameUser(value)}
                       inputClassName="search-input pl-3"
                     />
                   </div>
@@ -139,7 +120,7 @@ const UserTable = () => {
                     style={{ position: "relative" }}
                   >
                     <SearchInput
-                      onSearch={(value) => handleSearch(value, "a")}
+                      onSearch={(value) => handleSecName(value)}
                       inputClassName="search-input pl-3"
                     />
                   </div>
@@ -151,7 +132,7 @@ const UserTable = () => {
                     style={{ position: "relative" }}
                   >
                     <SearchInput
-                      onSearch={(value) => handleSearch(value, "c")}
+                      onSearch={(value) => handleIdCard(value)}
                       inputClassName="search-input pl-3"
                     />
                   </div>
@@ -197,6 +178,12 @@ const UserTable = () => {
           </table>
         </div>
         <UserModalAdd />
+        <Pagination
+          totalItems={totalItems}
+          itemsPerPage={"8"}
+          currentPage={currentPage}
+          onPageChange={handlePageChange}
+        />
       </div>
     </div>
   );

@@ -7,94 +7,68 @@ import FilterOffIcon from "../icons/MainIcons/FilterOffIcon";
 import AddIcon from "../icons/ActionIcons/AddIcon";
 import TeacherModalAdd from "./TeacherModalAdd";
 import MainSearch from "../search/MainSearch";
-
-async function fetchTeacherData() {
-  try {
-    const response = await fetch("http://localhost:3001/teacher", {
-      method: "GET",
-      credentials: "include",
-    });
-
-    if (!response.ok) {
-      throw new Error("Error en la solicitud");
-    }
-
-    const jsonResponse = await response.json();
-
-    return Array.isArray(jsonResponse.data) ? jsonResponse.data : [];
-  } catch (error) {
-    console.error("Error al obtener los datos:", error);
-    return [];
-  }
-}
+import Pagination from "../pagination/Pagination";
 
 const TeacherTable = () => {
   const [teachers, setTeachers] = useState([]);
-  const [searchTerms, setSearchTerms] = useState({
-    n: "",
-    a: "",
-    a: "",
-    ce: "",
-  });
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [teacherToDelete, setTeacherToDelete] = useState(null);
+  const [filteredTeacher, setFilteredTeacher] = useState([]);
+  const [nameTeach, setNameTeach] = useState("");
+  const [secName, setSecName] = useState("");
+  const [idCard, setIdCard] = useState("");
+  const [email, setEmail] = useState("");
+  const [currentPage, setCurrentPage] = useState(1);
+  const [totalItems, setTotalItems] = useState(0);
 
-  useEffect(() => {
-    const getTeachers = async () => {
-      const data = await fetchTeacherData();
-      setTeachers(data);
-    };
-    getTeachers();
-  }, []);
+  const loadTeacherData = async (page) => {
+    const searchQuery = `&nameTeach=${nameTeach}&secName=${secName}&idCard=${idCard}&email=${email}`;
+    const response = await fetch(
+      `http://localhost:3001/searchteacher?name=search-page&numPage=${page}${searchQuery}`,
+      {
+        method: "GET",
+        credentials: "include",
+      }
+    );
 
-  const handleSearch = (value, column) => {
-    switch (column) {
-      case "n":
-        setSearchTerms((prev) => ({ ...prev, n: value }));
-        break;
-      case "a":
-        setSearchTerms((prev) => ({ ...prev, a: value }));
-        break;
-      case "c":
-        setSearchTerms((prev) => ({ ...prev, c: value }));
-        break;
-      case "ce":
-        setSearchTerms((prev) => ({ ...prev, ce: value }));
-        break;
-      default:
-        break;
+    if (!response.ok) {
+      console.error("Error en la solicitud");
+      return;
     }
+
+    const jsonResponse = await response.json();
+    console.log(jsonResponse)
+    setFilteredTeacher(jsonResponse.data.rows || []);
+    setTotalItems(jsonResponse.data.totalMatches || 0);
   };
 
-  const filteredTeacher = teachers.filter((teacher) => {
-    const matchesName = searchTerms.n
-      ? teacher["NOMBRE"]
-          ?.toString()
-          .toLowerCase()
-          .includes(searchTerms.n.toString().toLowerCase())
-      : true;
+  useEffect(() => {
+    loadTeacherData(currentPage);
+  }, [currentPage, nameTeach, secName, idCard, email]);
 
-    const matchesLastName = searchTerms.a
-      ? teacher["APELLIDOS"]
-          ?.toString()
-          .toLowerCase()
-          .includes(searchTerms.a.toString().toLowerCase())
-      : true;
+  const handlePageChange = (page) => {
+    setCurrentPage(page);
+  };
 
-    const matchesIdCard = searchTerms.c
-      ? teacher["CEDULA"]
-          ?.toString()
-          .toLowerCase()
-          .includes(searchTerms.c.toString().toLowerCase())
-      : true;
+  const handleNameTeach = (value) => {
+    setNameTeach(value);
+    setCurrentPage(1); // Reinicia a la página 1 al buscar
+  };
 
-    const matchesEmail = searchTerms.ce
-      ? teacher["CORREO"]
-          ?.toString()
-          .toLowerCase()
-          .includes(searchTerms.ce.toString().toLowerCase())
-      : true;
+  const handleSecName = (value) => {
+    setSecName(value);
+    setCurrentPage(1); // Reinicia a la página 1 al buscar
+  };
 
-    return matchesName && matchesLastName && matchesIdCard && matchesEmail;
-  });
+  const handleIdCard = (value) => {
+    setIdCard(value);
+    setCurrentPage(1); // Reinicia a la página 1 al buscar
+  };
+
+  const handleEmail = (value) => {
+    setEmail(value);
+    setCurrentPage(1); // Reinicia a la página 1 al buscar
+  };
 
   const handleIconClick = () => {
     window.location.reload();
@@ -108,7 +82,11 @@ const TeacherTable = () => {
 
       <div className="teacher-container" title="Buscar profesores.">
         <div className="container mt-5">
-         <MainSearch placeholder={"Ingrese el nombre de un profesor"} /*onSearch={handleSearch}*//>
+          <MainSearch
+            placeholder={
+              "Ingrese el nombre de un profesor"
+            } onSearch={handleNameTeach}
+          />
           <button
             className="button-filter"
             title="Restablecer filtros"
@@ -138,7 +116,7 @@ const TeacherTable = () => {
                     style={{ position: "relative" }}
                   >
                     <SearchInput
-                      onSearch={(value) => handleSearch(value, "n")}
+                      onSearch={(value) => handleNameTeach(value)}
                       inputClassName="search-input pl-3"
                     />
                   </div>
@@ -150,7 +128,7 @@ const TeacherTable = () => {
                     style={{ position: "relative" }}
                   >
                     <SearchInput
-                      onSearch={(value) => handleSearch(value, "a")}
+                      onSearch={(value) => handleSecName(value)}
                       inputClassName="search-input pl-3"
                     />
                   </div>
@@ -162,7 +140,7 @@ const TeacherTable = () => {
                     style={{ position: "relative" }}
                   >
                     <SearchInput
-                      onSearch={(value) => handleSearch(value, "c")}
+                      onSearch={(value) => handleIdCard(value)}
                       inputClassName="search-input pl-3"
                     />
                   </div>
@@ -174,7 +152,7 @@ const TeacherTable = () => {
                     style={{ position: "relative" }}
                   >
                     <SearchInput
-                      onSearch={(value) => handleSearch(value, "ce")}
+                      onSearch={(value) => handleEmail(value)}
                       inputClassName="search-input pl-3"
                     />
                   </div>
@@ -196,7 +174,7 @@ const TeacherTable = () => {
                   <tr key={teacher.ID_TEACHER} style={{ color: "#CD1719" }}>
                     <td className="bg-light">{teacher["NOMBRE"]}</td>
                     <td className="bg-light">{teacher["APELLIDOS"]}</td>
-                    <td className="bg-light">{teacher["CEDULA"]}</td>
+                    <td className="bg-light">{teacher["IDENTIFICACION"]}</td>
                     <td className="bg-light">{teacher["CORREO"]}</td>
                     <td className="bg-light">
                       <div style={{ textAlign: "center" }}>
@@ -221,7 +199,14 @@ const TeacherTable = () => {
           </table>
         </div>
         <TeacherModalAdd />
+        <Pagination
+          totalItems={totalItems}
+          itemsPerPage={"8"}
+          currentPage={currentPage}
+          onPageChange={handlePageChange}
+        />
       </div>
+      
     </div>
   );
 };
