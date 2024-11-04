@@ -6,6 +6,8 @@ import './UpdateFaculty.css';
 const UpdateFaculty = ({ faculty }) => {
     const [desc, setNombreFacultad] = useState('');
     const [isModalOpen, setIsModalOpen] = useState(false);
+    const [isModalVisible, setIsModalVisible] = useState(false);
+    const [inputError, setInputError] = useState('');
 
     useEffect(() => {
         if (faculty) {
@@ -13,15 +15,59 @@ const UpdateFaculty = ({ faculty }) => {
         }
     }, [faculty]);
 
-    if (!faculty) {
-        return null;
-    }
+    useEffect(() => {
+        if (isModalOpen) {
+            setTimeout(() => {
+                setIsModalVisible(true);
+            }, 10);
+        }
+    }, [isModalOpen]);
+
+    if (!faculty) return null;
+
+    // Función para validar el texto
+    const validateInput = (text) => {
+        const regex = /^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s.]+$/;
+        return regex.test(text);
+    };
+
+    const handleInputChange = (e) => {
+        const value = e.target.value;
+        setNombreFacultad(value);
+        
+        if (inputError) {
+            setInputError('');
+        }
+    };
 
     const updateFaculty = async e => {
         e.preventDefault();
+
+        // Validar que el campo no esté vacío
+        if (!desc.trim()) {
+            Swal.fire({
+                icon: 'warning',
+                title: 'Campo vacío',
+                text: 'El nombre de la facultad no puede estar vacío',
+                confirmButtonColor: '#3085d6'
+            });
+            return;
+        }
+
+        // Validar que solo contenga texto
+        if (!validateInput(desc)) {
+            Swal.fire({
+                icon: 'warning',
+                title: 'Formato inválido',
+                text: 'El nombre solo puede contener letras, espacios y puntos',
+                confirmButtonColor: '#3085d6'
+            });
+            return;
+        }
+
         try {
             const body = {
-                desc,
+                desc: desc.trim(),
                 'id': faculty.ID_FACULTY,
                 'stat': 1
             };
@@ -41,14 +87,13 @@ const UpdateFaculty = ({ faculty }) => {
                     showConfirmButton: false,
                     timer: 1500
                 });
-                setIsModalOpen(false);
+                closeModal();
+                setTimeout(() => {
+                    window.location.reload();
+                }, 1500);
             } else {
                 throw new Error('Error al actualizar la facultad');
             }
-            
-            setTimeout(() => {
-                window.location.reload();
-            }, 1500);
         } catch (err) {
             Swal.fire({
                 icon: 'error',
@@ -63,16 +108,21 @@ const UpdateFaculty = ({ faculty }) => {
         if (faculty) {
             setNombreFacultad(faculty['NOMBRE FACULTAD'] || '');
         }
+        setInputError(''); // Limpiar cualquier mensaje de error
     }
 
-    const handleCloseModal = () => {
-        setIsModalOpen(false);
+    const closeModal = () => {
+        setIsModalVisible(false);
+        setTimeout(() => {
+            setIsModalOpen(false);
+        }, 300);
         resetFields();
     }
 
     return (
         <div>
             <button 
+                type="button" 
                 className="update-button"
                 onClick={() => setIsModalOpen(true)}
             >
@@ -80,16 +130,18 @@ const UpdateFaculty = ({ faculty }) => {
             </button>
 
             {isModalOpen && (
-                <div className="modal-overlay" onClick={handleCloseModal}>
-                    <div className="modal-container" onClick={e => e.stopPropagation()}>
+                <div className={`modal-overlay ${isModalVisible ? 'show' : ''}`}>
+                    <div className={`modal-container ${isModalVisible ? 'show' : ''}`} 
+                         onClick={e => e.stopPropagation()}>
                         <div className="modal-content">
                             <div className="modal-header">
                                 <h2>Actualizar Facultad</h2>
                                 <button 
+                                    type="button" 
                                     className="close-button"
-                                    onClick={handleCloseModal}
+                                    onClick={closeModal}
                                 >
-                                    ×
+                                    X
                                 </button>
                             </div>
 
@@ -99,23 +151,22 @@ const UpdateFaculty = ({ faculty }) => {
                                     <input 
                                         type="text" 
                                         value={desc} 
-                                        onChange={e => setNombreFacultad(e.target.value)} 
+                                        onChange={handleInputChange}
+                                        className={inputError ? 'error' : ''}
                                     />
+                                    {inputError && (
+                                        <span className="error-message">{inputError}</span>
+                                    )}
                                 </div>
                             </div>
 
                             <div className="modal-footer">
                                 <button 
+                                    type="button" 
                                     className="save-button"
                                     onClick={updateFaculty}
                                 >
                                     Guardar Cambios
-                                </button>
-                                <button 
-                                    className="cancel-button"
-                                    onClick={handleCloseModal}
-                                >
-                                    Cancelar
                                 </button>
                             </div>
                         </div>

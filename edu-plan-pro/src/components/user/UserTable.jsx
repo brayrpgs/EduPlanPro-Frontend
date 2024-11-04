@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import "./UserTable.css";
 import search from "../images/search.svg";
 import UpdateIcon from '../icons/ModalUpdateIcons/IconUpdate';
+import DeleteModal from "../modaldelete/DeleteModal.js"
 import deleteIcon from "../icons/ActionIcons/delete.svg";
 import SearchInput from "../search/SearchInput";
 import FilterOffIcon from "../icons/MainIcons/FilterOffIcon";
@@ -9,20 +10,39 @@ import AddIcon from "../icons/ActionIcons/AddIcon";
 import UserModalAdd from "./UserModalAdd.jsx";
 import UpdateUser from "./UpdateUser.jsx";
 import MainSearch from "../search/MainSearch.jsx";
+import Pagination from "../pagination/Pagination.jsx";
 
-async function fetchUserData() {
-  try {
-    const response = await fetch("http://localhost:3001/user", {
-      method: "GET",
-      credentials: "include",
-    });
+
+const UserTable = () => {
+  
+  const [users, setUsers] = useState([]);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [userToDelete, setUserToDelete] = useState(null);
+  const [filteredUser, setFilteredUser] = useState([]);
+  const [nameUser, setNameUser] = useState("");
+  const [secName, setSecName] = useState("");
+  const [idCard, setIdCard] = useState("");
+  const [currentPage, setCurrentPage] = useState(1);
+  const [totalItems, setTotalItems] = useState(0);
+
+  const loadUserData = async (page) => {
+    const searchQuery = `&nameUser=${nameUser}&secName=${secName}&idCard=${idCard}`;
+    const response = await fetch(
+      `http://localhost:3001/searchuser?name=search-page&numPage=${page}${searchQuery}`,
+      {
+        method: "GET",
+        credentials: "include",
+      }
+    );
 
     if (!response.ok) {
-      throw new Error("Error en la solicitud");
+      console.error("Error en la solicitud");
+      return;
     }
 
     const jsonResponse = await response.json();
     console.log(jsonResponse)
+
     return Array.isArray(jsonResponse.data) ? jsonResponse.data : [];
   } catch (error) {
     console.error("Error al obtener los datos:", error);
@@ -40,29 +60,58 @@ const UserTable = () => {
     a: "",
   });
 
-  useEffect(() => {
-    const getUsers = async () => {
-      const data = await fetchUserData();
-      setUsers(data);
-    };
-    getUsers();
-  }, []);
+    setFilteredUser(jsonResponse.data.rows || []);
+    setTotalItems(jsonResponse.data.totalMatches || 0);
+  };
 
-  const handleSearch = (value, column) => {
-    switch (column) {
-      case "n":
-        setSearchTerms((prev) => ({ ...prev, n: value }));
-        break;
-      case "a":
-        setSearchTerms((prev) => ({ ...prev, a: value }));
-        break;
-      case "c":
-        setSearchTerms((prev) => ({ ...prev, c: value }));
-        break;
-      default:
-        break;
+
+  useEffect(() => {
+    loadUserData(currentPage);
+  }, [currentPage, nameUser, secName, idCard]);
+
+  const handleDelete = async () => {
+    try {
+      const response = await fetch("http://localhost:3001/user", {
+        method: "PATCH",
+        credentials: "include",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          id: userToDelete.ID_USER,
+          name: userToDelete.NOMBRE,
+          secName: userToDelete.APELLIDOS,
+          idcard: userToDelete.IDENTIFICACION,
+          idrol: userToDelete.ID_ROL, // se va null porque el backend no me lo manda, ni tiene metodo para obtenerlo
+          pass: userToDelete.PASSWORD || "",
+          stat: "0",
+          flagPass: userToDelete.FLAG_PASSWORD || "0"
+        }),
+      });
+
+      if (!response.ok) {
+        throw new Error("Error en la solicitud");
+      }
+
+      const result = await response.json();
+
+      if (result.code === "200") {
+        // Actualizar la lista de usuarios después de eliminar
+        const updatedUsers = users.filter(
+          (user) => user.ID_USER !== userToDelete.ID_USER
+        );
+        setUsers(updatedUsers);
+        return true;
+      } else {
+        console.error("Error al eliminar:", result.data);
+        return false;
+      }
+    } catch (error) {
+      console.error("Error al eliminar el usuario:", error);
+      return false;
     }
   };
+
 
   const handleEditUser = (User) => {
     setSelectedUser(User);
@@ -104,6 +153,37 @@ const UserTable = () => {
     return matchesName && matchesLastName && matchesIdCard;
   });
 
+  const openModal = (user) => {
+    setUserToDelete(user);
+    setIsModalOpen(true);
+  };
+
+  const closeModal = () => {
+    setIsModalOpen(false);
+    setUserToDelete(null);
+  };
+
+
+  const handlePageChange = (page) => {
+    setCurrentPage(page);
+  };
+
+  const handleNameUser = (value) => {
+    setNameUser(value);
+    setCurrentPage(1); // Reinicia a la página 1 al buscar
+  };
+
+  const handleSecName = (value) => {
+    setSecName(value);
+    setCurrentPage(1); // Reinicia a la página 1 al buscar
+  };
+
+  const handleIdCard = (value) => {
+    setIdCard(value);
+    setCurrentPage(1); // Reinicia a la página 1 al buscar
+  };
+
+
   const handleIconClick = () => {
     window.location.reload();
   };
@@ -116,7 +196,9 @@ const UserTable = () => {
 
       <div className="user-container">
         <div className="container mt-5" title="Buscar usuarios.">
-          <MainSearch placeholder={"Ingrese el nombre de un usuario"} /*onSearch={handleSearch}*/ />
+
+        <MainSearch placeholder={"Ingrese el nombre de un usuario"} onSearch={handleNameUser}/>
+
           <button
             className="button-filter"
             title="Restablecer filtros"
@@ -146,7 +228,7 @@ const UserTable = () => {
                     style={{ position: "relative" }}
                   >
                     <SearchInput
-                      onSearch={(value) => handleSearch(value, "n")}
+                      onSearch={(value) => handleNameUser(value)}
                       inputClassName="search-input pl-3"
                     />
                   </div>
@@ -158,7 +240,7 @@ const UserTable = () => {
                     style={{ position: "relative" }}
                   >
                     <SearchInput
-                      onSearch={(value) => handleSearch(value, "a")}
+                      onSearch={(value) => handleSecName(value)}
                       inputClassName="search-input pl-3"
                     />
                   </div>
@@ -170,7 +252,7 @@ const UserTable = () => {
                     style={{ position: "relative" }}
                   >
                     <SearchInput
-                      onSearch={(value) => handleSearch(value, "c")}
+                      onSearch={(value) => handleIdCard(value)}
                       inputClassName="search-input pl-3"
                     />
                   </div>
@@ -211,6 +293,8 @@ const UserTable = () => {
                           alt="Eliminar"
                           style={{ cursor: "pointer" }}
 
+                          onClick={() => openModal(User)}
+
                         />
                       </div>
                     </td>
@@ -227,11 +311,23 @@ const UserTable = () => {
           </table>
         </div>
         <UserModalAdd />
+
         <UpdateUser
           isOpen={isEditModalOpen}
           user={selectedUser}
           onClose={handleCloseModal}
           onUpdate={handleUpdateSuccess}
+        <DeleteModal
+          isOpen={isModalOpen}
+          onClose={closeModal}
+          onDelete={handleDelete}
+          itemName={userToDelete ? `${userToDelete["NOMBRE"]} ${userToDelete["APELLIDOS"]}` : "usuario"}
+        />
+        <Pagination
+          totalItems={totalItems}
+          itemsPerPage={"8"}
+          currentPage={currentPage}
+          onPageChange={handlePageChange}
         />
       </div>
     </div>

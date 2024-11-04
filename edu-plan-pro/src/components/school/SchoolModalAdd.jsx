@@ -1,8 +1,5 @@
 import { useState, useEffect } from "react";
-import {
-  SweetAlertSuccess,
-  SweetAlertError,
-} from "../../assets/js/sweetalert.js";
+import { SweetAlertSuccess, SweetAlertError } from "../../assets/js/sweetalert.js";
 
 // Función para obtener facultades desde la API
 const fetchFacultyData = async () => {
@@ -17,7 +14,6 @@ const fetchFacultyData = async () => {
     }
 
     const jsonResponse = await response.json();
-
     return Array.isArray(jsonResponse.data) ? jsonResponse.data : [];
   } catch (error) {
     console.error("Error al obtener los datos:", error);
@@ -39,73 +35,79 @@ const SchoolModalAdd = () => {
     loadFaculties();
   }, []); // Cargar facultades al montar el componente
 
-  useEffect(() => {
-    if (showAlert) {
-      SweetAlertSuccess("Registro exitoso!");
-      setTimeout(() => {
-        setShowAlert(false);
-      }, 3000);
-    }
-  }, [showAlert]);
 
   // Función para manejar el envío de datos a través del POST
   const handleSubmit = async (e) => {
     e.preventDefault();
 
     // Verificar que se haya seleccionado una facultad y que el nombre de la escuela no esté vacío o tenga solo espacios en blanco
-    if (!selectedFaculty || !schoolName.trim()) {
-      SweetAlertError("Por favor, completa todos los campos correctamente.");
-     
+    if (!selectedFaculty.trim()) {
+      SweetAlertError("Seleccione una Facultad.");
+      return;
+    }
+    if (!schoolName.trim()) {
+      SweetAlertError("Campo escuela vacío.");
+      return;
+    }
+    if (/\d/.test(schoolName)) { // Validación para evitar números en el nombre de la escuela
+      SweetAlertError("El nombre de la escuela no debe contener números.");
       return;
     }
 
-    // Crear el objeto con los datos a enviar
+    // Crear el objeto con los datos a enviar y convertir selectedFaculty a un entero
     const schoolData = {
       desc: schoolName, // Nombre de la escuela
-      id: parseInt(selectedFaculty), // ID de la facultad seleccionada, Recordar que es necesario para insertar en tabla School
+      id: parseInt(selectedFaculty, 10), // ID de la facultad como número entero esto porque me estada dando error al pasarlo como string
     };
 
+    // Enviar a backend a través del método POST
     try {
-      
       const response = await fetch("http://localhost:3001/school", {
-        // URL de tu API para insertar escuela
         method: "POST",
-        credentials: "include",
         headers: {
-          "Content-Type": "application/json", // Indicar que se envían datos JSON
+          "Content-Type": "application/json",
         },
+        credentials: "include",
         body: JSON.stringify(schoolData), // Enviar los datos como JSON
       });
 
-      const jsonResponse = await response.json(); // Obtener la respuesta del servidor
-      console.log(jsonResponse);
-      if (!response.ok) {
-        throw new Error(jsonResponse.data || "Error al insertar la escuela");
+      // Primero obtenemos la respuesta JSON
+      const jsonResponse = await response.json();
+
+      // Verificar el estado de respuesta o el código de error devuelto por el backend
+      if (!response.ok || jsonResponse.code === "500" || jsonResponse.code === "501") {
+        if (jsonResponse.code === "500") {
+          SweetAlertError("Ya existe la escuela.");
+        } else if (jsonResponse.code === "501") {
+          SweetAlertError("Error, Campos Invalidos.");
+        } else {
+          SweetAlertError(jsonResponse.data || "Error al insertar la escuela");
+        }
+        return; // Salimos si hay un error, sin ejecutar el mensaje de éxito
       }
 
       // Si la inserción es exitosa
-      setShowAlert(true);
+      document.getElementById("closeSchoolModalAdd").click();
+      SweetAlertSuccess("Registro exitoso!");
       setSchoolName(""); // Reiniciar el campo de nombre de escuela
       setSelectedFaculty(""); // Reiniciar la selección de facultad
-
-      // Cerrar el modal usando el método click
-      SweetAlertSuccess("Escuela agregada correctamente!");
     } catch (error) {
       console.error("Error al insertar la escuela:", error);
       SweetAlertError("Error al registrar la escuela.");
     }
   };
 
+
   return (
     <div
-      className="modal fade "
-      id={"schoolModalAdd"}
+      className="modal fade"
+      id="schoolModalAdd"
       tabIndex={-1}
       aria-hidden="true"
     >
       <div className="modal-dialog modal-dialog-centered modal-dialog-scrollable">
         <div className="modal-content">
-          <div className="modal-header bg-danger ">
+          <div className="modal-header bg-danger">
             <h4 className="modal-title text-white" id="exampleModalLabel">
               {"Agregar una escuela"}
             </h4>
@@ -114,7 +116,7 @@ const SchoolModalAdd = () => {
               className="btn-close bg-white"
               data-bs-dismiss="modal"
               aria-label="Close"
-              id={"closeFacultyModalAdd"}
+              id="closeSchoolModalAdd"
             ></button>
           </div>
           <div className="modal-body">
@@ -144,7 +146,7 @@ const SchoolModalAdd = () => {
                   id="schoolName"
                   placeholder="Ingrese un nombre"
                   value={schoolName}
-                  onChange={(e) => setSchoolName(e.target.value)} // Captura el nombre de la escuela
+                  onChange={(e) => setSchoolName(e.target.value)}
                 />
               </div>
 

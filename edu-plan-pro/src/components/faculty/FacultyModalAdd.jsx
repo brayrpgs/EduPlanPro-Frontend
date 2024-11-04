@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import {
   SweetAlertSuccess,
   SweetAlertError,
@@ -21,9 +21,17 @@ async function fetchFacultyCreate(data) {
     }
 
     const jsonResponse = await response.json();
+
+    if (jsonResponse.code === "500") {
+      SweetAlertError("La facultad ya está registrada.");
+      return;
+    } else if (jsonResponse.code === "501") {
+      SweetAlertError("Campos inválidos.");
+      return;
+    }
+
     document.getElementById("closeFacultyModalAdd").click();
     SweetAlertSuccess("Registro exitoso!");
-
     return jsonResponse.data;
   } catch (error) {
     console.error("Error al crear la facultad:", error);
@@ -31,7 +39,7 @@ async function fetchFacultyCreate(data) {
   }
 }
 
-const FacultyModalAdd = ({ onAdd }) => {
+const FacultyModalAdd = () => {
   const [data, setData] = useState({
     name: "",
   });
@@ -45,14 +53,19 @@ const FacultyModalAdd = ({ onAdd }) => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    if (data.name.trim() === "") {
-      SweetAlertError("Verifique Datos Ingresados.");
+    const name = data.name.trim();
+
+    // Validación para evitar números en el campo de nombre
+    if (name === "") {
+      SweetAlertError("El nombre no puede estar vacío.");
       return;
     }
-    const newFaculty = fetchFacultyCreate(data);
-    if (newFaculty) {
-      onAdd(); 
+    if (/\d/.test(name)) {
+      SweetAlertError("El nombre no puede contener números.");
+      return;
     }
+
+    fetchFacultyCreate(data);
   };
 
   return (

@@ -62,28 +62,3 @@
 .aside.open {
   transform: translateX(0);  /* Deslizar el aside hacia la vista */
 }
-
-.nav-links {
-  position: absolute;
-  left: 50%;
-  transform: translateX(-50%);
-  display: flex;
-  gap: 20px; /* Espacio entre botones */
-}
-
-.nav-link {
-  background: none; /* Quita el fondo por defecto del botón */
-  border: none; /* Quita el borde por defecto del botón */
-  color: white !important;
-  text-decoration: none;
-  padding: 8px 16px;
-  border-radius: 4px;
-  transition: all 0.3s ease;
-  font-weight: 500;
-  cursor: pointer; /* Añade el cursor pointer */
-}
-
-.nav-link:hover {
-  background-color: rgba(255, 255, 255, 0.1);
-  color: #f0f0f0;
-}
