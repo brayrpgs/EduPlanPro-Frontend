@@ -64,8 +64,8 @@ const UserTable = () => {
     }
   };
 
-  const handleEditUser = (user) => {
-    setSelectedUser(user);
+  const handleEditUser = (User) => {
+    setSelectedUser(User);
     setIsEditModalOpen(true);
   };
 
@@ -190,9 +190,9 @@ const UserTable = () => {
               {filteredUser.length > 0 ? (
                 filteredUser.map((User) => (
                   <tr key={User.ID_USER} style={{ color: "#CD1719" }}>
-                    <td className="bg-light">{User["DSC_NAME"]}</td>
-                    <td className="bg-light">{User["DSC_SECOND_NAME"]}</td>
-                    <td className="bg-light">{User["IDCARD"]}</td>
+                    <td className="bg-light">{User["NOMBRE"]}</td>
+                    <td className="bg-light">{User["APELLIDOS"]}</td>
+                    <td className="bg-light">{User["IDENTIFICACION"]}</td>
                     <td className="bg-light">
                       <div style={{ textAlign: "center" }}>
                         <div

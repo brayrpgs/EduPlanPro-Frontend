@@ -1,87 +1,64 @@
-.modal-edit {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    z-index: 1000;
-  }
-  
-  .modal-overlay {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: rgba(0, 0, 0, 0.5);
-    display: flex;
-    justify-content: center;
-    align-items: center;
-  }
-  
-  .modal-content {
-    background: white;
-    padding: 20px;
-    border-radius: 8px;
-    width: 90%;
-    max-width: 500px;
-  }
-  
-  .modal-content h2 {
-    color: #CD1719;
-    margin-bottom: 20px;
-    text-align: center;
-  }
-  
-  .form-group {
-    margin-bottom: 15px;
-  }
-  
-  .form-group label {
-    display: block;
-    margin-bottom: 5px;
-    color: #CD1719;
-    font-weight: 500;
-  }
-  
-  .form-group input {
-    width: 100%;
-    padding: 8px;
-    border: 1px solid #CD1719;
-    border-radius: 4px;
-    font-size: 14px;
-  }
-  
-  .modal-buttons {
-    display: flex;
-    justify-content: center;
-    gap: 10px;
-    margin-top: 20px;
-  }
-  
-  .confirm-button, .cancel-button {
-    padding: 8px 20px;
-    border-radius: 4px;
-    cursor: pointer;
-    font-size: 14px;
-    transition: opacity 0.2s;
-  }
-  
-  .confirm-button {
-    background: #CD1719;
-    color: white;
-    border: none;
-  }
-  
-  .cancel-button {
-    background: white;
-    color: #CD1719;
-    border: 1px solid #CD1719;
-  }
-  
-  .confirm-button:hover, .cancel-button:hover {
-    opacity: 0.9;
-  }
+.modal {
+  display: none; /* Oculta el modal por defecto */
+  position: fixed; /* Posiciona el modal en la ventana */
+  z-index: 1000; /* Asegúrate de que esté por encima de otros elementos */
+  left: 0;
+  top: 0;
+  width: 100%; /* Full width */
+  height: 100%; /* Full height */
+  overflow: auto; /* Habilita el scroll si es necesario */
+  background-color: rgba(0, 0, 0, 0.5); /* Fondo oscuro */
+}
+
+.modal.is-active {
+  display: block; /* Muestra el modal cuando está activo */
+}
+
+.modal-content {
+  background-color: #fff; /* Fondo blanco para el contenido del modal */
+  margin: 15% auto; /* Espaciado desde la parte superior y centrado horizontalmente */
+  padding: 20px;
+  border-radius: 5px; /* Bordes redondeados */
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.5); /* Sombra alrededor del modal */
+  width: 90%; /* Ancho del modal */
+  max-width: 600px; /* Ancho máximo */
+}
+
+.modal-header {
+  display: flex;
+  justify-content: space-between; /* Espacia los elementos en el encabezado */
+  align-items: center; /* Centra verticalmente los elementos */
+}
+
+.modal-body {
+  margin-top: 10px; /* Espaciado entre el encabezado y el cuerpo */
+}
+
+.form-group {
+  margin-bottom: 15px; /* Espaciado entre campos de formulario */
+}
+
+label {
+  display: block; /* Hace que las etiquetas ocupen toda la línea */
+  margin-bottom: 5px; /* Espaciado debajo de la etiqueta */
+}
+
+input {
+  width: 100%; /* Campo de entrada de ancho completo */
+  padding: 10px; /* Espaciado interno */
+  border: 1px solid #ccc; /* Borde gris claro */
+  border-radius: 4px; /* Bordes redondeados */
+}
+
+.btn {
+  background-color: #CD1719; /* Color de fondo del botón */
+  color: white; /* Color del texto del botón */
+  padding: 10px 15px; /* Espaciado interno */
+  border: none; /* Sin borde */
+  border-radius: 4px; /* Bordes redondeados */
+  cursor: pointer; /* Cambia el cursor al pasar el mouse */
+}
+
+.btn:hover {
+  background-color: #c50f13; /* Color del botón al pasar el mouse */
+}
