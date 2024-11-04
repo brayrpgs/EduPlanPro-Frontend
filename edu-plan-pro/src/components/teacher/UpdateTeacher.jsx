@@ -97,7 +97,7 @@ const TeacherEditModal = ({ isOpen, teacher, onClose, onUpdate }) => {
         <div className="modal-content">
           <div className="modal-header bg-danger">
             <h4 className="modal-title text-white" id="exampleModalLabel">
-              Editar Profesor
+              Editar Docente
             </h4>
             <button
               type="button"
