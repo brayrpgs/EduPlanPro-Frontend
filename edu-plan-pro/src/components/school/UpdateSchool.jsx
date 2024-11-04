@@ -1,15 +1,13 @@
-
 import React, { useState, useEffect } from "react";
 import Swal from 'sweetalert2';
 import IconUpdate from '../icons/ModalUpdateIcons/IconUpdate.jsx';
-import './UpdateSchool.css';
+import 'bootstrap/dist/css/bootstrap.min.css';
 
 const UpdateSchool = ({ school }) => {
     const [desc, setSchoolName] = useState('');
     const [facu, setSelectedFacultyId] = useState('');
     const [faculties, setFaculties] = useState([]);
     const [isModalOpen, setIsModalOpen] = useState(false);
-    const [isModalVisible, setIsModalVisible] = useState(false);
     const [inputError, setInputError] = useState('');
 
     useEffect(() => {
@@ -32,6 +30,7 @@ const UpdateSchool = ({ school }) => {
                     icon: 'error',
                     title: 'Error',
                     text: 'No se pudieron cargar las facultades. Por favor, recarga la página.',
+                    confirmButtonColor: '#dc3545'
                 });
             }
         };
@@ -46,19 +45,9 @@ const UpdateSchool = ({ school }) => {
         }
     }, [school]);
 
-    useEffect(() => {
-        if (isModalOpen) {
-            setTimeout(() => {
-                setIsModalVisible(true);
-            }, 10);
-        }
-    }, [isModalOpen]);
-
     if (!school) return null;
 
-    // Función para validar el texto
     const validateInput = (text) => {
-        // Expresión regular que solo permite letras (incluyendo tildes y ñ), espacios y puntos
         const regex = /^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s.]+$/;
         return regex.test(text);
     };
@@ -67,7 +56,6 @@ const UpdateSchool = ({ school }) => {
         const value = e.target.value;
         setSchoolName(value);
         
-        // Limpiar el mensaje de error cuando el usuario empieza a escribir
         if (inputError) {
             setInputError('');
         }
@@ -76,41 +64,38 @@ const UpdateSchool = ({ school }) => {
     const updateSchool = async e => {
         e.preventDefault();
 
-        // Validar que el campo no esté vacío
         if (!desc.trim()) {
             Swal.fire({
                 icon: 'warning',
                 title: 'Campo vacío',
                 text: 'El nombre de la escuela no puede estar vacío',
-                confirmButtonColor: '#3085d6'
+                confirmButtonColor: '#dc3545'
             });
             return;
         }
 
-        // Validar que solo contenga texto
         if (!validateInput(desc)) {
             Swal.fire({
                 icon: 'warning',
                 title: 'Formato inválido',
                 text: 'El nombre solo puede contener letras, espacios y puntos',
-                confirmButtonColor: '#3085d6'
+                confirmButtonColor: '#dc3545'
             });
             return;
         }
 
-        // Validar que se haya seleccionado una facultad
         if (!facu) {
             Swal.fire({
                 icon: 'warning',
                 title: 'Debe seleccionar una facultad',
-                confirmButtonColor: '#3085d6'
+                confirmButtonColor: '#dc3545'
             });
             return;
         }
 
         try {
             const body = {
-                desc: desc.trim(), // Eliminar espacios al inicio y final
+                desc: desc.trim(),
                 facu,
                 'stat': 1,
                 'id': school.ID_SCHOOL
@@ -123,15 +108,17 @@ const UpdateSchool = ({ school }) => {
                 credentials: "include",
             });
 
-            if (response.ok) {
+            const jsonResponse = await response.json();
+            if (jsonResponse.code === "200") {
                 Swal.fire({
                     icon: 'success',
                     title: 'Escuela actualizada',
                     text: 'La información de la escuela se actualizó correctamente.',
                     showConfirmButton: false,
-                    timer: 1500
+                    timer: 1500,
+                    confirmButtonColor: '#dc3545'
                 });
-                closeModal();
+                handleClose();
                 setTimeout(() => {
                     window.location.reload();
                 }, 1500);
@@ -142,7 +129,8 @@ const UpdateSchool = ({ school }) => {
             Swal.fire({
                 icon: 'error',
                 title: 'Error',
-                text: 'No se pudo actualizar la escuela. Por favor, intenta de nuevo.',
+                text: 'No se pudo actualizar la escuela, ya existe una con ese nombre',
+                confirmButtonColor: '#dc3545'
             });
             console.error(err.message);
         }
@@ -153,60 +141,77 @@ const UpdateSchool = ({ school }) => {
             setSchoolName(school['NOMBRE ESCUELA'] || '');
             setSelectedFacultyId(school.ID_FACULTY || '');
         }
-        setInputError(''); // Limpiar cualquier mensaje de error
+        setInputError('');
     }
 
-    const closeModal = () => {
-        setIsModalVisible(false);
-        setTimeout(() => {
-            setIsModalOpen(false);
-        }, 300);
+    const handleClose = () => {
+        setIsModalOpen(false);
         resetFields();
     }
 
     return (
-        <div>
+        <>
             <button 
                 type="button" 
-                className="update-button"
+                 className="update-button"
                 onClick={() => setIsModalOpen(true)}
+                style={{ background: "none", border: "none", cursor: "pointer", padding: "8px", transition: "opacity 0.2s"}}
             >
                 <IconUpdate />
             </button>
 
-            {isModalOpen && (
-                <div className={`modal-overlay ${isModalVisible ? 'show' : ''}`} >
-                    <div className={`modal-container ${isModalVisible ? 'show' : ''}`} 
-                         onClick={e => e.stopPropagation()}>
-                        <div className="modal-content">
-                            <div className="modal-header">
-                                <h2>Actualizar Escuela</h2>
-                                <button 
-                                    type="button" 
-                                    className="close-button"
-                                    onClick={closeModal}
-                                >
-                                    X
-                                </button>
-                            </div>
-
-                            <div className="modal-body">
-                                <div className="form-group">
-                                    <label>Nombre de la Escuela</label>
-                                    <input 
-                                        type="text" 
-                                        value={desc} 
+            <div
+                className={`modal fade ${isModalOpen ? 'show' : ''}`}
+                style={{ display: isModalOpen ? 'block' : 'none' }}
+                tabIndex="-1"
+                role="dialog"
+                aria-labelledby="updateSchoolModal"
+                aria-hidden={!isModalOpen}
+            >
+                <div className="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+                    <div className="modal-content">
+                        <div className="modal-header bg-danger">
+                            <h4 className="modal-title text-white" id="updateSchoolModal">
+                                Actualizar Escuela
+                            </h4>
+                            <button
+                                type="button"
+                                className="btn-close bg-white"
+                                aria-label="Close"
+                                onClick={handleClose}
+                            />
+                        </div>
+                        
+                        <div className="modal-body">
+                            <form onSubmit={updateSchool}>
+                                <div className="mb-3">
+                                    <label htmlFor="schoolName" className="form-label">
+                                        Nombre
+                                    </label>
+                                    <input
+                                        type="text"
+                                        className={`form-control ${inputError ? 'is-invalid' : ''}`}
+                                        id="schoolName"
+                                        value={desc}
                                         onChange={handleInputChange}
-                                        className={inputError ? 'error' : ''}
+                                        placeholder="Ingrese un nombre"
                                     />
                                     {inputError && (
-                                        <span className="error-message">{inputError}</span>
+                                        <div className="invalid-feedback">
+                                            {inputError}
+                                        </div>
                                     )}
-                                    <label className="label-select">Facultad</label>
+                                </div>
+
+                                <div className="mb-3">
+                                    <label htmlFor="faculty" className="form-label">
+                                        Facultad
+                                    </label>
                                     <select 
+                                        id="faculty"
+                                        className={`form-select ${!facu && inputError ? 'is-invalid' : ''}`}
                                         value={facu}
                                         onChange={e => setSelectedFacultyId(e.target.value)}
-                                        className={!facu && inputError ? 'error' : ''}
                                     >
                                         <option value="">Seleccione una facultad</option>
                                         {faculties.map(faculty => (
@@ -219,22 +224,43 @@ const UpdateSchool = ({ school }) => {
                                         ))}
                                     </select>
                                 </div>
-                            </div>
 
-                            <div className="modal-footer">
-                                <button 
-                                    type="button" 
-                                    className="save-button"
-                                    onClick={updateSchool}
-                                >
-                                    Guardar Cambios
-                                </button>
-                            </div>
+                                <div className="d-flex justify-content-center gap-2 mt-3">
+                                    <button
+                                        type="button"
+                                        className="cancel-button"
+                                        onClick={handleClose}
+                                        style={{
+                                            width: "100px",
+                                            backgroundColor: "#A7A7A9",
+                                            color: "white",
+                                            border: "none",
+                                            padding: "10px 20px",
+                                            borderRadius: "5px",
+                                            cursor: "pointer",
+                                            marginLeft: "10px",
+                                            marginTop: "40px" }}
+                                    >
+                                        Cancelar
+                                    </button>
+                                    <button
+                                        type="submit"
+                                        className="btn btn-danger"
+                                        style={{ width: "100px" }}
+                                    >
+                                        Guardar
+                                    </button>
+                                </div>
+                            </form>
                         </div>
                     </div>
                 </div>
+            </div>
+            
+            {isModalOpen && (
+                <div className="modal-backdrop fade show"></div>
             )}
-        </div>
+        </>
     );
 }
 
