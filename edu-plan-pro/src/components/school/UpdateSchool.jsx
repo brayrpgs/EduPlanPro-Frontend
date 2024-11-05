@@ -226,13 +226,23 @@ const UpdateSchool = ({ school }) => {
                                 </div>
 
                                 <div className="d-flex justify-content-center gap-2 mt-3">
+                                <button
+                                        type="submit"
+                                        className="btn btn-danger"
+                                        style={{ width: "100px" ,
+                                            backgroundColor: "#A31E32"
+
+                                        }}
+                                    >
+                                        Guardar
+                                    </button>
                                     <button
                                         type="button"
                                         className="cancel-button"
                                         onClick={handleClose}
                                         style={{
                                             width: "100px",
-                                            backgroundColor: "#A7A7A9",
+                                            backgroundColor: "#2b3843",
                                             color: "white",
                                             border: "none",
                                             padding: "10px 20px",
@@ -243,13 +253,7 @@ const UpdateSchool = ({ school }) => {
                                     >
                                         Cancelar
                                     </button>
-                                    <button
-                                        type="submit"
-                                        className="btn btn-danger"
-                                        style={{ width: "100px" }}
-                                    >
-                                        Guardar
-                                    </button>
+                                    
                                 </div>
                             </form>
                         </div>
@@ -258,7 +262,7 @@ const UpdateSchool = ({ school }) => {
             </div>
             
             {isModalOpen && (
-                <div className="modal-backdrop fade show"></div>
+                <div className="modal-backdrop fade "></div>
             )}
         </>
     );

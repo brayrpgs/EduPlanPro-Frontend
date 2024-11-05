@@ -94,12 +94,6 @@ const UserEditModal = ({ isOpen, user, onClose, onUpdate }) => {
       return false;
     }
 
-    // Validate ID card format (only numbers)
-    const idCardRegex = /^\d+$/;
-    if (!idCardRegex.test(formData.idcard)) {
-      SweetAlertError('La cédula debe contener solo números');
-      return false;
-    }
 
     // Validate role selection
     if (!formData.idrol) {

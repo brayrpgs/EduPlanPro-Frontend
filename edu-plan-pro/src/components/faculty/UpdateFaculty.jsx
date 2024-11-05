@@ -159,7 +159,9 @@ const UpdateFaculty = ({ faculty }) => {
                                     <button
                                         type="submit"
                                         className="btn btn-danger"
-                                        style={{ width: "100px" }}
+                                        style={{ width: "100px",
+                                            backgroundColor: "#A31E32"
+                                         }}
                                     >
                                         Guardar
                                     </button>
@@ -169,7 +171,7 @@ const UpdateFaculty = ({ faculty }) => {
                                         onClick={handleClose}
                                         style={{
                                             width: "100px",
-                                            backgroundColor: "#A7A7A9",
+                                            backgroundColor: "#2b3843",
                                             color: "white",
                                             border: "none",
                                             padding: "10px 20px",
@@ -189,7 +191,7 @@ const UpdateFaculty = ({ faculty }) => {
             </div>
             
             {isModalOpen && (
-                <div className="modal-backdrop fade show"></div>
+                <div className="modal-backdrop fade"></div>
             )}
         </>
     );
