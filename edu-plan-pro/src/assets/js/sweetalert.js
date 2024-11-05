@@ -141,8 +141,10 @@ export const SweetAlertAccept = (title, text, funcionAceptar) => {
   }).then((result) => {
     if (result.isConfirmed) {
       funcionAceptar();
+
     }
   })
+
 }
 
 export const BotonCancelar = (message) => {
@@ -150,6 +152,7 @@ export const BotonCancelar = (message) => {
     title: 'Cancelado',
     text: 'Acción cancelada',
     icon: 'info',
+
   iconColor:"#2b3843",
     confirmButtonColor: '#A31E32',
     confirmButtonText: 'Aceptar'

@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from "react";
 import "./TeacherTable.css";
 import search from "../images/search.svg";
+import UpdateIcon from '../icons/ModalUpdateIcons/IconUpdate';
+import TeacherEditModal from './UpdateTeacher.jsx';
 import DeleteModal from "../modaldelete/DeleteModal"
 import deleteIcon from "../icons/ActionIcons/delete.svg";
 import SearchInput from "../search/SearchInput";
@@ -46,6 +48,23 @@ const TeacherTable = () => {
   useEffect(() => {
     loadTeacherData(currentPage);
   }, [currentPage, nameTeach, secName, idCard, email]);
+
+  const [isEditModalOpen, setIsEditModalOpen] = useState(false);
+  const [selectedTeacher, setSelectedTeacher] = useState(null);
+
+  const handleUpdateSuccess = () => {
+    loadTeacherData().then(data => setTeachers(data));
+  };
+
+  const handleEditTeacher = (teacher) => {
+    setSelectedTeacher(teacher);
+    setIsEditModalOpen(true);
+  };
+
+  const handleCloseModal = () => {
+    setIsEditModalOpen(false);
+    setSelectedTeacher(null);
+  };
 
   const handlePageChange = (page) => {
     setCurrentPage(page);
@@ -230,6 +249,16 @@ const TeacherTable = () => {
                     <td className="bg-light">{teacher["CORREO"]}</td>
                     <td className="bg-light">
                       <div style={{ textAlign: "center" }}>
+                      <div
+                          onClick={() => handleEditTeacher(teacher)}
+                          style={{
+                            display: 'inline-block',
+                            cursor: 'pointer',
+                            marginRight: '10px'
+                          }}
+                        >
+                          <UpdateIcon />
+                        </div>
                         <img
                           title="Eliminar profesor."
                           src={deleteIcon}
@@ -252,6 +281,12 @@ const TeacherTable = () => {
           </table>
         </div>
         <TeacherModalAdd />
+        <TeacherEditModal
+          isOpen={isEditModalOpen}
+          teacher={selectedTeacher}
+          onClose={handleCloseModal}
+          onUpdate={handleUpdateSuccess}
+        />
         <DeleteModal
           isOpen={isModalOpen}
           onClose={closeModal}

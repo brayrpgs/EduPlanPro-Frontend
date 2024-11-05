@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import "./UserTable.css";
 import search from "../images/search.svg";
+import UpdateIcon from '../icons/ModalUpdateIcons/IconUpdate';
 import DeleteModal from "../modaldelete/DeleteModal.js"
 import deleteIcon from "../icons/ActionIcons/delete.svg";
 import SearchInput from "../search/SearchInput";
@@ -9,6 +10,7 @@ import AddIcon from "../icons/ActionIcons/AddIcon";
 import UserModalAdd from "./UserModalAdd.jsx";
 import MainSearch from "../search/MainSearch.jsx";
 import Pagination from "../pagination/Pagination.jsx";
+import UpdateUser from "./UpdateUser.jsx";
 
 
 const UserTable = () => {
@@ -18,6 +20,8 @@ const UserTable = () => {
   const [userToDelete, setUserToDelete] = useState(null);
   const [filteredUser, setFilteredUser] = useState([]);
   const [nameUser, setNameUser] = useState("");
+  const [isEditModalOpen, setIsEditModalOpen] = useState(false);
+  const [selectedUser, setSelectedUser] = useState(null);
   const [secName, setSecName] = useState("");
   const [idCard, setIdCard] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
@@ -120,10 +124,25 @@ const UserTable = () => {
     setIdCard(value);
     setCurrentPage(1); // Reinicia a la página 1 al buscar
   };
+  const handleEditUser = (User) => {
+    setSelectedUser(User);
+    setIsEditModalOpen(true);
+  };
+
+  const handleCloseModal = () => {
+    setIsEditModalOpen(false);
+    setSelectedUser(null);
+  };
+
+  const handleUpdateSuccess = () => {
+    loadUserData().then(data => setUsers(data));
+  };
 
   const handleIconClick = () => {
     window.location.reload();
   };
+
+  
 
   const disableInputSearch = true;
 
@@ -212,6 +231,16 @@ const UserTable = () => {
                     <td className="bg-light">{User["IDENTIFICACION"]}</td>
                     <td className="bg-light">
                       <div style={{ textAlign: "center" }}>
+                      <div
+                          onClick={() => handleEditUser(User)}
+                          style={{
+                            display: 'inline-block',
+                            cursor: 'pointer',
+                            marginRight: '10px'
+                          }}
+                        >
+                          <UpdateIcon />
+                        </div>
                         <img
                           title="Eliminar usuario."
                           src={deleteIcon}
@@ -234,6 +263,12 @@ const UserTable = () => {
           </table>
         </div>
         <UserModalAdd />
+        <UpdateUser
+          isOpen={isEditModalOpen}
+          user={selectedUser}
+          onClose={handleCloseModal}
+          onUpdate={handleUpdateSuccess}
+        />
         <DeleteModal
           isOpen={isModalOpen}
           onClose={closeModal}
