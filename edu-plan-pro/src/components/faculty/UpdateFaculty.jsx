@@ -1,10 +1,8 @@
 import React, { useState, useEffect } from "react";
 import Swal from 'sweetalert2';
 import IconUpdate from '../icons/ModalUpdateIcons/IconUpdate.jsx';
-import {
-    BotonCancelar
-  } from "../../assets/js/sweetalert.js";
 import 'bootstrap/dist/css/bootstrap.min.css';
+
 
 const UpdateFaculty = ({ faculty }) => {
     const [desc, setNombreFacultad] = useState('');
@@ -27,11 +25,25 @@ const UpdateFaculty = ({ faculty }) => {
     const handleInputChange = (e) => {
         const value = e.target.value;
         setNombreFacultad(value);
-        
+
         if (inputError) {
             setInputError('');
         }
     };
+
+    const BotonCancelar = (message) => {
+        Swal.fire({
+          title: 'Cancelado',
+          text: 'Acción cancelada',
+          icon: 'info',
+          iconColor: '#2B385A',
+          confirmButtonColor: '#CD1719',
+          confirmButtonText: 'Aceptar'
+        }).then(() => {
+          
+          setIsModalOpen(false);
+        });
+      };
 
     const updateFaculty = async e => {
         e.preventDefault();
@@ -63,7 +75,7 @@ const UpdateFaculty = ({ faculty }) => {
                 'stat': 1
             };
 
-            const response = await fetch(`http://localhost:3001/faculty`, { 
+            const response = await fetch(`http://localhost:3001/faculty`, {
                 method: "PATCH",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify(body),
@@ -84,7 +96,7 @@ const UpdateFaculty = ({ faculty }) => {
                 setTimeout(() => {
                     window.location.reload();
                 }, 1000);
-            } 
+            }
             else {
                 throw new Error('Error al actualizar la facultad');
             }
@@ -114,11 +126,11 @@ const UpdateFaculty = ({ faculty }) => {
 
     return (
         <>
-            <button 
+            <button
                 type="button"
                 className="update-button"
                 onClick={() => setIsModalOpen(true)}
-                style={{ background: "none", border: "none", cursor: "pointer", padding: "8px", transition: "opacity 0.2s"}}
+                style={{ background: "none", border: "none", cursor: "pointer", padding: "8px", transition: "opacity 0.2s" }}
             >
                 <IconUpdate />
             </button>
@@ -144,7 +156,7 @@ const UpdateFaculty = ({ faculty }) => {
                                 onClick={handleClose}
                             />
                         </div>
-                        
+
                         <div className="modal-body">
                             <form onSubmit={updateFaculty}>
                                 <label htmlFor="facultyName" className="form-label">
@@ -162,15 +174,17 @@ const UpdateFaculty = ({ faculty }) => {
                                     <button
                                         type="submit"
                                         className="btn btn-danger"
-                                        style={{ width: "100px",
+                                        style={{
+                                            width: "100px",
                                             backgroundColor: "#A31E32"
-                                         }}
+                                        }}
                                     >
                                         Guardar
                                     </button>
                                     <button
                                         type="button"
-                                        className="cancel-button"
+                                        aria-label="Close"
+                                        
                                         style={{
                                             width: "100px",
                                             backgroundColor: "#2b3843",
@@ -180,10 +194,13 @@ const UpdateFaculty = ({ faculty }) => {
                                             borderRadius: "5px",
                                             cursor: "pointer",
                                             marginLeft: "10px",
-                                            marginTop: "40px" }}
-                                            onClick={() => BotonCancelar('Acción cancelada')}
+                                            marginTop: "40px"
+                                        }}
+                                        onClick={() => BotonCancelar('Acción cancelada')}
+                                        
                                     >
                                         Cancelar
+                                       
                                     </button>
 
                                 </div>
@@ -192,7 +209,7 @@ const UpdateFaculty = ({ faculty }) => {
                     </div>
                 </div>
             </div>
-            
+
             {isModalOpen && (
                 <div className="modal-backdrop fade"></div>
             )}

@@ -1,9 +1,6 @@
 import React, { useState, useEffect } from "react";
 import Swal from 'sweetalert2';
 import IconUpdate from '../icons/ModalUpdateIcons/IconUpdate.jsx';
-import {
-    BotonCancelar
-  } from "../../assets/js/sweetalert.js";
 import 'bootstrap/dist/css/bootstrap.min.css';
 
 const UpdateSchool = ({ school }) => {
@@ -54,6 +51,20 @@ const UpdateSchool = ({ school }) => {
         const regex = /^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s.]+$/;
         return regex.test(text);
     };
+
+    const BotonCancelar = (message) => {
+        Swal.fire({
+          title: 'Cancelado',
+          text: 'Acción cancelada',
+          icon: 'info',
+          iconColor: '#2B385A',
+          confirmButtonColor: '#CD1719',
+          confirmButtonText: 'Aceptar'
+        }).then(() => {
+          
+          setIsModalOpen(false);
+        });
+      };
 
     const handleInputChange = (e) => {
         const value = e.target.value;
