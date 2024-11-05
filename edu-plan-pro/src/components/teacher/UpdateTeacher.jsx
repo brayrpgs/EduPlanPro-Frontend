@@ -15,6 +15,7 @@ const TeacherEditModal = ({ isOpen, teacher, onClose, onUpdate }) => {
       title: 'Cancelado',
       text: 'Acción cancelada',
       icon: 'info',
+      iconColor: '#2B385A',
       confirmButtonColor: '#CD1719',
       confirmButtonText: 'Aceptar'
     }).then(() => {

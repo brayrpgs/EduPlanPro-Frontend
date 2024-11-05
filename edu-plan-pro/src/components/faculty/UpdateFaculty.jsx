@@ -1,6 +1,9 @@
 import React, { useState, useEffect } from "react";
 import Swal from 'sweetalert2';
 import IconUpdate from '../icons/ModalUpdateIcons/IconUpdate.jsx';
+import {
+    BotonCancelar
+  } from "../../assets/js/sweetalert.js";
 import 'bootstrap/dist/css/bootstrap.min.css';
 
 const UpdateFaculty = ({ faculty }) => {
@@ -168,7 +171,6 @@ const UpdateFaculty = ({ faculty }) => {
                                     <button
                                         type="button"
                                         className="cancel-button"
-                                        onClick={handleClose}
                                         style={{
                                             width: "100px",
                                             backgroundColor: "#2b3843",
@@ -179,6 +181,7 @@ const UpdateFaculty = ({ faculty }) => {
                                             cursor: "pointer",
                                             marginLeft: "10px",
                                             marginTop: "40px" }}
+                                            onClick={() => BotonCancelar('Acción cancelada')}
                                     >
                                         Cancelar
                                     </button>

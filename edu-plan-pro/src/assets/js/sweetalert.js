@@ -144,3 +144,15 @@ export const SweetAlertAccept = (title, text, funcionAceptar) => {
     }
   })
 }
+
+export const BotonCancelar = (message) => {
+  Swal.fire({
+    title: 'Cancelado',
+    text: 'Acción cancelada',
+    icon: 'info',
+    iconColor: '#2B385A',
+    confirmButtonColor: '#CD1719',
+    confirmButtonText: 'Aceptar'
+
+    });
+  };
