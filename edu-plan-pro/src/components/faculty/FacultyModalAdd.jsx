@@ -75,10 +75,14 @@ const FacultyModalAdd = () => {
       tabIndex={-1}
       aria-labelledby="exampleModalLabel"
       aria-hidden="true"
+       data-bs-backdrop="static"
+      data-bs-keyboard="false"
     >
       <div className="modal-dialog modal-dialog-centered modal-dialog-scrollable">
         <div className="modal-content">
-          <div className="modal-header bg-danger ">
+          <div className="modal-header"style={{     
+                backgroundColor: "#A31E32",
+              }}>
             <h4 className="modal-title text-white" id="exampleModalLabel">
               {"Agregar una facultad"}
             </h4>
@@ -104,13 +108,42 @@ const FacultyModalAdd = () => {
                 id={"name"}
                 placeholder={"Ingrese un nombre"}
               />
-              <div className="d-flex justify-content-center">
+               <div style={{
+                display: "flex",
+                justifyContent: "center",
+                gap: "40px", // Espacio entre los botones
+                marginTop: "20px"
+              }}>
                 <button
-                  className="btn btn-danger mt-3"
                   type="submit"
-                  style={{ maxWidth: "100px" }}
+                  style={{
+                    width: "100px",
+                    backgroundColor: "#A31E32",
+                    color: "white",
+                    border: "none",
+                    padding: "10px 20px",
+                    borderRadius: "5px",
+                    cursor: "pointer"
+                  }}
                 >
                   Guardar
+                </button>
+
+                <button
+                  type="button"
+                  data-bs-dismiss="modal"
+                  aria-label="Close"
+                  style={{
+                    width: "100px",
+                    backgroundColor:"#2B385A",
+                    color: "white",
+                    border: "none",
+                    padding: "10px 20px",
+                    borderRadius: "5px",
+                    cursor: "pointer"
+                  }}
+                >
+                  Cancelar
                 </button>
               </div>
             </form>

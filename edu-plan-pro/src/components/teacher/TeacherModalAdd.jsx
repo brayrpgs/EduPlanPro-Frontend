@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { SweetAlertSuccess, SweetAlertError } from "../../assets/js/sweetalert.js";
+import "./TeacherModalAdd.css"
 
 async function fetchTeacherCreate(data) {
   try {
@@ -98,10 +99,17 @@ async function fetchTeacherCreate(data) {
       tabIndex={-1}
       aria-labelledby="exampleModalLabel"
       aria-hidden="true"
+     // data-bs-backdrop="static"
+      data-bs-keyboard="false"
+      
+ 
+      
     >
-      <div className="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+      <div className="modal-dialog modal-dialog-centered modal-dialog-scrollable ">
         <div className="modal-content">
-          <div className="modal-header bg-danger">
+          <div className="modal-header"style={{     
+                backgroundColor: "#A31E32",
+              }}>
             <h4 className="modal-title text-white" id="exampleModalLabel">
               Agregar un Docente
             </h4>
@@ -113,9 +121,10 @@ async function fetchTeacherCreate(data) {
               id="closeTeacherModalAdd"
             ></button>
           </div>
+          
           <div className="modal-body">
             <form onSubmit={handleSubmit}>
-              <div className="form-group">
+              <div className="mb-3">
                 <label htmlFor="name" className="form-label">Nombre</label>
                 <input
                   value={data.name}
@@ -128,7 +137,7 @@ async function fetchTeacherCreate(data) {
                 />
               </div>
 
-              <div className="form-group mt-3">
+              <div className="mb-3">
                 <label htmlFor="secName" className="form-label">Apellido</label>
                 <input
                   value={data.secName}
@@ -141,7 +150,7 @@ async function fetchTeacherCreate(data) {
                 />
               </div>
 
-              <div className="form-group mt-3">
+              <div className="mb-3">
                 <label htmlFor="idcard" className="form-label">Cédula de Identidad</label>
                 <input
                   value={data.idcard}
@@ -154,7 +163,7 @@ async function fetchTeacherCreate(data) {
                 />
               </div>
 
-              <div className="form-group mt-3">
+              <div className="mb-3">
                 <label htmlFor="email" className="form-label">Email</label>
                 <input
                   value={data.email}
@@ -167,11 +176,45 @@ async function fetchTeacherCreate(data) {
                 />
               </div>
 
-              <div className="d-flex justify-content-center">
-                <button className="btn btn-danger mt-3" type="submit" style={{ maxWidth: "100px" }}>
+              <div style={{
+                display: "flex",
+                justifyContent: "center",
+                gap: "40px", // Espacio entre los botones
+                marginTop: "20px"
+              }}>
+                <button
+                  type="submit"
+                  style={{
+                    width: "100px",
+                    backgroundColor: "#A31E32",
+                    color: "white",
+                    border: "none",
+                    padding: "10px 20px",
+                    borderRadius: "5px",
+                    cursor: "pointer"
+                  }}
+                >
                   Guardar
                 </button>
+
+                <button
+                  type="button"
+                  data-bs-dismiss="modal"
+                  aria-label="Close"
+                  style={{
+                    width: "100px",
+                    backgroundColor: "#2B385A",
+                    color: "white",
+                    border: "none",
+                    padding: "10px 20px",
+                    borderRadius: "5px",
+                    cursor: "pointer"
+                  }}
+                >
+                  Cancelar
+                </button>
               </div>
+
             </form>
           </div>
         </div>
@@ -181,3 +224,5 @@ async function fetchTeacherCreate(data) {
 };
 
 export default TeacherModalAdd;
+
+

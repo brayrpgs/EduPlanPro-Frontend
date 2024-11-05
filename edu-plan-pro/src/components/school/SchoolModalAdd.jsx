@@ -1,7 +1,9 @@
 import { useState, useEffect } from "react";
 import { SweetAlertSuccess, SweetAlertError } from "../../assets/js/sweetalert.js";
 
+
 // Función para obtener facultades desde la API
+
 const fetchFacultyData = async () => {
   try {
     const response = await fetch("http://localhost:3001/faculty", {
@@ -104,10 +106,14 @@ const SchoolModalAdd = () => {
       id="schoolModalAdd"
       tabIndex={-1}
       aria-hidden="true"
+      data-bs-backdrop="static"
+      data-bs-keyboard="false"
     >
       <div className="modal-dialog modal-dialog-centered modal-dialog-scrollable">
         <div className="modal-content">
-          <div className="modal-header bg-danger">
+          <div className="modal-header"style={{     
+                backgroundColor: "#A31E32",
+              }}>
             <h4 className="modal-title text-white" id="exampleModalLabel">
               {"Agregar una escuela"}
             </h4>
@@ -137,8 +143,10 @@ const SchoolModalAdd = () => {
                   ))}
                 </select>
               </div>
-
-              <div className="form-group mt-3">
+              <div className="mb-3">
+             
+              </div>     
+              <div className="mb-3">
                 <label htmlFor="schoolName">Escuela</label>
                 <input
                   type="text"
@@ -150,15 +158,45 @@ const SchoolModalAdd = () => {
                 />
               </div>
 
-              <div className="d-flex justify-content-center">
+              <div style={{
+                display: "flex",
+                justifyContent: "center",
+                gap: "40px", // Espacio entre los botones
+                marginTop: "20px"
+              }}>
                 <button
-                  className="btn btn-danger mt-3"
                   type="submit"
-                  style={{ maxWidth: "100px" }}
+                  style={{
+                    width: "100px",
+                    backgroundColor: "#A31E32",
+                    color: "white",
+                    border: "none",
+                    padding: "10px 20px",
+                    borderRadius: "5px",
+                    cursor: "pointer"
+                  }}
                 >
                   Guardar
                 </button>
+
+                <button
+                  type="button"
+                  data-bs-dismiss="modal"
+                  aria-label="Close"
+                  style={{
+                    width: "100px",
+                    backgroundColor: "#2B385A",
+                    color: "white",
+                    border: "none",
+                    padding: "10px 20px",
+                    borderRadius: "5px",
+                    cursor: "pointer"
+                  }}
+                >
+                  Cancelar
+                </button>
               </div>
+              
             </form>
           </div>
         </div>

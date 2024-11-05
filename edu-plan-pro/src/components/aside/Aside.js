@@ -24,7 +24,7 @@ const Aside = () => {
       showCancelButton: true,
       iconColor: "#A31E32",
       confirmButtonColor: "#A31E32",
-      cancelButtonColor: "#2B3843",
+      cancelButtonColor: "#0C71C3",
       confirmButtonText: "Cerrar la sesión",
       cancelButtonText: "Cancelar",
 
