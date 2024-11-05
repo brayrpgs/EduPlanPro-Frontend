@@ -151,7 +151,7 @@ export const BotonCancelar = (message) => {
     text: 'Acción cancelada',
     icon: 'info',
   iconColor:"#2b3843",
-    confirmButtonColor: '#CD1719',
+    confirmButtonColor: '#A31E32',
     confirmButtonText: 'Aceptar'
 
     });
