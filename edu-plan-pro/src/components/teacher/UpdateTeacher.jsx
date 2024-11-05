@@ -10,15 +10,23 @@ const TeacherEditModal = ({ isOpen, teacher, onClose, onUpdate }) => {
     id: '',
     stat: 1
   });
-
-  const [error, setError] = useState("");
-
+  const handleCancel = () => {
+    Swal.fire({
+      title: 'Cancelado',
+      text: 'Acción cancelada',
+      icon: 'info',
+      confirmButtonColor: '#CD1719',
+      confirmButtonText: 'Aceptar'
+    }).then(() => {
+      onClose(); 
+    });
+  };
   useEffect(() => {
     if (teacher) {
       setFormData({
         name: teacher.NOMBRE || '',
         secName: teacher.APELLIDOS || '',
-        idcard: teacher.CEDULA || '',
+        idcard: teacher.IDENTIFICACION || '',
         email: teacher.CORREO || '',
         id: teacher.ID_TEACHER || '',
         stat: teacher.ESTADO || 1
@@ -28,16 +36,81 @@ const TeacherEditModal = ({ isOpen, teacher, onClose, onUpdate }) => {
 
   if (!isOpen) return null;
 
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    const hasNumber = /\d/;
-
-    if ((name === "name" || name === "secName") && hasNumber.test(value)) {
-      setError("Los nombres y apellidos no deben contener números.");
-      return;
+  const validateForm = () => {
+    // Check for empty fields
+    for (const [key, value] of Object.entries(formData)) {
+      if (key !== 'stat' && key !== 'id' && !value.trim()) {
+        Swal.fire({
+          position: 'center',
+          icon: 'error',
+          iconColor: "#A31E32",
+          title: 'Campo requerido',
+          text: `El campo ${getFieldName(key)} no puede estar vacío`,
+          confirmButtonColor: "#A31E32",
+          confirmButtonText: 'Aceptar'
+        });
+        return false;
+      }
     }
 
-    setError("");
+    // Validate name and surname (no numbers)
+    const hasNumber = /\d/;
+    if (hasNumber.test(formData.name)) {
+      Swal.fire({
+        position: 'center',
+        icon: 'error',
+        iconColor: "#A31E32",
+        title: 'Error en el nombre',
+        text: 'El nombre no puede contener números',
+        confirmButtonColor: "#A31E32",
+        confirmButtonText: 'Aceptar'
+      });
+      return false;
+    }
+
+    if (hasNumber.test(formData.secName)) {
+      Swal.fire({
+        position: 'center',
+        icon: 'error',
+        iconColor: "#A31E32",
+        title: 'Error en los apellidos',
+        text: 'Los apellidos no pueden contener números',
+        confirmButtonColor: "#A31E32",
+        confirmButtonText: 'Aceptar'
+      });
+      return false;
+    }
+
+    // Validate email format
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(formData.email)) {
+      Swal.fire({
+        position: 'center',
+        icon: 'error',
+        iconColor: "#A31E32",
+        title: 'Error en el correo',
+        text: 'Por favor ingrese un correo electrónico válido',
+        confirmButtonColor: "#A31E32",
+        confirmButtonText: 'Aceptar'
+      });
+      return false;
+    }
+
+    return true;
+  };
+
+  const getFieldName = (key) => {
+    const fields = {
+      name: 'nombre',
+      secName: 'apellidos',
+      idcard: 'cédula',
+      email: 'correo electrónico'
+    };
+    return fields[key];
+  };
+
+  const handleChange = (e) => {
+    const { name, value } = e.target;
     setFormData(prev => ({
       ...prev,
       [name]: value
@@ -46,7 +119,11 @@ const TeacherEditModal = ({ isOpen, teacher, onClose, onUpdate }) => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    
+
+    if (!validateForm()) {
+      return;
+    }
+
     try {
       const response = await fetch('http://localhost:3001/teacher', {
         method: 'PATCH',
@@ -61,10 +138,12 @@ const TeacherEditModal = ({ isOpen, teacher, onClose, onUpdate }) => {
 
       if (data.code === "200") {
         Swal.fire({
+          position: 'center',
+          icon: 'success',
+          iconColor: "#7CDA24",
           title: '¡Actualizado!',
           text: 'El profesor fue actualizado correctamente',
-          icon: 'success',
-          confirmButtonColor: '#CD1719',
+          confirmButtonColor: "#A31E32",
           confirmButtonText: 'Aceptar'
         }).then(() => {
           onUpdate();
@@ -75,10 +154,12 @@ const TeacherEditModal = ({ isOpen, teacher, onClose, onUpdate }) => {
       }
     } catch (error) {
       Swal.fire({
+        position: 'center',
+        icon: 'error',
+        iconColor: "#A31E32",
         title: 'Error',
         text: error.message || 'Error al actualizar el profesor',
-        icon: 'error',
-        confirmButtonColor: '#CD1719',
+        confirmButtonColor: "#A31E32",
         confirmButtonText: 'Aceptar'
       });
     }
@@ -108,23 +189,23 @@ const TeacherEditModal = ({ isOpen, teacher, onClose, onUpdate }) => {
           </div>
           <div className="modal-body">
             <form onSubmit={handleSubmit} autoComplete="off">
-              <div className="form-group">
-                <label htmlFor="name" className="form-label">Nombre</label>
+              <div className="flex flex-row items-center space-x-4">
+                <label htmlFor="name" className="w-24">Nombre</label>
                 <input
                   type="text"
                   name="name"
-                  className="form-control placeholder-black"
+                  className="flex-1 form-control placeholder-black"
                   id="name"
                   value={formData.name}
                   onChange={handleChange}
                   placeholder="Ingrese un nombre"
                   autoComplete="off"
-                  required
+                  
                 />
               </div>
 
-              <div className="form-group mt-3">
-                <label htmlFor="secName" className="form-label">Apellidos</label>
+              <div className="grid grid-cols-[100px_1fr] items-center gap-4 mt-3">
+                <label htmlFor="secName">Apellidos</label>
                 <input
                   type="text"
                   name="secName"
@@ -134,27 +215,27 @@ const TeacherEditModal = ({ isOpen, teacher, onClose, onUpdate }) => {
                   onChange={handleChange}
                   placeholder="Ingrese Apellidos"
                   autoComplete="off"
-                  required
+                  
                 />
               </div>
 
-              <div className="form-group mt-3">
-                <label htmlFor="idcard" className="form-label">Cédula de Identidad</label>
+              <div className="grid grid-cols-[100px_1fr] items-center gap-4 mt-3">
+                <label htmlFor="idcard">Cédula de Identidad</label>
                 <input
+                  value={formData.idcard}
+                  onChange={handleChange}
                   type="text"
                   name="idcard"
                   className="form-control placeholder-black"
                   id="idcard"
-                  value={formData.idcard}
-                  onChange={handleChange}
                   placeholder="Ingrese la cédula"
                   autoComplete="off"
-                  required
+                 
                 />
               </div>
 
-              <div className="form-group mt-3">
-                <label htmlFor="email" className="form-label">Correo electrónico</label>
+              <div className="grid grid-cols-[100px_1fr] items-center gap-4 mt-3">
+                <label htmlFor="email">Correo electrónico</label>
                 <input
                   type="email"
                   name="email"
@@ -164,17 +245,47 @@ const TeacherEditModal = ({ isOpen, teacher, onClose, onUpdate }) => {
                   onChange={handleChange}
                   placeholder="Ingrese el correo electrónico"
                   autoComplete="off"
-                  required
+                 
                 />
               </div>
 
-              <div className="d-flex justify-content-center">
-                <button className="btn btn-danger mt-3" type="submit" style={{ maxWidth: "100px" }}>
+              <div style={{
+                display: "flex",
+                justifyContent: "center",
+                gap: "40px",
+                marginTop: "20px"
+              }}>
+                <button
+                  type="submit"
+                  style={{
+                    width: "100px",
+                    backgroundColor: "#A31E32",
+                    color: "white",
+                    border: "none",
+                    padding: "10px 20px",
+                    borderRadius: "5px",
+                    cursor: "pointer"
+                  }}
+                >
                   Guardar
                 </button>
-              </div>
 
-              {error && <p className="text-danger text-center mt-3">{error}</p>}
+                <button
+                  type="button"
+                  onClick={handleCancel}
+                  style={{
+                    width: "100px",
+                    backgroundColor: "#2b3843",
+                    color: "white",
+                    border: "none",
+                    padding: "10px 20px",
+                    borderRadius: "5px",
+                    cursor: "pointer"
+                  }}
+                >
+                  Cancelar
+                </button>
+              </div>
             </form>
           </div>
         </div>

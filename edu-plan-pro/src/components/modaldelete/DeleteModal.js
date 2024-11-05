@@ -1,23 +1,7 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import Swal from 'sweetalert2';
-import 'bootstrap/dist/css/bootstrap.min.css';
 
 const DeleteModal = ({ isOpen, onClose, onDelete, itemName }) => {
-  useEffect(() => {
-    const modalElement = document.getElementById('deleteModal');
-    const modal = new window.bootstrap.Modal(modalElement);
-    
-    if (isOpen) {
-      modal.show();
-    } else {
-      modal.hide();
-    }
-
-     return () => {
-      modal.hide();
-    };
-  }, [isOpen]);
-
   const handleDelete = () => {
     Swal.fire({
       title: '¡Eliminado!',
@@ -27,7 +11,7 @@ const DeleteModal = ({ isOpen, onClose, onDelete, itemName }) => {
       confirmButtonText: 'Aceptar'
     }).then(() => {
       onDelete();
-      onClose(); 
+      onClose();
     });
   };
 
@@ -39,52 +23,75 @@ const DeleteModal = ({ isOpen, onClose, onDelete, itemName }) => {
       confirmButtonColor: '#CD1719',
       confirmButtonText: 'Aceptar'
     }).then(() => {
-      onClose(); 
+      onClose();
     });
   };
 
   return (
     <div
-      className="modal fade"
-      id="deleteModal" 
+      className="modal fade show"
+      id="deleteModal"
       tabIndex={-1}
       aria-labelledby="deleteModalLabel"
       aria-hidden="true"
+      style={{ display: isOpen ? 'block' : 'none' }}
     >
-      <div className="modal-dialog modal-dialog-centered">
+      <div className="modal-dialog modal-dialog-centered modal-dialog-scrollable">
         <div className="modal-content">
           <div className="modal-header bg-danger">
-            <h5 className="modal-title text-white" id="deleteModalLabel">
+            <h4 className="modal-title text-white" id="deleteModalLabel">
               Eliminar: {itemName}
-            </h5>
+            </h4>
             <button
               type="button"
               className="btn-close bg-white"
-              data-bs-dismiss="modal"
-              aria-label="Close"
               onClick={onClose}
+              aria-label="Close"
             ></button>
           </div>
-          <div className="modal-body text-center">
-            <p>¿Estás seguro de que deseas eliminar este elemento?</p>
-          </div>
-          <div className="modal-footer justify-content-center">
-            <button
-              className="btn btn-danger mt-3"
-              type="button"
-              onClick={handleDelete}
-              style={{ maxWidth: "100px" }}
-            >
-              Eliminar
-            </button>
-            <button
-              type="button"
-              className="btn btn-secondary mt-3"
-              onClick={handleCancel}
-              style={{ maxWidth: "100px" }}
-            >
-              Cancelar
-            </button>
+          <div className="modal-body">
+            <div className="text-center">
+              <p>¿Estás seguro de que deseas eliminar este elemento?</p>
+              
+              <div style={{
+                display: "flex",
+                justifyContent: "center",
+                gap: "40px",
+                marginTop: "20px"
+              }}>
+                <button
+                  type="button"
+                  onClick={handleDelete}
+                  style={{
+                    width: "100px",
+                    backgroundColor: "#A31E32",
+                    color: "white",
+                    border: "none",
+                    padding: "10px 20px",
+                    borderRadius: "5px",
+                    cursor: "pointer"
+                  }}
+                >
+                  Eliminar
+                </button>
+
+                <button
+                  type="button"
+                  onClick={handleCancel}
+                  style={{
+                    width: "100px",
+                    backgroundColor: "#2b3843",
+                    color: "white",
+                    border: "none",
+                    padding: "10px 20px",
+                    borderRadius: "5px",
+                    cursor: "pointer"
+                  }}
+                >
+                  Cancelar
+                </button>
+              </div>
+            </div>
           </div>
         </div>
       </div>

@@ -4,7 +4,7 @@ const insertStyles = () => {
   const style = `
     <style>
       .btn-red {
-        background-color: red !important;
+        background-color: "#A31E32" !important;
         color: white !important;          
         border: none !important;          
         padding: 10px 20px !important;    
@@ -24,11 +24,11 @@ export const SweetAlertSuccess = (message) => {
   Swal.fire({
     position: 'center',
     icon: 'success',
+    iconColor:"#7CDA24",
     title: message,
     confirmButtonText: 'Aceptar',
-    customClass: {
-      confirmButton: 'btn-red',  
-    }
+    confirmButtonColor:"#A31E32",
+    
   })
  };
 
@@ -37,6 +37,7 @@ export const SweetAlertError = (message) => {
   Swal.fire({
     position: 'center',
     icon: 'error',
+    iconColor:"#A31E32",
     title: message,
     showConfirmButton: false,
     timer: 1500
@@ -140,6 +141,6 @@ export const SweetAlertAccept = (title, text, funcionAceptar) => {
   }).then((result) => {
     if (result.isConfirmed) {
       funcionAceptar();
-    }
-  })
+    }
+  })
 }

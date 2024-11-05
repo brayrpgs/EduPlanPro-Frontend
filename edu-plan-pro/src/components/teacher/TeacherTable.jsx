@@ -53,7 +53,7 @@ const TeacherTable = () => {
   const [selectedTeacher, setSelectedTeacher] = useState(null);
 
   const handleUpdateSuccess = () => {
-    fetchTeacherData().then(data => setTeachers(data));
+    loadTeacherData().then(data => setTeachers(data));
   };
 
   const handleEditTeacher = (teacher) => {
@@ -249,6 +249,16 @@ const TeacherTable = () => {
                     <td className="bg-light">{teacher["CORREO"]}</td>
                     <td className="bg-light">
                       <div style={{ textAlign: "center" }}>
+                      <div
+                          onClick={() => handleEditTeacher(teacher)}
+                          style={{
+                            display: 'inline-block',
+                            cursor: 'pointer',
+                            marginRight: '10px'
+                          }}
+                        >
+                          <UpdateIcon />
+                        </div>
                         <img
                           title="Eliminar profesor."
                           src={deleteIcon}
@@ -271,6 +281,12 @@ const TeacherTable = () => {
           </table>
         </div>
         <TeacherModalAdd />
+        <TeacherEditModal
+          isOpen={isEditModalOpen}
+          teacher={selectedTeacher}
+          onClose={handleCloseModal}
+          onUpdate={handleUpdateSuccess}
+        />
         <DeleteModal
           isOpen={isModalOpen}
           onClose={closeModal}
