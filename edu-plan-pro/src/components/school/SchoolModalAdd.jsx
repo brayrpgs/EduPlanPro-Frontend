@@ -1,5 +1,9 @@
 import { useState, useEffect } from "react";
-import { SweetAlertSuccess, SweetAlertError } from "../../assets/js/sweetalert.js";
+import {
+  SweetAlertSuccess,
+  SweetAlertError,
+  BotonCancelar
+} from "../../assets/js/sweetalert.js";
 
 
 // Función para obtener facultades desde la API
@@ -185,13 +189,14 @@ const SchoolModalAdd = () => {
                   aria-label="Close"
                   style={{
                     width: "100px",
-                    backgroundColor: "#2B385A",
+                    backgroundColor: "#2b3843",
                     color: "white",
                     border: "none",
                     padding: "10px 20px",
                     borderRadius: "5px",
                     cursor: "pointer"
                   }}
+                  onClick={() => BotonCancelar('Acción cancelada.')}
                 >
                   Cancelar
                 </button>

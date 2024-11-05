@@ -2,7 +2,9 @@ import { useState } from "react";
 import {
   SweetAlertSuccess,
   SweetAlertError,
+  BotonCancelar
 } from "../../assets/js/sweetalert.js";
+
 import "./FacultyModalAdd.css";
 
 async function fetchFacultyCreate(data) {
@@ -31,7 +33,7 @@ async function fetchFacultyCreate(data) {
     }
 
     document.getElementById("closeFacultyModalAdd").click();
-    SweetAlertSuccess("Registro exitoso!");
+    SweetAlertSuccess("¡Registro exitoso!");
     return jsonResponse.data;
   } catch (error) {
     console.error("Error al crear la facultad:", error);
@@ -135,13 +137,14 @@ const FacultyModalAdd = () => {
                   aria-label="Close"
                   style={{
                     width: "100px",
-                    backgroundColor:"#2B385A",
+                    backgroundColor:"#2b3843",
                     color: "white",
                     border: "none",
                     padding: "10px 20px",
                     borderRadius: "5px",
                     cursor: "pointer"
                   }}
+                  onClick={() => BotonCancelar('Acción cancelada.')}
                 >
                   Cancelar
                 </button>
