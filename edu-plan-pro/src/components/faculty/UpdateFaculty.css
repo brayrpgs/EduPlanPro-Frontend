@@ -1,5 +1,8 @@
-/* UpdateFaculty.css */
+/* UpdateFaculty.css Como al final justo antes de le E4 decidimos pasarnos a bootstrap, esto queda sin uso */
 
+
+
+/*
 .update-button {
     background: none;
     border: none;
@@ -24,7 +27,7 @@
     align-items: center;
     z-index: 1000;
     transition: background-color 0.3s ease-in-out;
-    /* Aseguramos que el overlay aparezca inmediatamente */
+
     visibility: visible;
 }
 
@@ -44,7 +47,7 @@
 }
 
 .modal-container.open {
-    transform: scale(1); /* Escala completa */
+    transform: scale(1); 
     opacity: 1;
 }
 
@@ -147,7 +150,7 @@
 }
 
 .save-button, .cancel-button {
-    /* Aumentamos el padding en ambos ejes */
+
     padding: 12px 24px;
     margin-right: 24px;
     border: none;
@@ -155,7 +158,7 @@
     cursor: pointer;
     font-weight: 500;
     transition: opacity 0.2s;
-    /* Aumentamos el tamaño del texto */
+
     font-size: 1rem;
 }
 
@@ -168,7 +171,7 @@
     opacity: 0.9;
 }
 
-/* para errores de caracteres en el input de texto */
+
 .form-group input.error,
 .form-group select.error {
     border-color: #ff4444;
@@ -180,4 +183,6 @@
     font-size: 0.875rem;
     margin-top: -12px;
     margin-bottom: 8px;
-}
+} 
+
+*/

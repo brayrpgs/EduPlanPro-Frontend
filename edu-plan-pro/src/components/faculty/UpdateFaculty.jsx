@@ -1,12 +1,11 @@
 import React, { useState, useEffect } from "react";
 import Swal from 'sweetalert2';
 import IconUpdate from '../icons/ModalUpdateIcons/IconUpdate.jsx';
-import './UpdateFaculty.css';
+import 'bootstrap/dist/css/bootstrap.min.css';
 
 const UpdateFaculty = ({ faculty }) => {
     const [desc, setNombreFacultad] = useState('');
     const [isModalOpen, setIsModalOpen] = useState(false);
-    const [isModalVisible, setIsModalVisible] = useState(false);
     const [inputError, setInputError] = useState('');
 
     useEffect(() => {
@@ -15,17 +14,8 @@ const UpdateFaculty = ({ faculty }) => {
         }
     }, [faculty]);
 
-    useEffect(() => {
-        if (isModalOpen) {
-            setTimeout(() => {
-                setIsModalVisible(true);
-            }, 10);
-        }
-    }, [isModalOpen]);
-
     if (!faculty) return null;
 
-    // Función para validar el texto
     const validateInput = (text) => {
         const regex = /^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s.]+$/;
         return regex.test(text);
@@ -43,24 +33,22 @@ const UpdateFaculty = ({ faculty }) => {
     const updateFaculty = async e => {
         e.preventDefault();
 
-        // Validar que el campo no esté vacío
         if (!desc.trim()) {
             Swal.fire({
                 icon: 'warning',
                 title: 'Campo vacío',
                 text: 'El nombre de la facultad no puede estar vacío',
-                confirmButtonColor: '#3085d6'
+                confirmButtonColor: '#dc3545'
             });
             return;
         }
 
-        // Validar que solo contenga texto
         if (!validateInput(desc)) {
             Swal.fire({
                 icon: 'warning',
                 title: 'Formato inválido',
                 text: 'El nombre solo puede contener letras, espacios y puntos',
-                confirmButtonColor: '#3085d6'
+                confirmButtonColor: '#dc3545'
             });
             return;
         }
@@ -72,34 +60,39 @@ const UpdateFaculty = ({ faculty }) => {
                 'stat': 1
             };
 
-            const response = await fetch(`http://localhost:3001/faculty`, {
+            const response = await fetch(`http://localhost:3001/faculty`, { 
                 method: "PATCH",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify(body),
                 credentials: "include",
             });
 
-            if (response.ok) {
+            const jsonResponse = await response.json();
+            if (jsonResponse.code === "200") {
                 Swal.fire({
                     icon: 'success',
                     title: 'Facultad actualizada',
                     text: 'La información de la facultad se actualizó correctamente.',
                     showConfirmButton: false,
-                    timer: 1500
+                    timer: 1500,
+                    confirmButtonColor: '#dc3545'
                 });
-                closeModal();
+                handleClose();
                 setTimeout(() => {
                     window.location.reload();
-                }, 1500);
-            } else {
+                }, 1000);
+            } 
+            else {
                 throw new Error('Error al actualizar la facultad');
             }
         } catch (err) {
             Swal.fire({
                 icon: 'error',
                 title: 'Error',
-                text: 'No se pudo actualizar la facultad. Por favor, intenta de nuevo.',
+                text: 'No se pudo actualizar la facultad, ya existe una con ese nombre',
+                confirmButtonColor: '#dc3545'
             });
+            handleClose();
             console.error(err.message);
         }
     }
@@ -108,72 +101,97 @@ const UpdateFaculty = ({ faculty }) => {
         if (faculty) {
             setNombreFacultad(faculty['NOMBRE FACULTAD'] || '');
         }
-        setInputError(''); // Limpiar cualquier mensaje de error
+        setInputError('');
     }
 
-    const closeModal = () => {
-        setIsModalVisible(false);
-        setTimeout(() => {
-            setIsModalOpen(false);
-        }, 300);
+    const handleClose = () => {
+        setIsModalOpen(false);
         resetFields();
     }
 
     return (
-        <div>
+        <>
             <button 
-                type="button" 
+                type="button"
                 className="update-button"
                 onClick={() => setIsModalOpen(true)}
+                style={{ background: "none", border: "none", cursor: "pointer", padding: "8px", transition: "opacity 0.2s"}}
             >
                 <IconUpdate />
             </button>
 
-            {isModalOpen && (
-                <div className={`modal-overlay ${isModalVisible ? 'show' : ''}`}>
-                    <div className={`modal-container ${isModalVisible ? 'show' : ''}`} 
-                         onClick={e => e.stopPropagation()}>
-                        <div className="modal-content">
-                            <div className="modal-header">
-                                <h2>Actualizar Facultad</h2>
-                                <button 
-                                    type="button" 
-                                    className="close-button"
-                                    onClick={closeModal}
-                                >
-                                    X
-                                </button>
-                            </div>
+            <div
+                className={`modal fade ${isModalOpen ? 'show' : ''}`}
+                style={{ display: isModalOpen ? 'block' : 'none' }}
+                tabIndex="-1"
+                role="dialog"
+                aria-labelledby="updateFacultyModal"
+                aria-hidden={!isModalOpen}
+            >
+                <div className="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+                    <div className="modal-content">
+                        <div className="modal-header bg-danger">
+                            <h4 className="modal-title text-white" id="updateFacultyModal">
+                                Actualizar Facultad
+                            </h4>
+                            <button
+                                type="button"
+                                className="btn-close bg-white"
+                                aria-label="Close"
+                                onClick={handleClose}
+                            />
+                        </div>
+                        
+                        <div className="modal-body">
+                            <form onSubmit={updateFaculty}>
+                                <label htmlFor="facultyName" className="form-label">
+                                    Nombre
+                                </label>
+                                <input
+                                    type="text"
+                                    className="form-control placeholder-black"
+                                    id="facultyName"
+                                    value={desc}
+                                    onChange={handleInputChange}
+                                    placeholder="Ingrese un nombre"
+                                />
+                                <div className="d-flex justify-content-center gap-2 mt-3">
+                                    <button
+                                        type="submit"
+                                        className="btn btn-danger"
+                                        style={{ width: "100px" }}
+                                    >
+                                        Guardar
+                                    </button>
+                                    <button
+                                        type="button"
+                                        className="cancel-button"
+                                        onClick={handleClose}
+                                        style={{
+                                            width: "100px",
+                                            backgroundColor: "#A7A7A9",
+                                            color: "white",
+                                            border: "none",
+                                            padding: "10px 20px",
+                                            borderRadius: "5px",
+                                            cursor: "pointer",
+                                            marginLeft: "10px",
+                                            marginTop: "40px" }}
+                                    >
+                                        Cancelar
+                                    </button>
 
-                            <div className="modal-body">
-                                <div className="form-group">
-                                    <label>Nombre de la Facultad</label>
-                                    <input 
-                                        type="text" 
-                                        value={desc} 
-                                        onChange={handleInputChange}
-                                        className={inputError ? 'error' : ''}
-                                    />
-                                    {inputError && (
-                                        <span className="error-message">{inputError}</span>
-                                    )}
                                 </div>
-                            </div>
-
-                            <div className="modal-footer">
-                                <button 
-                                    type="button" 
-                                    className="save-button"
-                                    onClick={updateFaculty}
-                                >
-                                    Guardar Cambios
-                                </button>
-                            </div>
+                            </form>
                         </div>
                     </div>
                 </div>
+            </div>
+            
+            {isModalOpen && (
+                <div className="modal-backdrop fade show"></div>
             )}
-        </div>
+        </>
     );
 }
 
