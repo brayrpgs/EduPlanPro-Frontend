@@ -37,7 +37,7 @@ const UpdateFaculty = ({ faculty }) => {
           text: 'Acción cancelada',
           icon: 'info',
           iconColor: '#2B385A',
-          confirmButtonColor: '#CD1719',
+          confirmButtonColor: '#A31E32',
           confirmButtonText: 'Aceptar'
         }).then(() => {
           
@@ -90,7 +90,7 @@ const UpdateFaculty = ({ faculty }) => {
                     text: 'La información de la facultad se actualizó correctamente.',
                     showConfirmButton: false,
                     timer: 1500,
-                    confirmButtonColor: '#dc3545'
+                    confirmButtonColor: '#A31E32'
                 });
                 handleClose();
                 setTimeout(() => {
@@ -105,7 +105,7 @@ const UpdateFaculty = ({ faculty }) => {
                 icon: 'error',
                 title: 'Error',
                 text: 'No se pudo actualizar la facultad, ya existe una con ese nombre',
-                confirmButtonColor: '#dc3545'
+                confirmButtonColor: '#A31E32'
             });
             handleClose();
             console.error(err.message);

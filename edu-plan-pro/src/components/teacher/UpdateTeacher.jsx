@@ -16,10 +16,10 @@ const TeacherEditModal = ({ isOpen, teacher, onClose, onUpdate }) => {
       text: 'Acción cancelada',
       icon: 'info',
       iconColor: '#2B385A',
-      confirmButtonColor: '#CD1719',
+      confirmButtonColor: '#A31E32',
       confirmButtonText: 'Aceptar'
     }).then(() => {
-      onClose(); 
+      onClose();
     });
   };
   useEffect(() => {
@@ -148,6 +148,7 @@ const TeacherEditModal = ({ isOpen, teacher, onClose, onUpdate }) => {
           confirmButtonText: 'Aceptar'
         }).then(() => {
           onUpdate();
+          window.location.reload();
           onClose();
         });
       } else {
@@ -160,7 +161,7 @@ const TeacherEditModal = ({ isOpen, teacher, onClose, onUpdate }) => {
         iconColor: "#A31E32",
         title: 'Error',
         text: error.message || 'Error al actualizar el profesor',
-        confirmButtonColor: "#A31E32",
+        confirmButtonColor: "#dc3545",
         confirmButtonText: 'Aceptar'
       });
     }
@@ -201,7 +202,7 @@ const TeacherEditModal = ({ isOpen, teacher, onClose, onUpdate }) => {
                   onChange={handleChange}
                   placeholder="Ingrese un nombre"
                   autoComplete="off"
-                  
+
                 />
               </div>
 
@@ -216,7 +217,7 @@ const TeacherEditModal = ({ isOpen, teacher, onClose, onUpdate }) => {
                   onChange={handleChange}
                   placeholder="Ingrese Apellidos"
                   autoComplete="off"
-                  
+
                 />
               </div>
 
@@ -231,7 +232,7 @@ const TeacherEditModal = ({ isOpen, teacher, onClose, onUpdate }) => {
                   id="idcard"
                   placeholder="Ingrese la cédula"
                   autoComplete="off"
-                 
+
                 />
               </div>
 
@@ -246,7 +247,7 @@ const TeacherEditModal = ({ isOpen, teacher, onClose, onUpdate }) => {
                   onChange={handleChange}
                   placeholder="Ingrese el correo electrónico"
                   autoComplete="off"
-                 
+
                 />
               </div>
 

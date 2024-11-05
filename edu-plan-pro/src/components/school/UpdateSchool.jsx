@@ -58,7 +58,7 @@ const UpdateSchool = ({ school }) => {
           text: 'Acción cancelada',
           icon: 'info',
           iconColor: '#2B385A',
-          confirmButtonColor: '#CD1719',
+          confirmButtonColor: '#A31E32',
           confirmButtonText: 'Aceptar'
         }).then(() => {
           
@@ -130,12 +130,10 @@ const UpdateSchool = ({ school }) => {
                     text: 'La información de la escuela se actualizó correctamente.',
                     showConfirmButton: false,
                     timer: 1500,
-                    confirmButtonColor: '#dc3545'
+                    confirmButtonColor: '#A31E32'
                 });
                 handleClose();
-                setTimeout(() => {
                     window.location.reload();
-                }, 1500);
             } else {
                 throw new Error('Error al actualizar la escuela');
             }

@@ -41,7 +41,7 @@ const UserEditModal = ({ isOpen, user, onClose, onUpdate }) => {
       text: 'Acción cancelada',
       icon: 'info',
       iconColor: '#2B385A',
-      confirmButtonColor: '#CD1719',
+      confirmButtonColor: '#A31E32',
       confirmButtonText: 'Aceptar'
     }).then(() => {
       onClose(); 

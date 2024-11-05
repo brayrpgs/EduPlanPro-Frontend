@@ -7,10 +7,13 @@ const DeleteModal = ({ isOpen, onClose, onDelete, itemName }) => {
       title: '¡Eliminado!',
       text: 'El elemento fue eliminado',
       icon: 'success',
-      confirmButtonColor: '#CD1719',
+      confirmButtonColor: '#dc3545',
       confirmButtonText: 'Aceptar'
     }).then(() => {
       onDelete();
+      
+        window.location.reload();
+
       onClose();
     });
   };
@@ -21,10 +24,11 @@ const DeleteModal = ({ isOpen, onClose, onDelete, itemName }) => {
       text: 'Acción cancelada',
       icon: 'info',
       iconColor: '#2B385A',
-      confirmButtonColor: '#CD1719',
+      confirmButtonColor: '#A31E32',
       confirmButtonText: 'Aceptar'
     }).then(() => {
       onClose();
+      
     });
   };
 
