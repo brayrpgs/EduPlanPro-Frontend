@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+/*
 import {
   SweetAlertSuccess,
   SweetAlertError,
@@ -309,6 +310,14 @@ const UserModalAdd = () => {
       </div>
     </div>
   );
-};
+};*/
+
+function UserModalAdd(){
+
+  return (
+    <div>Hola</div>
+  );
+
+}
 
 export default UserModalAdd;

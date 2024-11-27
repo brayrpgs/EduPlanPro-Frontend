@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+/*
 import {
   SweetAlertSuccess,
   SweetAlertError,
@@ -209,6 +210,15 @@ const SchoolModalAdd = () => {
       </div>
     </div>
   );
-};
+};*/
+
+function SchoolModalAdd(){
+
+  return (
+    <div>Hola</div>
+  );
+
+}
+
 
 export default SchoolModalAdd;

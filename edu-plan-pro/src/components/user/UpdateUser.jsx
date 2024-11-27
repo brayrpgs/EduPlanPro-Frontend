@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+/*
 import Swal from 'sweetalert2';
 import { SweetAlertSuccess, SweetAlertError } from "../../assets/js/sweetalert.js";
 
@@ -298,6 +299,14 @@ const UserEditModal = ({ isOpen, user, onClose, onUpdate }) => {
       </div>
     </div>
   );
-};
+};*/
+
+function UserEditModal(){
+
+  return (
+    <div>Hola</div>
+  );
+
+}
 
 export default UserEditModal;

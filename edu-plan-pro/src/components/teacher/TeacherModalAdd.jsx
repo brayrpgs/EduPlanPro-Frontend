@@ -1,4 +1,6 @@
 import { useState } from "react";
+
+/*
 import {
   SweetAlertSuccess,
   SweetAlertError,
@@ -229,7 +231,15 @@ async function fetchTeacherCreate(data) {
     </div>
   );
 };
+*/
 
+function TeacherModalAdd(){
+
+  return (
+    <div>Hola</div>
+  );
+
+}
 export default TeacherModalAdd;
 
 

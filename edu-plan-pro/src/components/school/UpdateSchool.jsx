@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from "react";
 import Swal from 'sweetalert2';
 import IconUpdate from '../icons/ModalUpdateIcons/IconUpdate.jsx';
-import 'bootstrap/dist/css/bootstrap.min.css';
 
 const UpdateSchool = ({ school }) => {
     const [desc, setSchoolName] = useState('');

@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 const ValidateLogin = ({ Component }) => {
-  const [loading, setLoading] = useState(true);
+
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const navigate = useNavigate();
 
@@ -25,9 +25,7 @@ const ValidateLogin = ({ Component }) => {
         }
       } catch (error) {
         navigate('/login'); // Si hay error, redirige al login
-      } finally {
-        setLoading(false); // Detén la carga
-      }
+      } 
     };
 
     validatelogin(); // Llama a validatelogin

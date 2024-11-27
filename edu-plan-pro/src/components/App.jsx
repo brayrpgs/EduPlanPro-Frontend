@@ -10,10 +10,6 @@ import ValidateLogin from "./validatelogin/ValidateLogin.jsx";
 import ValidateMain from "./validatelogin/ValidateMain.jsx";
 import Pagination from "./pagination/Pagination.jsx";
 
-import 'bootstrap/dist/css/bootstrap.min.css';
-import 'bootstrap/dist/js/bootstrap.bundle.min.js';
-
-
 
 function App() {
   return (

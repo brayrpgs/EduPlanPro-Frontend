@@ -1,10 +1,6 @@
 import { useState } from "react";
-import {
-  SweetAlertSuccess,
-  SweetAlertError,
-  BotonCancelar
-} from "../../assets/js/sweetalert.js";
 
+/*
 import "./FacultyModalAdd.css";
 
 async function fetchFacultyCreate(data) {
@@ -156,6 +152,17 @@ const FacultyModalAdd = () => {
       </div>
     </div>
   );
-};
+};*/
+
+function FacultyModalAdd(){
+
+  return (
+    <div>Hola</div>
+  );
+
+}
+
+
 
 export default FacultyModalAdd;
+
