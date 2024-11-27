@@ -10,6 +10,10 @@ module.exports = {
         'Focus-Login-Red': '#931212',
         'UNA-Gray': '#A7A7A9',
         'UNA-Gray-Dark': '#747476'
+      },
+      screens: {
+        'Pc-Medium': '900px',
+        'Pc-Small': '500px'
       }
     },
   },

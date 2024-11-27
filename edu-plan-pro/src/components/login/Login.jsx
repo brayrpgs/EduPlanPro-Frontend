@@ -92,84 +92,90 @@ export const Login = () => {
   };
 
   return (
-    <div>
-      <header>
-        <nav className="bg-UNA-Red h-16"></nav>
-      </header>
+    <div className="overflow-x-hidden overflow-y-auto h-screen">
+      <div>
+        <header>
+          <nav className="bg-UNA-Red h-16"></nav>
+        </header>
+      </div>
 
-      <div className="mt-20 flex justify-center items-center w-full ">
-        <div className="bg-white p-14 text-center shadow-md  w-96 relative">
-          <div className="relative">
-            <LoginFinalLogo />
-          </div>
-
-          <div className="relative mb-3 mt-2">
-            <input
-              className="w-full mt-6 pb-1 pt-3 text-gray-900 bg-transparent border-b-2 border-gray-300 focus:outline-none focus:border-transparent peer"
-              title="Nombre de usuario"
-              name="username"
-              id="username"
-              type="text"
-              autoComplete="username"
-              placeholder=" "
-              onChange={handleChange}
-              pattern="^(?!\s*$).+"
-              required
-            />
-
-            <label
-              className="absolute left-0 top-9 text-gray-400 cursor-text peer-focus:text-UNA-Red duration-300 peer-focus:text-sm peer-focus:-translate-y-5 peer-valid:text-sm peer-valid:-translate-y-5 peer-valid:text-UNA-Red"
-              id="Lusername"
-              htmlFor="username"
-            >
-              Nombre de usuario *
-            </label>
-            <div className="absolute bottom-0 left-1/2 w-0 h-0.5 bg-UNA-Red transition-all duration-300 ease-in-out peer-focus:w-full peer-focus:left-0"></div>
-          </div>
-
-          <div className="relative mb-3 mt-2">
-            <input
-              className="w-full mt-6 pb-1 pt-3 text-gray-900 bg-transparent border-b-2 border-gray-300 focus:outline-none focus:border-transparent peer"
-              title="Contraseña"
-              name="password"
-              id="password"
-              type="password"
-              autoComplete="current-password"
-              placeholder=" "
-              pattern="^(?!\s*$).+"
-              onChange={handleChange}
-              required
-            />
-            <label
-              className="absolute left-0 top-9 text-gray-400 cursor-text peer-focus:text-UNA-Red duration-300 peer-focus:text-sm peer-focus:-translate-y-5 peer-valid:text-sm peer-valid:-translate-y-5 peer-valid:text-UNA-Red"
-              id="Lpassword"
-              htmlFor="password"
-            >
-              Contraseña *
-            </label>
-            <div className="absolute bottom-0 left-1/2 w-0 h-0.5 bg-UNA-Red transition-all duration-300 ease-in-out peer-focus:w-full peer-focus:left-0"></div>
-          </div>
-
-          <div className="relative mb-3 mt-2">
-            <button
-              className="mt-9 bg-UNA-Red text-white w-full p-2 rounded cursor-pointer hover:bg-Focus-Login-Red"
-              onClick={handleLogin}
-            >
-              <div className="translate-x-3 -translate-y-1 scale-150">
-                <LoginButtonEnter />
-              </div>
-              <span className="">Ingresar</span>
-            </button>
-          </div>
-
-          <div className="relative mb-3 mt-2">
-            <a href="/login" className="mt-3 block bg-UNA-Gray text-white w-full p-2 rounded cursor-pointer hover:bg-UNA-Gray-Dark">
-            <div className="translate-x-3 -translate-y-1 scale-150">
-            <LoginButtonHelp />
+      <div>
+        <div className="mt-20 flex justify-center items-center Pc-Medium:scale-125 Pc-Medium:translate-y-11 ">
+          <div className="bg-white p-14 text-center shadow-xl w-96 relative">
+            <div className="relative">
+              <LoginFinalLogo />
             </div>
-              
-              Olvidé mi contraseña
-            </a>
+
+            <div className="relative mb-3 mt-2">
+              <input
+                className="w-full mt-6 pb-1 pt-3 text-gray-900 bg-transparent border-b-2 border-gray-300 focus:outline-none focus:border-transparent peer"
+                title="Nombre de usuario"
+                name="username"
+                id="username"
+                type="text"
+                autoComplete="username"
+                placeholder=" "
+                onChange={handleChange}
+                pattern="^(?!\s*$).+"
+                required
+              />
+
+              <label
+                className="absolute left-0 top-9 text-gray-400 cursor-text peer-focus:text-UNA-Red duration-300 peer-focus:text-sm peer-focus:-translate-y-5 peer-valid:text-sm peer-valid:-translate-y-5 peer-valid:text-UNA-Red"
+                id="Lusername"
+                htmlFor="username"
+              >
+                Nombre de usuario *
+              </label>
+              <div className="absolute bottom-0 left-1/2 w-0 h-0.5 bg-UNA-Red transition-all duration-300 ease-in-out peer-focus:w-full peer-focus:left-0"></div>
+            </div>
+
+            <div className="relative mb-3 mt-2">
+              <input
+                className="w-full mt-6 pb-1 pt-3 text-gray-900 bg-transparent border-b-2 border-gray-300 focus:outline-none focus:border-transparent peer"
+                title="Contraseña"
+                name="password"
+                id="password"
+                type="password"
+                autoComplete="current-password"
+                placeholder=" "
+                pattern="^(?!\s*$).+"
+                onChange={handleChange}
+                required
+              />
+              <label
+                className="absolute left-0 top-9 text-gray-400 cursor-text peer-focus:text-UNA-Red duration-300 peer-focus:text-sm peer-focus:-translate-y-5 peer-valid:text-sm peer-valid:-translate-y-5 peer-valid:text-UNA-Red"
+                id="Lpassword"
+                htmlFor="password"
+              >
+                Contraseña *
+              </label>
+              <div className="absolute bottom-0 left-1/2 w-0 h-0.5 bg-UNA-Red transition-all duration-300 ease-in-out peer-focus:w-full peer-focus:left-0"></div>
+            </div>
+
+            <div className="relative mb-3 mt-2">
+              <button
+                className="mt-9 bg-UNA-Red text-white w-full p-2 rounded cursor-pointer hover:bg-Focus-Login-Red"
+                onClick={handleLogin}
+              >
+                <div className="translate-x-3 -translate-y-1 scale-150">
+                  <LoginButtonEnter />
+                </div>
+                <span className="">Ingresar</span>
+              </button>
+            </div>
+
+            <div className="relative mb-3 mt-2">
+              <a
+                href="/login"
+                className="mt-3 block bg-UNA-Gray text-white w-full p-2 rounded cursor-pointer hover:bg-UNA-Gray-Dark"
+              >
+                <div className="translate-x-3 -translate-y-1 scale-150">
+                  <LoginButtonHelp />
+                </div>
+                Olvidé mi contraseña
+              </a>
+            </div>
           </div>
         </div>
       </div>
