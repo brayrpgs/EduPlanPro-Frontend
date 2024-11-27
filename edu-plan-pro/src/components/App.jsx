@@ -1,6 +1,6 @@
 import React from "react";
 import { BrowserRouter, Route, Routes, Navigate } from "react-router-dom";
-import { Login } from "./login/Login.js"
+import { Login } from "./login/Login.jsx"
 import CoursesPlan from "./coursesplan/CoursesPlan.js";
 import School from "./school/School.jsx";
 import Faculty from "./faculty/Faculty.jsx";
@@ -13,6 +13,7 @@ import Pagination from "./pagination/Pagination.jsx";
 
 function App() {
   return (
+    
     <BrowserRouter>
 
       <Routes>
