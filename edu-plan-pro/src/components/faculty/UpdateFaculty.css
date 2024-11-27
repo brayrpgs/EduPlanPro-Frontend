@@ -1,0 +1,188 @@
+/* UpdateFaculty.css Como al final justo antes de le E4 decidimos pasarnos a bootstrap, esto queda sin uso */
+
+
+
+/*
+.update-button {
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 8px;
+    transition: opacity 0.2s;
+}
+
+.update-button:hover {
+    opacity: 0.8;
+}
+
+.modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+    transition: background-color 0.3s ease-in-out;
+
+    visibility: visible;
+}
+
+.modal-overlay.show {
+    background-color: rgba(0, 0, 0, 0.5);
+}
+
+.modal-container {
+    background-color: white;
+    border-radius: 8px;
+    width: 90%;
+    max-width: 500px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    opacity: 0;
+    transform: scale(0.7);
+    transition: all 0.3s ease-in-out;
+}
+
+.modal-container.open {
+    transform: scale(1); 
+    opacity: 1;
+}
+
+.modal-container.show {
+    opacity: 1;
+    transform: scale(1);
+}
+
+.modal-content {
+    display: flex;
+    flex-direction: column;
+    gap: 50px;
+}
+
+.modal-content {
+    display: flex;
+    flex-direction: column;
+    gap: 50px;
+}
+
+.modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 24px 32px;
+    border-bottom: 1px solid #eee;
+    background-color: #BB0E0E;
+}
+
+.modal-header h2 {
+    margin: 0;
+    font-size: 1.25rem;
+    color: white;
+    margin: 12px 12px;
+}
+
+.close-button {
+    width: 30px; 
+    height: 30px;
+    background-color: #f0f0f0; 
+    border: none;
+    border-radius: 25%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer; 
+    position: absolute; 
+    top: 9px; 
+    right: 10px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2); 
+    transition: background-color 0.3s, transform 0.2s;
+}
+.close-button:hover {
+    background-color: #FFFF;
+    background-color: #f1f1f1; 
+    transform: scale(1.1); 
+}
+.close-button:active {
+    background-color: #FFFF; 
+    transform: scale(0.95);
+}
+
+.modal-body {
+    padding: 32px;
+}
+
+.form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+}
+
+.form-group label {
+    font-weight: 500;
+    color: #444;
+    font-size: 1.1rem;
+}
+
+.form-group input {
+    padding: 12px 16px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    font-size: 1rem;
+    transition: border-color 0.2s;
+    margin: 5%;
+}
+
+.form-group input:focus {
+    outline: none;
+    border-color: #2196f3;
+}
+
+.modal-footer {
+    display: flex;
+    justify-content: flex-end;
+    gap: 24px;
+    padding: 24px 32px;
+    border-top: 1px solid #eee;
+    margin: 24px 24px;
+}
+
+.save-button, .cancel-button {
+
+    padding: 12px 24px;
+    margin-right: 24px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-weight: 500;
+    transition: opacity 0.2s;
+
+    font-size: 1rem;
+}
+
+.save-button {
+    background-color: #273351;
+    color: white;
+}
+
+.save-button:hover {
+    opacity: 0.9;
+}
+
+
+.form-group input.error,
+.form-group select.error {
+    border-color: #ff4444;
+    background-color: #fff6f6;
+}
+
+.error-message {
+    color: #ff4444;
+    font-size: 0.875rem;
+    margin-top: -12px;
+    margin-bottom: 8px;
+} 
+
+*/

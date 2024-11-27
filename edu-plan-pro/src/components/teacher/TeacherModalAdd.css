@@ -1,0 +1,10 @@
+input::placeholder {
+    color: #999999  !important; 
+}
+
+.placeholder-black::placeholder {
+    color: #999999  !important; 
+}
+.modal-backdrop { 
+    display: none !important; /* Elimina el backdrop */
+  }

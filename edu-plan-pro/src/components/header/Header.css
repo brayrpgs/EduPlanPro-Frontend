@@ -1,0 +1,64 @@
+.header {
+  background: linear-gradient(to right, rgb(252, 252, 252) 3%, #A31E32 15%); /* Parte izquierda oscura y parte derecha clara */
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  position: relative;
+  padding: 10px 20px; 
+}
+
+.logo-container {
+
+  display: flex;
+  align-items: center;
+}
+
+.logo {
+  max-height: 66px;
+  width: auto;
+  object-fit: contain; 
+}
+
+.icons-container {
+  display: flex;
+  align-items: center;
+  height: 40px; 
+}
+
+.icons-container i {
+  color: white;
+  font-size: 20px;
+  margin-left: 10px;
+}
+
+
+/* Estilos para el header */
+.header-content {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.menu-header-container {
+  margin-left: auto; /* Empuja este div hacia la derecha */
+}
+
+/* Para mostrar el Aside */
+
+.aside {
+  position: fixed;
+  top: 0;
+  right: 0;
+  width: 300px;
+  height: 100%;
+  background-color: #333;
+  color: white;
+  padding: 20px;
+  box-shadow: -2px 0 5px rgba(0, 0, 0, 0.5);
+  transform: translateX(100%);  /* Comienza fuera de pantalla */
+  transition: transform 0.3s ease-in-out;
+}
+
+.aside.open {
+  transform: translateX(0);  /* Deslizar el aside hacia la vista */
+}
