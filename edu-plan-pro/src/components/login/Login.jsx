@@ -6,7 +6,7 @@ import axios from "axios";
 import Swal from "sweetalert2";
 import { useNavigate } from "react-router-dom";
 import LoginHeader from "./LoginHeader.jsx";
-import Footer from "../footer/Footer.js";
+import Footer from "../footer/Footer.jsx";
 
 export const Login = () => {
   const navigate = useNavigate();
@@ -16,10 +16,15 @@ export const Login = () => {
     password: "",
   });
 
-  const handleChange = async (e) => {
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+  
+    const cleanedValue = value.replace(/^\s*|\s*$/g, ''); 
+    e.target.value = cleanedValue; 
+  
     setForm({
       ...form,
-      [e.target.name]: e.target.value,
+      [name]: cleanedValue, 
     });
   };
 
@@ -28,6 +33,7 @@ export const Login = () => {
   };
 
   const login = async (username, password) => {
+
     const url = "http://localhost:3001/session";
 
     if (username.trim() === "" || password.trim() === "") {
@@ -40,12 +46,17 @@ export const Login = () => {
         confirmButtonColor: "#A31E32",
         customClass: {
           confirmButton: "custom-confirm-button",
-          
         },
       });
 
       document.getElementById("Lusername").style.color = "#E62A10";
       document.getElementById("Lpassword").style.color = "#E62A10";
+
+      setTimeout(() => {
+        document.getElementById("Lusername").style.color = ""; 
+        document.getElementById("Lpassword").style.color = ""; 
+      }, 3000);
+
     } else {
       try {
         const response = await axios.post(
@@ -94,26 +105,33 @@ export const Login = () => {
   };
 
   return (
-    <div>
+    <div className="grid grid-rows-[auto_1fr_auto] min-h-screen h-screen ">
       <LoginHeader />
-  
+
       <main>
         <div className="mt-[5vh] justify-center items-center h-[80vh] flex flex-col">
           <div className="w-[25%] h-[90%] bg-white text-center shadow-[0_0.5vh_1vh_rgba(0,0,0,0.5)] relative">
             <div className="h-[25%] mt-[5vh]">
               <LoginFinalLogo />
             </div>
-  
-            {['username', 'password'].map((field) => (
-              <div key={field} className="relative mt-[5vh] w-full h-[4vh] flex justify-center items-center">
+
+            {["username", "password"].map((field) => (
+              <div
+                key={field}
+                className="relative mt-[5vh] w-full h-[4vh] flex justify-center items-center"
+              >
                 <input
                   className="w-[65%] p-[1%] h-full text-[1vw] text-gray-900 bg-transparent border-b-[0.2vh] border-gray-300
                     focus:outline-none focus:border-transparent peer box-border"
-                  title={field === 'username' ? "Nombre de usuario" : "Contraseña"}
+                  title={
+                    field === "username" ? "Nombre de usuario" : "Contraseña"
+                  }
                   name={field}
                   id={field}
-                  type={field === 'username' ? 'text' : 'password'}
-                  autoComplete={field === 'username' ? 'username' : 'current-password'}
+                  type={field === "username" ? "text" : "password"}
+                  autoComplete={
+                    field === "username" ? "username" : "current-password"
+                  }
                   placeholder=" "
                   onChange={handleChange}
                   pattern="^(?!\s*$).+"
@@ -129,7 +147,7 @@ export const Login = () => {
                   id={`L${field}`}
                   htmlFor={field}
                 >
-                  {field === 'username' ? 'Nombre de usuario' : 'Contraseña'} *
+                  {field === "username" ? "Nombre de usuario" : "Contraseña"} *
                 </label>
                 <div
                   className="absolute bottom-0 left-[50%] w-0 h-[0.2vh] bg-UNA-Red transition-width duration-300 ease-in-out 
@@ -137,11 +155,12 @@ export const Login = () => {
                 ></div>
               </div>
             ))}
-  
+
             <div className="relative mt-[8vh] flex justify-center">
               <button
                 className="w-[65%] h-[5vh] bg-UNA-Red rounded-[1vh] text-white text-[2vh] cursor-pointer hover:bg-Focus-Login-Red"
-                onClick={handleLogin} title="Ingresar"
+                onClick={handleLogin}
+                title="Ingresar"
               >
                 <div className="flex items-center w-full h-full justify-center">
                   <div className="absolute h-full w-[2vw] left-[18%]">
@@ -151,10 +170,11 @@ export const Login = () => {
                 </div>
               </button>
             </div>
-  
+
             <div className="relative mt-[2vh] flex justify-center">
               <a
-                href="/login" title="Olvidé mi contraseña"
+                href="/login"
+                title="Olvidé mi contraseña"
                 className="w-[65%] h-[5vh] bg-UNA-Gray rounded-[1vh] text-white text-[2vh] cursor-pointer hover:bg-UNA-Gray-Dark"
               >
                 <div className="flex items-center w-full h-full justify-center">
@@ -168,9 +188,11 @@ export const Login = () => {
           </div>
         </div>
       </main>
+
+      <Footer/>
+
     </div>
   );
-  
 };
 
 export default Login;

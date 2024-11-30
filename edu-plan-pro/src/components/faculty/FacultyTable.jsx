@@ -36,7 +36,7 @@ const FacultyTable = () => {
     }
 
     const jsonResponse = await response.json();
-    
+
     setFilteredFaculty(jsonResponse.data.rows || []);
     setTotalItems(jsonResponse.data.totalMatches || 0);
   };
@@ -46,7 +46,7 @@ const FacultyTable = () => {
   }, [currentPage, searchTerm]); // Agrega searchTerm a la lista de dependencias
 
   const handleAddFaculty = () => {
-    loadFacultyData(currentPage); 
+    loadFacultyData(currentPage);
   };
 
   const handlePageChange = (page) => {
@@ -113,13 +113,13 @@ const FacultyTable = () => {
   };
 
   const handleIconClick = () => {
-      window.location.reload();
+    window.location.reload();
   };
 
   const disableInputSearch = true;
 
   return (
-    <div>
+    <main>
       <h1 className="h1-faculty">Facultades</h1>
       <div className="faculty-container">
         <div className="container mt-5, input " title="Buscar facultades.">
@@ -229,7 +229,7 @@ const FacultyTable = () => {
             facultyToDelete ? facultyToDelete["NOMBRE FACULTAD"] : "facultad"
           }
         />
-        <FacultyModalAdd onAdd={handleAddFaculty}/>
+        <FacultyModalAdd onAdd={handleAddFaculty} />
         <Pagination
           totalItems={totalItems}
           itemsPerPage={"8"}
@@ -237,7 +237,7 @@ const FacultyTable = () => {
           onPageChange={handlePageChange}
         />
       </div>
-    </div>
+    </main>
   );
 };
 
