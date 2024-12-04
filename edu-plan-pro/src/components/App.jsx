@@ -9,6 +9,7 @@ import User from "./user/User.jsx"
 import ValidateLogin from "./validatelogin/ValidateLogin.jsx";
 import ValidateMain from "./validatelogin/ValidateMain.jsx";
 import Pagination from "./pagination/Pagination.jsx";
+import ServerError from "./validatelogin/ServerError.jsx";
 
 
 function App() {
@@ -26,6 +27,7 @@ function App() {
         <Route path="/teacher" element={<ValidateLogin Component={Teacher} />} />
         <Route path="/user" element={<ValidateLogin Component={User} />} />
         <Route path="/pagination" element={<ValidateLogin Component={Pagination} />} />
+        <Route path="/serverError" element={<ServerError/>} />
       </Routes>
 
     </BrowserRouter>

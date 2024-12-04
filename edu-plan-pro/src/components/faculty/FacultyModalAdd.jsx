@@ -157,7 +157,7 @@ const FacultyModalAdd = () => {
 function FacultyModalAdd(){
 
   return (
-    <div>Hola</div>
+    <div></div>
   );
 
 }

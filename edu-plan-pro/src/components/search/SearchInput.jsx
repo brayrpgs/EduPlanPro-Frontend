@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 
-const SearchInput = ({ onSearch, inputClassName, inputStyle, disabled }) => {
+const SearchInput = ({ onSearch, className, inputStyle, disabled }) => {
     const [query, setQuery] = useState('');
 
     const handleInputChange = (event) => {
@@ -28,10 +28,12 @@ const SearchInput = ({ onSearch, inputClassName, inputStyle, disabled }) => {
                 onChange={handleInputChange}
                 onBlur={handleBlur} 
                 onKeyDown={handleKeyDown}
-                className={inputClassName}  
+                className={className}  
                 style={{
                     ...inputStyle,
-                    textAlign: 'center'  
+                    textAlign: 'center',
+                    fontSize: '0.9vw',
+                    fontWeight: '1'
                 }}  
                 disabled={disabled}
             />

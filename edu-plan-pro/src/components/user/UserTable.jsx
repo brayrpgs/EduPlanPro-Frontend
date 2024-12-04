@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import "./UserTable.css";
 import UpdateIcon from '../icons/ModalUpdateIcons/IconUpdate';
-import DeleteModal from "../modaldelete/DeleteModal.js"
+import DeleteModal from "../modaldelete/DeleteModal.jsx"
 import deleteIcon from "../icons/ActionIcons/delete.svg";
 import SearchInput from "../search/SearchInput";
 import FilterOffIcon from "../icons/MainIcons/FilterOffIcon";

@@ -1,7 +1,7 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
 import LogoTransparent from "../icons/HeaderIcons/LogoTransparent";
-import SideBar from "../aside/SideBar";
+import SideBar from "../sidebar/SideBar";
 
 const Header = () => {
   const navigate = useNavigate();
@@ -23,11 +23,8 @@ const Header = () => {
             <LogoTransparent />
           </button>
         </div>
-        <SideBar/>
+        <SideBar />
       </div>
-
-      
-
     </header>
   );
 };

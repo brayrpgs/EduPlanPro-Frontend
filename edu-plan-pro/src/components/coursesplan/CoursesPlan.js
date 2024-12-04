@@ -1,4 +1,4 @@
-import Aside from '../aside/Aside'; 
+
 import CoursesPlanTable from '../coursesplan/CoursesPlanTable';
 
 function CoursesPlan() {
