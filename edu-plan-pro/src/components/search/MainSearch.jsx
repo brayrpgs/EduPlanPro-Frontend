@@ -1,24 +1,23 @@
-import React, { useState } from "react";
+import React from "react";
 import SearchIcon from "../icons/SearchIcons/SearchIcon";
 import SearchOffIcon from "../icons/SearchIcons/SearchOffIcon";
 
 
-export function MainSearch({ onSearch, placeholder, title }) {
-  const [query, setQuery] = useState("");
-
+export function MainSearch({ onSearch, placeholder, title, mainFilter, setMainFilter }) {
+  
   const handleInputChange = (e) => {
-    setQuery(e.target.value);
+    setMainFilter(e.target.value);
   };
 
   const handleSearch = () => {
     if(onSearch){
-      onSearch(query);
+      onSearch(mainFilter);
     }
   }
 
   const handleKeyDown = (event) => {
     if (event.key === "Enter" && onSearch) {
-      onSearch(query);
+      onSearch(mainFilter);
     }
   };
 
@@ -31,17 +30,17 @@ export function MainSearch({ onSearch, placeholder, title }) {
           title={title}
           type="text"
           placeholder={placeholder}
-          value={query}
+          value={mainFilter}
           onKeyDown={handleKeyDown}
           onChange={handleInputChange}
           className="flex pr-[1.6vw] pl-[1vw] h-full bg-UNA-Red rounded-tl-[1vh] rounded-bl-[1vh] text-[0.9vw] text-white placeholder-white w-full outline-none border-none z-20 shadow-none text-left "
         />
         <div className="absolute flex w-full h-full justify-end">
-          {query && (
+          {mainFilter && (
             <button
               className="bg-transparent border-none z-20 mr-[0.1vw]"
               title="Borrar búsqueda"
-              onClick={() => {setQuery('')}}
+              onClick={() => {setMainFilter('')}}
             >
               <SearchOffIcon />
             </button>

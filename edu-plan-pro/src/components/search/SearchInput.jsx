@@ -1,21 +1,20 @@
-import React, { useState } from 'react';
+import React from 'react';
 
-const SearchInput = ({ onSearch, className, inputStyle, disabled }) => {
-    const [query, setQuery] = useState('');
+const SearchInput = ({ onSearch, className, inputStyle, filter, setFilter }) => {
 
     const handleInputChange = (event) => {
-        setQuery(event.target.value);
+        setFilter(event.target.value);
     };
 
     const handleBlur = () => {
         if (onSearch) {
-            onSearch(query);
+            onSearch(filter);
         }
     };
 
     const handleKeyDown = (event) => {
         if (event.key === 'Enter' && onSearch) {
-            onSearch(query);
+            onSearch(filter);
         }
     };
 
@@ -24,7 +23,7 @@ const SearchInput = ({ onSearch, className, inputStyle, disabled }) => {
             <input
                 
                 type="text"
-                value={query}
+                value={filter}
                 onChange={handleInputChange}
                 onBlur={handleBlur} 
                 onKeyDown={handleKeyDown}
@@ -34,8 +33,7 @@ const SearchInput = ({ onSearch, className, inputStyle, disabled }) => {
                     textAlign: 'center',
                     fontSize: '0.9vw',
                     fontWeight: '1'
-                }}  
-                disabled={disabled}
+                }} 
             />
         </div>
     );

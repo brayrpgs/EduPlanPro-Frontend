@@ -13,6 +13,8 @@ const FacultyTable = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
   const [totalItems, setTotalItems] = useState(0);
+  const [mainFilter, setMainFilter] = useState("");
+  const [filter, setFilter] = useState("");
 
   const loadFacultyData = useCallback(
     async (page) => {
@@ -45,9 +47,26 @@ const FacultyTable = () => {
     setCurrentPage(page);
   };
 
-  const handleSearch = (value) => {
+  const handleSearch = (value, type = "main") => {
+    if (type === "main") {
+      if (filter.trim() !== "") {
+        setFilter("");
+      }
+    } else if (type === "filter") {
+      if (mainFilter.trim() !== "") {
+        setMainFilter("");
+      }
+    }
+
     setSearchTerm(value);
     setCurrentPage(1);
+  };
+
+  const handleClearFilters = () => {
+    setSearchTerm("");
+    setCurrentPage(1);
+    setMainFilter("");
+    setFilter("");
   };
 
   return (
@@ -72,11 +91,14 @@ const FacultyTable = () => {
         <div className="flex flex-row w-full items-center justify-end gap-[0.3vw]">
           <MainSearch
             placeholder={"Ingrese el nombre de una facultad"}
-            onSearch={handleSearch}
+            onSearch={(value) => handleSearch(value, "main")}
+            mainFilter={mainFilter}
+            setMainFilter={setMainFilter}
           />
           <div
             title="Limpiar campos de busqueda."
             className="flex h-[3.8vh] items-center cursor-pointer"
+            onClick={handleClearFilters}
           >
             <FilterOffIcon />
           </div>
@@ -93,7 +115,9 @@ const FacultyTable = () => {
                     title="Filtrar por facultad."
                   >
                     <SearchInput
-                      onSearch={(value) => handleSearch(value)}
+                      onSearch={(value) => handleSearch(value, "filter")}
+                      filter={filter}
+                      setFilter={setFilter}
                       className="bg-transparent text-black w-full outline-none border-b-[0.2vh] text-[0.9vw] border-solid border-UNA-Red"
                     />
                   </div>
