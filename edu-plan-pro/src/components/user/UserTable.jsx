@@ -1,11 +1,10 @@
 import React, { useState, useEffect } from "react";
 import "./UserTable.css";
-import UpdateIcon from '../icons/ModalUpdateIcons/IconUpdate';
 import DeleteModal from "../modaldelete/DeleteModal.jsx"
 import deleteIcon from "../icons/ActionIcons/delete.svg";
 import SearchInput from "../search/SearchInput";
 import FilterOffIcon from "../icons/MainIcons/FilterOffIcon";
-import AddIcon from "../icons/ActionIcons/AddIcon";
+import AddIcon from "../icons/CrudIcons/AddIcon";
 import UserModalAdd from "./UserModalAdd.jsx";
 import MainSearch from "../search/MainSearch.jsx";
 import Pagination from "../pagination/Pagination.jsx";
@@ -238,7 +237,7 @@ const UserTable = () => {
                             marginRight: '10px'
                           }}
                         >
-                          <UpdateIcon />
+                          
                         </div>
                         <img
                           title="Eliminar usuario."

@@ -38,7 +38,7 @@ const ValidateLogin = ({ Login }) => {
   if (loading) {
     return (
       <div className="flex justify-center items-center w-full h-screen">
-        <div className="w-[25vw] h-[30vh] border-[0.5vw] border-t-[0.5vw] border-UNA-Red border-solid rounded-full animate-spin">
+        <div className="w-[5vw] h-[10vh] border-[0.5vw] border-t-[0.5vw] border-UNA-Red border-solid rounded-full animate-bounce">
         </div>
       </div>
     );

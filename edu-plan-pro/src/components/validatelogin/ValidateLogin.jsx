@@ -20,7 +20,7 @@ const ValidateLogin = ({ Component }) => {
           navigate("/login"); // Sin sesión, redirige al login
         }
       } catch (error) {
-        navigate("/login"); // Si hay error, redirige a una pagina especifica
+        navigate("/serverError"); // Si hay error, redirige a una pagina especifica
       }
     };
 

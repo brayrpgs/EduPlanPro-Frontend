@@ -13,7 +13,9 @@ module.exports = {
         'UNA-Blue-Dark': '#2b3843',
         'Focus-Login-Red': '#931212',
         'UNA-Gray': '#A7A7A9',
-        'UNA-Gray-Dark': '#747476'
+        'UNA-Gray-Dark': '#747476',
+        'UNA-Green-Light': '#7cda24',
+        'UNA-Yellow': '#FCBC6D'
       },
       animation: {
         'slow-spin': 'spin 5s linear infinite',

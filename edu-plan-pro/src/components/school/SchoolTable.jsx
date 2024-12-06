@@ -6,7 +6,7 @@ import DeleteModal from "../modaldelete/DeleteModal";
 import SearchInput from "../search/SearchInput";
 import FilterOffIcon from "../icons/MainIcons/FilterOffIcon";
 import UpdateSchool from "./UpdateSchool";
-import AddIcon from "../icons/ActionIcons/AddIcon";
+import AddIcon from "../icons/CrudIcons/AddIcon";
 import SchoolModalAdd from "./SchoolModalAdd";
 import MainSearch from "../search/MainSearch";
 import Pagination from "../pagination/Pagination";

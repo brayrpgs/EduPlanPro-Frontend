@@ -1,4 +1,4 @@
-import "./LoginButtonEnter.css";
+import React from "react";
 
 const LoginButtonEnter = ( {className} ) => {
   return (

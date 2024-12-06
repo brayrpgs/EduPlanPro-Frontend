@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import Swal from 'sweetalert2';
-import IconUpdate from '../icons/ModalUpdateIcons/IconUpdate.jsx';
+
 
 const UpdateSchool = ({ school }) => {
     const [desc, setSchoolName] = useState('');
@@ -167,7 +167,7 @@ const UpdateSchool = ({ school }) => {
                 onClick={() => setIsModalOpen(true)}
                 style={{ background: "none", border: "none", cursor: "pointer", padding: "8px", transition: "opacity 0.2s"}}
             >
-                <IconUpdate />
+                
             </button>
 
             <div

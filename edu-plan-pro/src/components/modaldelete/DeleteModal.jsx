@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import DeleteIcon from "../icons/DeleteIcons/DeleteIcon";
+import DeleteIcon from "../icons/CrudIcons/DeleteIcon";
 import CancelActionIcon from "../icons/MainIcons/CancelActionIcon";
 import Swal from "sweetalert2";
 
@@ -13,34 +13,16 @@ const DeleteModal = ({
   currentPage,
   loadData,
   destination,
-  
 }) => {
   const [isOpen, setIsOpen] = useState(false);
   const [itemToDelete, setItemToDelete] = useState(null);
 
-  const infoCancel = () => {
-    Swal.fire({
-      title: "Acción cancelada.",
-      text: "La acción fue cancelada.",
-      icon: "info",
-      iconColor: "#2B385A",
-      confirmButtonColor: "#A31E32",
-      confirmButtonText: "Aceptar",
-    }).then((result) => {
-      if (result.isConfirmed) {
-        setIsOpen(false);
-        setItemToDelete(null);
-      }
-    });
-  };
-
   const handleDelete = async () => {
-
     const dataToSend = { stat: 0 };
 
-    fields.forEach(({field, value}) => {
-      dataToSend[value] = item[field]
-    })
+    fields.forEach(({ field, value }) => {
+      dataToSend[value] = item[field];
+    });
 
     try {
       const response = await fetch(`http://localhost:3001/${destination}`, {
@@ -68,7 +50,8 @@ const DeleteModal = ({
         }).then((result) => {
           if (result.isConfirmed) {
             const updatedItems = items.filter(
-              (item) => item[itemName] !== fields.find(field => field.value === "id")
+              (item) =>
+                item[itemName] !== fields.find((field) => field.value === "id")
             );
             setItems(updatedItems);
 
@@ -97,9 +80,9 @@ const DeleteModal = ({
   };
 
   return (
-    <div>
+    <div title="Eliminar registro.">
       <button
-        className="h-[2vh] w-[1.5vw] flex items-center justify-center"
+        className="h-[3vh] w-[1.5vw] flex items-center justify-center"
         onClick={() => {
           setIsOpen(true);
           setItemToDelete(item);
@@ -121,7 +104,7 @@ const DeleteModal = ({
       <div
         className={`${
           isOpen
-            ? "transition-all duration-500 ease-in-out w-[30vw] h-[30vh] bg-white fixed top-0 left-0 right-0 bottom-0 m-auto z-50 flex items-center justify-center border-[0.1vh] border-gray-400 rounded-[1vh] shadow-2xl"
+            ? "w-[30vw] h-[30vh] bg-white fixed top-0 left-0 right-0 bottom-0 m-auto z-50 flex items-center justify-center border-[0.1vh] border-gray-400 rounded-[1vh]"
             : "w-[0%] h-[0%]"
         } 
             `}
@@ -166,7 +149,10 @@ const DeleteModal = ({
               <button
                 className="border-[0.1vh] bg-UNA-Blue-Dark text-white rounded-[0.3vw] h-[60%] border-black w-[50%] mr-[1vw] ml-[0.1vw]
               "
-                onClick={() => infoCancel()}
+                onClick={() => {
+                  setIsOpen(false);
+                  setItemToDelete(null);
+                }}
               >
                 Cancelar
               </button>

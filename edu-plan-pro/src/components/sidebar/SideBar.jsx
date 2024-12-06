@@ -91,7 +91,7 @@ const SideBar = () => {
   };
 
   return (
-    <div className="flex fixed w-[2vw] h-[3vh]">
+    <div className="flex fixed w-[2vw] h-[3vh] z-50">
       <button onClick={() => setIsOpen(true)}>
         <OpenSideBar />
       </button>
@@ -112,7 +112,7 @@ const SideBar = () => {
       <div
         className={`${
           isOpen ? "w-[17vw] border-[0.3vh]  border-UNA-Blue-Light/95 " : "w-[0%]"
-        } bg-white min-h-screen top-0 right-0 fixed transition-all duration-300 select-none`}
+        } bg-white min-h-screen top-0 right-0 fixed select-none`}
       >
         <div className={`${!isOpen && "hidden"}`}>
           <div className="flex fixed w-[2vw] h-[3vh] right-[2vh] top-[2.5vh]">

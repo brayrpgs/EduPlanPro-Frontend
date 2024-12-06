@@ -3,14 +3,42 @@ import SettingServerErrorIcon from "../icons/ServerErrorIcons/SettingServerError
 
 const ServerError = () => {
   const [visible, setVisible] = useState(false);
+  const [serverAvailable, setServerAvailable] = useState(false); 
+
+  const checkServerStatus = async () => {
+    try {
+      
+      const response = await fetch("http://localhost:3001/session", {
+        method: "GET",
+        credentials: "include",
+      });  
+      if (response.ok) {
+        setServerAvailable(true);  
+      } else {
+        setServerAvailable(false);  
+      }
+    } catch (error) {
+      setServerAvailable(false); 
+    }
+  };
 
   useEffect(() => {
+    
+    checkServerStatus();
+
     const timer = setTimeout(() => {
       setVisible(true);
     }, 100); 
 
-    return () => clearTimeout(timer);
-  }, []);
+    return () => clearTimeout(timer); 
+  }, []); 
+
+  useEffect(() => {
+    if (serverAvailable) {
+      
+      window.location.assign("/login");
+    }
+  }, [serverAvailable]); 
 
   return (
     <div className="flex flex-col items-center w-full h-screen bg-UNA-Blue-Dark justify-center text-center relative">
@@ -26,9 +54,12 @@ const ServerError = () => {
       >
         Lo sentimos, no podemos acceder al servicio en este momento. El servidor no está disponible. Por favor, inténtalo de nuevo más tarde.
         
-        <button className="flex w-[15vw] h-[6vh] border-black border-[0.1vh] mt-[1vh] text-center items-center justify-center bg-UNA-Red rounded-[1vh] "
-        onClick={() => {window.location.assign("/login");}}
-        > Intentar de nuevo </button>
+        <button
+          className="flex w-[15vw] h-[6vh] border-black border-[0.1vh] mt-[1vh] text-center items-center justify-center bg-UNA-Red rounded-[1vh]"
+          onClick={() => { window.location.assign("/login"); }}
+        >
+          Intentar de nuevo
+        </button>
       </div>
     </div>
   );

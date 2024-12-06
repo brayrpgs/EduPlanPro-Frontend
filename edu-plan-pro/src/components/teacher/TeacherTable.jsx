@@ -1,13 +1,12 @@
 import React, { useState, useEffect } from "react";
 import "./TeacherTable.css";
 import search from "../images/search.svg";
-import UpdateIcon from '../icons/ModalUpdateIcons/IconUpdate';
 import TeacherEditModal from './UpdateTeacher.jsx';
 import DeleteModal from "../modaldelete/DeleteModal"
 import deleteIcon from "../icons/ActionIcons/delete.svg";
 import SearchInput from "../search/SearchInput";
 import FilterOffIcon from "../icons/MainIcons/FilterOffIcon";
-import AddIcon from "../icons/ActionIcons/AddIcon";
+import AddIcon from "../icons/CrudIcons/AddIcon";
 import TeacherModalAdd from "./TeacherModalAdd";
 import MainSearch from "../search/MainSearch";
 import Pagination from "../pagination/Pagination";
@@ -257,7 +256,7 @@ const TeacherTable = () => {
                             marginRight: '10px'
                           }}
                         >
-                          <UpdateIcon />
+                          
                         </div>
                         <img
                           title="Eliminar profesor."

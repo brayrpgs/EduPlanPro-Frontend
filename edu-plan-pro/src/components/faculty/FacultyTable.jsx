@@ -1,13 +1,11 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import DeleteModal from "../modaldelete/DeleteModal";
-import DeleteModal2 from "../modaldelete/DeleteModal";
 import SearchInput from "../search/SearchInput";
 import FilterOffIcon from "../icons/MainIcons/FilterOffIcon";
-import AddIcon from "../icons/ActionIcons/AddIcon";
-import FacultyModalAdd from "./FacultyModalAdd";
-import UpdateFaculty from "./UpdateFaculty";
+import FacultyAdd from "./FacultyAdd";
 import MainSearch from "../search/MainSearch";
 import Pagination from "../pagination/Pagination";
+import FacultyUpdate from "./FacultyUpdate";
 
 const FacultyTable = () => {
   const [faculties, setFaculties] = useState([]);
@@ -16,33 +14,32 @@ const FacultyTable = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [totalItems, setTotalItems] = useState(0);
 
-  const loadFacultyData = async (page) => {
-    const searchQuery = searchTerm ? `&search=${searchTerm}` : "&search=";
-    const response = await fetch(
-      `http://localhost:3001/searchfaculty?name=search-page&numPage=${page}${searchQuery}`,
-      {
-        method: "GET",
-        credentials: "include",
+  const loadFacultyData = useCallback(
+    async (page) => {
+      const searchQuery = searchTerm ? `&search=${searchTerm}` : "&search=";
+      const response = await fetch(
+        `http://localhost:3001/searchfaculty?name=search-page&numPage=${page}${searchQuery}`,
+        {
+          method: "GET",
+          credentials: "include",
+        }
+      );
+
+      if (!response.ok) {
+        console.error("Error en la solicitud");
+        return;
       }
-    );
 
-    if (!response.ok) {
-      console.error("Error en la solicitud");
-      return;
-    }
-
-    const jsonResponse = await response.json();
-    setFilteredFaculty(jsonResponse.data.rows || []);
-    setTotalItems(jsonResponse.data.totalMatches || 0);
-  };
+      const jsonResponse = await response.json();
+      setFilteredFaculty(jsonResponse.data.rows || []);
+      setTotalItems(jsonResponse.data.totalMatches || 0);
+    },
+    [searchTerm]
+  );
 
   useEffect(() => {
     loadFacultyData(currentPage);
-  }, [currentPage, searchTerm]);
-
-  const handleAddFaculty = () => {
-    loadFacultyData(currentPage);
-  };
+  }, [currentPage, loadFacultyData]);
 
   const handlePageChange = (page) => {
     setCurrentPage(page);
@@ -55,9 +52,36 @@ const FacultyTable = () => {
 
   return (
     <main>
-      <h1 className="text-[2vw] mt-[2.5vh] justify-center flex">Facultades</h1>
+      <div className="mt-[3vh] justify-start flex pr-[15vw] pl-[15vw]">
+        <div className="bg-UNA-Blue-Dark w-full max-w-screens flex rounded-[0.5vh] items-center">
+          <h1 className="ml-[1vw] my-[0.5vh] text-[2vw] text-white">
+            Administrar facultades
+          </h1>
+          <div className="flex ml-auto justify-end mr-[1vw]">
+            <FacultyAdd
+              totalItems={totalItems}
+              currentPage={currentPage}
+              loadData={loadFacultyData}
+              textToAdd={"Agregar facultad"}
+            />
+          </div>
+        </div>
+      </div>
 
       <div className="flex flex-col justify-center items-center w-full pl-[15vw] pr-[15vw]">
+        <div className="flex flex-row w-full items-center justify-end gap-[0.3vw]">
+          <MainSearch
+            placeholder={"Ingrese el nombre de una facultad"}
+            onSearch={handleSearch}
+          />
+          <div
+            title="Limpiar campos de busqueda."
+            className="flex h-[3.8vh] items-center cursor-pointer"
+          >
+            <FilterOffIcon />
+          </div>
+        </div>
+
         <div className="flex justify-center items-center mt-0 w-full overflow-x-auto">
           <table className="w-full table-auto">
             <thead>
@@ -76,12 +100,6 @@ const FacultyTable = () => {
                 </th>
                 <th className="border-[0.1vh] border-gray-400 px-[1vw] py-[1vh] w-[10vw] text-[1vw] text-UNA-Red">
                   Acciones
-                  <div className="w-full flex flex-col ">
-                    <SearchInput
-                      disabled={true}
-                      className="bg-transparent w-full outline-none border-b-[0.2vh] border-solid border-UNA-Red"
-                    />
-                  </div>
                 </th>
               </tr>
             </thead>
@@ -89,17 +107,24 @@ const FacultyTable = () => {
               {filteredFaculty.length > 0 ? (
                 filteredFaculty.map((faculty) => (
                   <tr key={faculty.ID_FACULTY}>
-                    <td className="border-[0.1vh] border-gray-400 px-[1vw] py-[1vh] text-[0.9vw] text-center items-center ">
+                    <td className="border-[0.1vh] border-gray-400 px-[1vw] py-[1.5vh] text-[0.9vw] text-center items-center break-words whitespace-normal max-w-[15vw]">
                       {faculty["NOMBRE FACULTAD"]}
                     </td>
                     <td className="border-[0.1vh] border-gray-400 px-[1vw] py-[1vh] text-[0.9vw]">
-                      <div className="flex items-center justify-center w-full h-full">
+                      <div className="flex items-center flex-row justify-center w-full h-full gap-[0.2vw]">
+                        <FacultyUpdate
+                          faculty={faculty}
+                          currentPage={currentPage}
+                          loadData={loadFacultyData}
+                        />
+
                         <DeleteModal
                           item={faculty}
                           itemName={"NOMBRE FACULTAD"}
                           fields={[
-                            {field: "NOMBRE FACULTAD", value: "desc"},
-                            {field: "ID_FACULTY", value: "id"},]}
+                            { field: "NOMBRE FACULTAD", value: "desc" },
+                            { field: "ID_FACULTY", value: "id" },
+                          ]}
                           items={faculties}
                           setItems={setFaculties}
                           totalItems={totalItems}
@@ -115,7 +140,7 @@ const FacultyTable = () => {
                 <tr>
                   <td
                     colSpan={2}
-                    className="text-center items-center justify-center pt-[1vh] text-[0.9vw]"
+                    className="px-[1vw] py-[1vh] text-[0.9vw] text-center items-center pt-[3.5vh]"
                   >
                     No se encontraron facultades registradas.
                   </td>
@@ -124,14 +149,14 @@ const FacultyTable = () => {
             </tbody>
           </table>
         </div>
-
-        <FacultyModalAdd />
-        <Pagination
-          totalItems={totalItems}
-          itemsPerPage={"8"}
-          currentPage={currentPage}
-          onPageChange={handlePageChange}
-        />
+        <div className="w-full h-[8vh] flex justify-center items-center">
+          <Pagination
+            totalItems={totalItems}
+            itemsPerPage={"8"}
+            currentPage={currentPage}
+            onPageChange={handlePageChange}
+          />
+        </div>
       </div>
     </main>
   );

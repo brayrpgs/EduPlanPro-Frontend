@@ -1,4 +1,4 @@
-import "./LoginFinalLogo.css";
+import React from "react";
 
 const LoginFinalLogo = () => {
   return (
