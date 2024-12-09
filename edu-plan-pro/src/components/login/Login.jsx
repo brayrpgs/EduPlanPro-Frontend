@@ -1,15 +1,17 @@
 import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { FetchValidate } from "../../utilities/FetchValidate.js";
 import LoginFinalLogo from "../icons/LoginIcons/LoginFinalLogo.jsx";
 import LoginButtonEnter from "../icons/LoginIcons/LoginButtonEnter.jsx";
 import LoginButtonHelp from "../icons/LoginIcons/LoginButtonHelp.jsx";
-import axios from "axios";
 import Swal from "sweetalert2";
-import { useNavigate } from "react-router-dom";
 import LoginHeader from "./LoginHeader.jsx";
 import Footer from "../footer/Footer.jsx";
+import Loading from "../componentsgeneric/Loading.jsx";
 
 export const Login = () => {
   const navigate = useNavigate();
+  const [loading, setLoading] = useState(false); 
 
   const [form, setForm] = useState({
     username: "",
@@ -18,13 +20,13 @@ export const Login = () => {
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-  
-    const cleanedValue = value.replace(/^\s*|\s*$/g, ''); 
-    e.target.value = cleanedValue; 
-  
+
+    const cleanedValue = value.replace(/^\s*|\s*$/g, "");
+    e.target.value = cleanedValue;
+
     setForm({
       ...form,
-      [name]: cleanedValue, 
+      [name]: cleanedValue,
     });
   };
 
@@ -33,9 +35,6 @@ export const Login = () => {
   };
 
   const login = async (username, password) => {
-
-    const url = "http://localhost:3001/session";
-
     if (username.trim() === "" || password.trim() === "") {
       Swal.fire({
         title: "¡Datos incompletos!",
@@ -53,24 +52,36 @@ export const Login = () => {
       document.getElementById("Lpassword").style.color = "#E62A10";
 
       setTimeout(() => {
-        document.getElementById("Lusername").style.color = ""; 
-        document.getElementById("Lpassword").style.color = ""; 
+        document.getElementById("Lusername").style.color = "";
+        document.getElementById("Lpassword").style.color = "";
       }, 3000);
-
     } else {
-      try {
-        const response = await axios.post(
-          url,
-          {
-            idcard: username,
-            password: password,
-          },
-          {
-            withCredentials: true,
-          }
-        );
 
-        if (response.data.code === "200") {
+      const url = "http://localhost:3001/session";
+
+      const body = {
+        idcard: username,
+        password: password,
+      };
+
+      const options = {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(body),
+        credentials: "include",
+      };
+
+      try {
+        
+        setLoading(true);
+        const response = await FetchValidate(url, options, navigate);
+
+        if(!response){
+          setLoading(false);
+          return; // Hubo un error y se evita seguir con el flujo
+        }
+
+        if (response.code === "200") {
           Swal.fire({
             title: "Acceso válido.",
             icon: "success",
@@ -100,6 +111,8 @@ export const Login = () => {
         }
       } catch (error) {
         console.error("Error en la solicitud:", error);
+      } finally {
+        setLoading(false);
       }
     }
   };
@@ -187,10 +200,11 @@ export const Login = () => {
             </div>
           </div>
         </div>
+            
+        {loading && <Loading/>}
       </main>
 
-      <Footer/>
-
+      <Footer />
     </div>
   );
 };

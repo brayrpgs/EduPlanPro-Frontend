@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import "./SchoolTable.css";
 import search from "../images/search.svg";
 import deleteIcon from "../icons/ActionIcons/delete.svg";
-import DeleteModal from "../modaldelete/DeleteModal";
+import DeleteModal from "../componentsgeneric/DeleteModal";
 import SearchInput from "../search/SearchInput";
 import FilterOffIcon from "../icons/MainIcons/FilterOffIcon";
 import UpdateSchool from "./UpdateSchool";

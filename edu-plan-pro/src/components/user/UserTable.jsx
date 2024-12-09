@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import "./UserTable.css";
-import DeleteModal from "../modaldelete/DeleteModal.jsx"
+import DeleteModal from "../componentsgeneric/DeleteModal.jsx"
 import deleteIcon from "../icons/ActionIcons/delete.svg";
 import SearchInput from "../search/SearchInput";
 import FilterOffIcon from "../icons/MainIcons/FilterOffIcon";

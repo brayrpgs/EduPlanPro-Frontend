@@ -85,7 +85,7 @@ const FacultyAdd = ({ totalItems, currentPage, loadData, textToAdd }) => {
 
   return (
     <div title="Agregar facultad.">
-      <div className="bg-UNA-Green-Light flex flex-row justify-start items-center h-[3.8vh] rounded-[1vh]">
+      <div className="bg-UNA-Green-Light/70 flex flex-row justify-start items-center h-[3.8vh] rounded-[1vh]">
         <button
           className="flex flex-row h-full items-center justify-start ml-[0.5vw] mr-[0.5vw] gap-[0.25vw]"
           onClick={() => {
@@ -120,7 +120,7 @@ const FacultyAdd = ({ totalItems, currentPage, loadData, textToAdd }) => {
       >
         {isOpen && (
           <div className="w-full flex flex-col justify-center items-center ">
-            <div className="bg-UNA-Red  w-full h-[7vh] flex top-0 fixed border-white z-50 rounded-t-[1vh] text-start items-center">
+            <div className="bg-UNA-Red w-full h-[7vh] flex top-0 absolute border-white z-50 rounded-t-[1vh] text-start items-center">
               <h1 className="text-[3vh] ml-[1vw] text-white">
                 Agregar facultad
               </h1>
@@ -158,6 +158,7 @@ const FacultyAdd = ({ totalItems, currentPage, loadData, textToAdd }) => {
                 id="facultyName"
                 type="text"
               />
+              
             </div>
             <div className="w-full h-[7vh] flex bottom-0 fixed border-white z-50 text-center justify-center items-center">
               <button

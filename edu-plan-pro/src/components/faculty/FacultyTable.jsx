@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useCallback } from "react";
-import DeleteModal from "../modaldelete/DeleteModal";
+import DeleteModal from "../componentsgeneric/DeleteModal";
 import SearchInput from "../search/SearchInput";
 import FilterOffIcon from "../icons/MainIcons/FilterOffIcon";
 import FacultyAdd from "./FacultyAdd";
@@ -136,6 +136,7 @@ const FacultyTable = () => {
                     </td>
                     <td className="border-[0.1vh] border-gray-400 px-[1vw] py-[1vh] text-[0.9vw]">
                       <div className="flex items-center flex-row justify-center w-full h-full gap-[0.2vw]">
+
                         <FacultyUpdate
                           faculty={faculty}
                           currentPage={currentPage}

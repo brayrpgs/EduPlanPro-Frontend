@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { FetchValidate } from "../../utilities/FetchValidate";
 
 const ValidateLogin = ({ Component }) => {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
@@ -7,14 +8,17 @@ const ValidateLogin = ({ Component }) => {
 
   useEffect(() => {
     const validatelogin = async () => {
-      try {
-        const response = await fetch("http://localhost:3001/session", {
-          method: "GET",
-          credentials: "include",
-        });
-        const data = await response.json();
+      const url = "http://localhost:3001/session";
 
-        if (data.code === "200") {
+      const options = {
+        method: "GET",
+        credentials: "include",
+      };
+
+      try {
+        const response = await FetchValidate(url, options, options);
+
+        if (response.code === "200") {
           setIsLoggedIn(true); // Sesión válida
         } else {
           navigate("/login"); // Sin sesión, redirige al login
