@@ -2,6 +2,9 @@ import React, { useState } from "react";
 import DeleteIcon from "../icons/CrudIcons/DeleteIcon";
 import CancelActionIcon from "../icons/MainIcons/CancelActionIcon";
 import Swal from "sweetalert2";
+import { FetchValidate } from "../../utilities/FetchValidate";
+import { useNavigate } from "react-router-dom";
+import Loading from "./Loading";
 
 const DeleteModal = ({
   item,
@@ -13,9 +16,13 @@ const DeleteModal = ({
   currentPage,
   loadData,
   destination,
+  componentName,
+  componentPrefix
 }) => {
   const [isOpen, setIsOpen] = useState(false);
   const [itemToDelete, setItemToDelete] = useState(null);
+  const [loading, setLoading] = useState(false);
+  const navigate = useNavigate();
 
   const handleDelete = async () => {
     const dataToSend = { stat: 0 };
@@ -24,23 +31,26 @@ const DeleteModal = ({
       dataToSend[value] = item[field];
     });
 
-    try {
-      const response = await fetch(`http://localhost:3001/${destination}`, {
-        method: "PATCH",
+const url = `http://localhost:3001/${destination}`;
+
+const options = {
+  method: "PATCH",
         credentials: "include",
         headers: {
           "Content-Type": "application/json",
         },
         body: JSON.stringify(dataToSend),
-      });
+}
 
-      if (!response.ok) {
+    try {
+      setLoading(true);
+const response =  await FetchValidate(url, options, navigate);
+
+      if (!response) {
         throw new Error("Error en la solicitud");
       }
 
-      const result = await response.json();
-
-      if (result.code === "200") {
+      if (response.code === "200") {
         Swal.fire({
           title: "¡Eliminado!",
           text: "El elemento fue eliminado exitosamente.",
@@ -72,16 +82,19 @@ const DeleteModal = ({
           confirmButtonColor: "#A31E32",
           confirmButtonText: "Aceptar",
         });
-        console.log(result);
+        
       }
     } catch (error) {
+      setLoading(false);
       console.error("Error al eliminar la facultad:", error);
+    } finally {
+      setLoading(false);
     }
   };
 
   return (
-    <div title="Eliminar registro.">
-      <button
+    <div >
+      <button title={`Eliminar ${componentName}`}
         className="h-[3vh] w-[1.5vw] flex items-center justify-center"
         onClick={() => {
           setIsOpen(true);
@@ -113,7 +126,7 @@ const DeleteModal = ({
           <div className="w-full flex flex-col justify-center items-center">
             <div className="bg-UNA-Red w-full h-[7vh] flex top-0 absolute border-white z-50 rounded-t-[1vh] text-start items-center">
               <h1 className="text-[3vh] ml-[1vw] text-white">
-                Eliminar elemento
+                Eliminar {componentName}
               </h1>
               <div className="w-[5vw] right-0 h-full absolute flex text-center justify-center items-center">
                 <button
@@ -131,7 +144,7 @@ const DeleteModal = ({
             </div>
 
             <h1 className="text-[1.1vw] flex items-center text-center">
-              ¿Estás seguro que deseas eliminar el siguiente elemento?
+              ¿Estás seguro que deseas eliminar {componentPrefix} siguiente {componentName}?
             </h1>
             <div className="w-full flex flex-wrap items-center text-center justify-center">
               <p className="ml-[1vw] mr-[1vw] text-[1.0vw] text-center break-words mt-[3vh] max-w-full overflow-auto max-h-[6vh]">
@@ -160,6 +173,7 @@ const DeleteModal = ({
           </div>
         )}
       </div>
+      {loading && <Loading/>}
     </div>
   );
 };

@@ -52,6 +52,7 @@ const SideBar = () => {
         cancelButton: "swal-button-largeV1",
       },
     });
+    
     //llama a la funcion del backend y cierra
     if (result.isConfirmed) {
       try {
@@ -91,7 +92,7 @@ const SideBar = () => {
   };
 
   return (
-    <div className="flex fixed w-[2vw] h-[3vh] z-50">
+    <div className="flex fixed w-[2vw] h-[3vh] z-40">
       <button onClick={() => setIsOpen(true)}>
         <OpenSideBar />
       </button>

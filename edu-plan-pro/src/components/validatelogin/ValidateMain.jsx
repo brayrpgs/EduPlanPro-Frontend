@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { FetchValidate } from "../../utilities/FetchValidate.js";
+import Loading from "../componentsgeneric/Loading.jsx";
 
 const ValidateLogin = ({ Login }) => {
   const [flag, setFlag] = useState(false);
@@ -27,8 +28,9 @@ const ValidateLogin = ({ Login }) => {
         }
       } catch (error) {
         navigate("/serverError"); // Si hay error, redirige a una página específica
+
       } finally {
-        setLoading(false);
+        setLoading(false); 
       }
     };
 
@@ -36,11 +38,7 @@ const ValidateLogin = ({ Login }) => {
   }, [navigate]);
 
   if (loading) {
-    return (
-      <div className="flex justify-center items-center w-full h-screen">
-        <div className="w-[5vw] h-[10vh] border-[0.5vw] border-t-[0.5vw] border-UNA-Red border-solid rounded-full animate-bounce"></div>
-      </div>
-    );
+    return <Loading />; 
   }
 
   return flag ? <Login /> : null;

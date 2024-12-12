@@ -6,6 +6,9 @@ import FacultyAdd from "./FacultyAdd";
 import MainSearch from "../search/MainSearch";
 import Pagination from "../pagination/Pagination";
 import FacultyUpdate from "./FacultyUpdate";
+import Loading from "../componentsgeneric/Loading";
+import { FetchValidate } from "../../utilities/FetchValidate";
+import { useNavigate } from "react-router-dom";
 
 const FacultyTable = () => {
   const [faculties, setFaculties] = useState([]);
@@ -15,28 +18,40 @@ const FacultyTable = () => {
   const [totalItems, setTotalItems] = useState(0);
   const [mainFilter, setMainFilter] = useState("");
   const [filter, setFilter] = useState("");
+  const [loading, setLoading] = useState(false);
+
+  const navigate = useNavigate();
 
   const loadFacultyData = useCallback(
     async (page) => {
+      setCurrentPage(page);
       const searchQuery = searchTerm ? `&search=${searchTerm}` : "&search=";
-      const response = await fetch(
-        `http://localhost:3001/searchfaculty?name=search-page&numPage=${page}${searchQuery}`,
-        {
-          method: "GET",
-          credentials: "include",
+
+      const url = `http://localhost:3001/searchfaculty?name=search-page&numPage=${page}${searchQuery}`;
+
+      const options = {
+        method: "GET",
+        credentials: "include",
+      };
+
+      try {
+        setLoading(true);
+        const response = await FetchValidate(url, options, navigate);
+
+        if (!response) {
+          console.error("Error en la solicitud");
+          return;
         }
-      );
 
-      if (!response.ok) {
-        console.error("Error en la solicitud");
-        return;
+        setFilteredFaculty(response.data.rows || []);
+        setTotalItems(response.data.totalMatches || 0);
+      } catch (error) {
+        setLoading(false);
+      } finally {
+        setLoading(false);
       }
-
-      const jsonResponse = await response.json();
-      setFilteredFaculty(jsonResponse.data.rows || []);
-      setTotalItems(jsonResponse.data.totalMatches || 0);
     },
-    [searchTerm]
+    [searchTerm, navigate]
   );
 
   useEffect(() => {
@@ -96,7 +111,7 @@ const FacultyTable = () => {
             setMainFilter={setMainFilter}
           />
           <div
-            title="Limpiar campos de busqueda."
+            title="Limpiar filtros."
             className="flex h-[3.8vh] items-center cursor-pointer"
             onClick={handleClearFilters}
           >
@@ -136,7 +151,6 @@ const FacultyTable = () => {
                     </td>
                     <td className="border-[0.1vh] border-gray-400 px-[1vw] py-[1vh] text-[0.9vw]">
                       <div className="flex items-center flex-row justify-center w-full h-full gap-[0.2vw]">
-
                         <FacultyUpdate
                           faculty={faculty}
                           currentPage={currentPage}
@@ -156,6 +170,8 @@ const FacultyTable = () => {
                           currentPage={currentPage}
                           loadData={loadFacultyData}
                           destination={"faculty"}
+                          componentName={"facultad"}
+                          componentPrefix={"la"}
                         />
                       </div>
                     </td>
@@ -183,6 +199,7 @@ const FacultyTable = () => {
           />
         </div>
       </div>
+      {loading && <Loading />}
     </main>
   );
 };

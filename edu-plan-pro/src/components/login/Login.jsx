@@ -30,7 +30,8 @@ export const Login = () => {
     });
   };
 
-  const handleLogin = () => {
+  const handleLogin = (e) => {
+    e.preventDefault();
     login(form.username, form.password);
   };
 
@@ -111,6 +112,7 @@ export const Login = () => {
         }
       } catch (error) {
         console.error("Error en la solicitud:", error);
+        setLoading(false);
       } finally {
         setLoading(false);
       }

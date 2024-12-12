@@ -2,13 +2,18 @@ import React, { useState } from "react";
 import AddIcon from "../icons/CrudIcons/AddIcon";
 import CancelActionIcon from "../icons/MainIcons/CancelActionIcon";
 import Swal from "sweetalert2";
+import { useNavigate } from "react-router-dom";
+import { FetchValidate } from "../../utilities/FetchValidate";
+import Loading from "../componentsgeneric/Loading";
 
 const FacultyAdd = ({ totalItems, currentPage, loadData, textToAdd }) => {
   const [isOpen, setIsOpen] = useState(false);
   const [name, setName] = useState("");
+  const [loading, setLoading] = useState(false);
+  const navigate = useNavigate();
 
   function validateData(data) {
-    const patternString = /^[A-Za-zÁ-ÿ\s]+$/;
+    const patternString = /^[A-Za-zÁ-ÿ\s]+[A-Za-zÁ-ÿ\s.,]*[A-Za-zÁ-ÿ\s]*$/;
 
     if (data === "") {
       Swal.fire({
@@ -33,21 +38,30 @@ const FacultyAdd = ({ totalItems, currentPage, loadData, textToAdd }) => {
 
   const handleAdd = async (nameInput) => {
     if (validateData(nameInput.trim())) {
+
+      const url = "http://localhost:3001/faculty";
+
+      const body = {
+        name: nameInput,
+      };
+
+      const options = {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(body),
+        credentials: "include",
+      };
+
       try {
-        const body = {
-          name: nameInput,
-        };
+        setLoading(true);
+        const response = await FetchValidate(url, options, navigate);
+        
+        if (!response) {
+          console.error("Error en la solicitud");
+          return;
+        }
 
-        const response = await fetch(`http://localhost:3001/faculty`, {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify(body),
-          credentials: "include",
-        });
-
-        const jsonResponse = await response.json();
-
-        if (jsonResponse.code === "200") {
+        if (response.code === "200") {
           Swal.fire({
             icon: "success",
             title: "Facultad agregada",
@@ -63,7 +77,8 @@ const FacultyAdd = ({ totalItems, currentPage, loadData, textToAdd }) => {
               setName("");
             }
           });
-        } else if (jsonResponse.code === "500") {
+
+        } else if (response.code === "500") {
           Swal.fire({
             icon: "error",
             title: "Error",
@@ -72,6 +87,7 @@ const FacultyAdd = ({ totalItems, currentPage, loadData, textToAdd }) => {
           });
         }
       } catch (error) {
+        setLoading(false);
         Swal.fire({
           icon: "error",
           title: "Error al actualizar la facultad",
@@ -79,14 +95,16 @@ const FacultyAdd = ({ totalItems, currentPage, loadData, textToAdd }) => {
           confirmButtonColor: "#A31E32",
         });
         console.error(error);
+      } finally {
+        setLoading(false);
       }
     }
   };
 
   return (
-    <div title="Agregar facultad.">
+    <div>
       <div className="bg-UNA-Green-Light/70 flex flex-row justify-start items-center h-[3.8vh] rounded-[1vh]">
-        <button
+        <button title="Agregar facultad."
           className="flex flex-row h-full items-center justify-start ml-[0.5vw] mr-[0.5vw] gap-[0.25vw]"
           onClick={() => {
             setIsOpen(true);
@@ -158,7 +176,6 @@ const FacultyAdd = ({ totalItems, currentPage, loadData, textToAdd }) => {
                 id="facultyName"
                 type="text"
               />
-              
             </div>
             <div className="w-full h-[7vh] flex bottom-0 fixed border-white z-50 text-center justify-center items-center">
               <button
@@ -181,6 +198,7 @@ const FacultyAdd = ({ totalItems, currentPage, loadData, textToAdd }) => {
           </div>
         )}
       </div>
+      {loading && <Loading/>}
     </div>
   );
 };

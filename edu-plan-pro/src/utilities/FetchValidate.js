@@ -16,7 +16,6 @@ export const FetchValidate = async (url, options, navigate) => {
   }
 
   // Si el servidor esta respondiendo, realizar el fetch
-
   try {
     const response = await fetch(url, options);
     if (!response.ok) {

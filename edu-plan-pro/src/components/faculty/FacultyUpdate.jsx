@@ -2,14 +2,19 @@ import React, { useState } from "react";
 import UpdateIcon from "../icons/CrudIcons/UpdateIcon";
 import CancelActionIcon from "../icons/MainIcons/CancelActionIcon";
 import Swal from "sweetalert2";
+import { useNavigate } from "react-router-dom";
+import { FetchValidate } from "../../utilities/FetchValidate";
+import Loading from "../componentsgeneric/Loading";
 
 const FacultyUpdate = ({ faculty, loadData, currentPage }) => {
   const [isOpen, setIsOpen] = useState(false);
   const [facultyToUpdate, setFacultyToUpdate] = useState(null);
   const [editedName, setEditedName] = useState(faculty["NOMBRE FACULTAD"]);
+  const [loading, setLoading] = useState(false);
+  const navigate = useNavigate();
 
   function validateData(data) {
-    const patternString = /^[A-Za-zÁ-ÿ\s]+$/;
+    const patternString = /^[A-Za-zÁ-ÿ\s]+[A-Za-zÁ-ÿ\s.,]*[A-Za-zÁ-ÿ\s]*$/;
 
     if (data === "") {
       Swal.fire({
@@ -33,26 +38,34 @@ const FacultyUpdate = ({ faculty, loadData, currentPage }) => {
   }
 
   const handleUpdate = async (newName) => {
+
+    const url = "http://localhost:3001/faculty";
+
+    const body = {
+      desc: newName,
+      id: facultyToUpdate["ID_FACULTY"],
+      stat: 1,
+    };
+
+    const options = {
+      method: "PATCH",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(body),
+      credentials: "include"
+    }
+
     if (validateData(newName.trim())) {
       try {
-        const body = {
-          desc: newName,
-          id: facultyToUpdate["ID_FACULTY"],
-          stat: 1,
-        };
+        
+        setLoading(true);
+        const response = await FetchValidate(url, options, navigate);
 
-        const response = await fetch(`http://localhost:3001/faculty`, {
-          method: "PATCH",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify(body),
-          credentials: "include",
-        });
+        if (!response) {
+          console.error("Error en la solicitud");
+          return;
+        }
 
-        const jsonResponse = await response.json();
-
-
-
-        if (jsonResponse.code === "200") {
+        if (response.code === "200") {
           Swal.fire({
             icon: "success",
             title: "Facultad actualizada",
@@ -67,7 +80,7 @@ const FacultyUpdate = ({ faculty, loadData, currentPage }) => {
               setEditedName(newName);
             }
           });
-        } else if (jsonResponse.code === "400") {
+        } else if (response.code === "400") {
           Swal.fire({
             icon: "error",
             title: "Error",
@@ -76,6 +89,7 @@ const FacultyUpdate = ({ faculty, loadData, currentPage }) => {
           });
         }
       } catch (error) {
+        setLoading(false);
         Swal.fire({
           icon: "error",
           title: "Error al actualizar la facultad",
@@ -83,13 +97,15 @@ const FacultyUpdate = ({ faculty, loadData, currentPage }) => {
           confirmButtonColor: "#A31E32",
         });
         console.error(error);
+      } finally {
+        setLoading(false);
       }
     }
   };
 
   return (
-    <div title="Editar registro.">
-      <button
+    <div >
+      <button title="Editar facultad."
         className="h-[3vh] w-[1.5vw] flex items-center justify-center"
         onClick={() => {
           setIsOpen(true);
@@ -180,6 +196,7 @@ const FacultyUpdate = ({ faculty, loadData, currentPage }) => {
           </div>
         )}
       </div>
+      {loading && <Loading/>}
     </div>
   );
 };

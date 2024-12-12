@@ -45,7 +45,7 @@ const ServerError = () => {
       <div
         className={`h-[15vh] w-[15vw] flex items-center justify-center relative transition-opacity duration-1000 ${visible ? "opacity-100" : "opacity-0"}`}
       >
-        <div className="inset-0 flex items-center justify-center animate-slow-spin">
+        <div className="inset-0 w-full flex items-center justify-center animate-slow-spin">
           <SettingServerErrorIcon />
         </div>
       </div>

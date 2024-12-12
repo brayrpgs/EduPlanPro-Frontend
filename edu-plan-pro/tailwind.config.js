@@ -20,6 +20,11 @@ module.exports = {
       animation: {
         'slow-spin': 'spin 5s linear infinite',
       },
+      zIndex: {
+        60: '60',
+        70: '70',
+        80: '80',
+      },
     },
   },
   plugins: [],
