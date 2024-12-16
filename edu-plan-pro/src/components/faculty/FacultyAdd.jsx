@@ -12,22 +12,35 @@ const FacultyAdd = ({ totalItems, currentPage, loadData, textToAdd }) => {
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
 
+  function finallyActions() {
+    const remainingItems = totalItems + 1;
+    const lastPage = Math.ceil(remainingItems / 8);
+    const newPage = Math.min(currentPage, lastPage);
+    loadData(newPage);
+    setIsOpen(false);
+    setName("");
+  }
+
   function validateData(data) {
     const patternString = /^[A-Za-zÁ-ÿ\s]+[A-Za-zÁ-ÿ\s.,]*[A-Za-zÁ-ÿ\s]*$/;
 
     if (data === "") {
       Swal.fire({
         icon: "error",
-        title: "Error al agregar la facultad",
-        text: "El nombre de la facultad no puede ir vacia, agrega texto e intenta de nuevo!",
+        iconColor: "#a31e32",
+        title: "No se pudo agregar la facultad",
+        text: "El nombre de la facultad no puede ir vacío, completa el campo e intenta de nuevo.",
+        confirmButtonText: "Aceptar",
         confirmButtonColor: "#A31E32",
       });
       return false;
     } else if (!patternString.test(data)) {
       Swal.fire({
         icon: "error",
-        title: "Error al agregar la facultad",
-        text: "El nombre de la facultad no puede contener numeros ni caracteres especiales!",
+        iconColor: "#a31e32",
+        title: "No se pudo agregar la facultad",
+        text: "El nombre de la facultad debe contener solo letras, sin números ni caracteres especiales.",
+        confirmButtonText: "Aceptar",
         confirmButtonColor: "#A31E32",
       });
       return false;
@@ -38,7 +51,6 @@ const FacultyAdd = ({ totalItems, currentPage, loadData, textToAdd }) => {
 
   const handleAdd = async (nameInput) => {
     if (validateData(nameInput.trim())) {
-
       const url = "http://localhost:3001/faculty";
 
       const body = {
@@ -55,7 +67,7 @@ const FacultyAdd = ({ totalItems, currentPage, loadData, textToAdd }) => {
       try {
         setLoading(true);
         const response = await FetchValidate(url, options, navigate);
-        
+
         if (!response) {
           console.error("Error en la solicitud");
           return;
@@ -64,25 +76,26 @@ const FacultyAdd = ({ totalItems, currentPage, loadData, textToAdd }) => {
         if (response.code === "200") {
           Swal.fire({
             icon: "success",
+            iconColor: "#7cda24",
             title: "Facultad agregada",
             text: "La facultad se agrego correctamente.",
+            confirmButtonText: "Aceptar",
             confirmButtonColor: "#A31E32",
+            willClose: () => {
+              finallyActions();
+            },
           }).then((result) => {
             if (result.isConfirmed) {
-              const remainingItems = totalItems + 1;
-              const lastPage = Math.ceil(remainingItems / 8);
-              const newPage = Math.min(currentPage, lastPage);
-              loadData(newPage);
-              setIsOpen(false);
-              setName("");
+              finallyActions();
             }
           });
-
         } else if (response.code === "500") {
           Swal.fire({
             icon: "error",
-            title: "Error",
-            text: "No se pudo agregar la facultad, ya existe una con ese nombre",
+            iconColor: "#a31e32",
+            title: "No se pudo agregar la facultad",
+            text: "No se pudo registrar la facultad, ya existe una con ese nombre.",
+            confirmButtonText: "Aceptar",
             confirmButtonColor: "#A31E32",
           });
         }
@@ -90,7 +103,7 @@ const FacultyAdd = ({ totalItems, currentPage, loadData, textToAdd }) => {
         setLoading(false);
         Swal.fire({
           icon: "error",
-          title: "Error al actualizar la facultad",
+          title: "Error al agregar la facultad",
           text: "Intenta de nuevo mas tarde.",
           confirmButtonColor: "#A31E32",
         });
@@ -103,8 +116,9 @@ const FacultyAdd = ({ totalItems, currentPage, loadData, textToAdd }) => {
 
   return (
     <div>
-      <div className="bg-UNA-Green-Light/70 flex flex-row justify-start items-center h-[3.8vh] rounded-[1vh]">
-        <button title="Agregar facultad."
+      <div className="bg-UNA-Green-Light/70 flex flex-row justify-start items-center h-[3.8vh] rounded-[1vh] hover:scale-105">
+        <button
+          title="Agregar facultad."
           className="flex flex-row h-full items-center justify-start ml-[0.5vw] mr-[0.5vw] gap-[0.25vw]"
           onClick={() => {
             setIsOpen(true);
@@ -130,10 +144,10 @@ const FacultyAdd = ({ totalItems, currentPage, loadData, textToAdd }) => {
       ></div>
 
       <div
-        className={`${
+        className={` ${
           isOpen
-            ? "w-[30vw] min-h-[30vh] overflow-auto bg-white fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 z-50 flex flex-col items-center justify-start border-[-1vh] border-gray-400 rounded-[1vh] "
-            : "w-[0%] h-[0%]"
+            ? "w-[30vw] min-h-[30vh] overflow-hidden bg-white fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 z-50 flex flex-col items-center justify-start border-[-1vh] border-gray-400 rounded-[1vh] transition-[width] duration-300"
+            : "w-[0%]"
         }`}
       >
         {isOpen && (
@@ -142,6 +156,7 @@ const FacultyAdd = ({ totalItems, currentPage, loadData, textToAdd }) => {
               <h1 className="text-[3vh] ml-[1vw] text-white">
                 Agregar facultad
               </h1>
+
               <div className="w-[5vw] right-0 h-full absolute flex text-center justify-center items-center">
                 <button
                   className="flex w-[60%] h-[60%] bg-UNA-Pink-Light rounded-[0.5vh] items-center justify-center"
@@ -150,7 +165,7 @@ const FacultyAdd = ({ totalItems, currentPage, loadData, textToAdd }) => {
                     setName("");
                   }}
                 >
-                  <div className="flex w-[75%] h-[75%] ">
+                  <div className="flex w-[75%] h-[75%]">
                     <CancelActionIcon />
                   </div>
                 </button>
@@ -198,7 +213,7 @@ const FacultyAdd = ({ totalItems, currentPage, loadData, textToAdd }) => {
           </div>
         )}
       </div>
-      {loading && <Loading/>}
+      {loading && <Loading />}
     </div>
   );
 };

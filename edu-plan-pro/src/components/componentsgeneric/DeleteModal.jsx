@@ -17,12 +17,27 @@ const DeleteModal = ({
   loadData,
   destination,
   componentName,
-  componentPrefix
+  componentPrefix,
 }) => {
   const [isOpen, setIsOpen] = useState(false);
   const [itemToDelete, setItemToDelete] = useState(null);
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
+
+  function finallyActions() {
+    const updatedItems = items.filter(
+      (item) => item[itemName] !== fields.find((field) => field.value === "id")
+    );
+    setItems(updatedItems);
+
+    const remainingItems = totalItems - 1;
+    const lastPage = Math.ceil(remainingItems / 8);
+    const newPage = Math.min(currentPage, lastPage);
+    loadData(newPage);
+
+    setIsOpen(false);
+    setItemToDelete(null);
+  }
 
   const handleDelete = async () => {
     const dataToSend = { stat: 0 };
@@ -31,20 +46,20 @@ const DeleteModal = ({
       dataToSend[value] = item[field];
     });
 
-const url = `http://localhost:3001/${destination}`;
+    const url = `http://localhost:3001/${destination}`;
 
-const options = {
-  method: "PATCH",
-        credentials: "include",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(dataToSend),
-}
+    const options = {
+      method: "PATCH",
+      credentials: "include",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(dataToSend),
+    };
 
     try {
       setLoading(true);
-const response =  await FetchValidate(url, options, navigate);
+      const response = await FetchValidate(url, options, navigate);
 
       if (!response) {
         throw new Error("Error en la solicitud");
@@ -52,26 +67,20 @@ const response =  await FetchValidate(url, options, navigate);
 
       if (response.code === "200") {
         Swal.fire({
-          title: "¡Eliminado!",
-          text: "El elemento fue eliminado exitosamente.",
+          title: "Se eliminó con éxito.",
+          text: `${
+            componentPrefix.charAt(0).toUpperCase() + componentPrefix.slice(1)
+          } ${componentName} fue eliminado exitosamente.`,
           icon: "success",
-          confirmButtonColor: "#A31E32",
+          iconColor: "#7cda24",
+          confirmButtonColor: "#a31e32",
           confirmButtonText: "Aceptar",
+          willClose: () => {
+            finallyActions();
+          },
         }).then((result) => {
           if (result.isConfirmed) {
-            const updatedItems = items.filter(
-              (item) =>
-                item[itemName] !== fields.find((field) => field.value === "id")
-            );
-            setItems(updatedItems);
-
-            const remainingItems = totalItems - 1;
-            const lastPage = Math.ceil(remainingItems / 8);
-            const newPage = Math.min(currentPage, lastPage);
-            loadData(newPage);
-
-            setIsOpen(false);
-            setItemToDelete(null);
+            finallyActions();
           }
         });
       } else {
@@ -82,7 +91,6 @@ const response =  await FetchValidate(url, options, navigate);
           confirmButtonColor: "#A31E32",
           confirmButtonText: "Aceptar",
         });
-        
       }
     } catch (error) {
       setLoading(false);
@@ -93,9 +101,10 @@ const response =  await FetchValidate(url, options, navigate);
   };
 
   return (
-    <div >
-      <button title={`Eliminar ${componentName}`}
-        className="h-[3vh] w-[1.5vw] flex items-center justify-center"
+    <div>
+      <button
+        title={`Eliminar ${componentName}`}
+        className="h-[3vh] w-[1.5vw] flex items-center justify-center hover:scale-125"
         onClick={() => {
           setIsOpen(true);
           setItemToDelete(item);
@@ -117,8 +126,8 @@ const response =  await FetchValidate(url, options, navigate);
       <div
         className={`${
           isOpen
-            ? "w-[30vw] h-[30vh] bg-white fixed top-0 left-0 right-0 bottom-0 m-auto z-50 flex items-center justify-center border-[0.1vh] border-gray-400 rounded-[1vh]"
-            : "w-[0%] h-[0%]"
+            ? "w-[30vw] h-[30vh] bg-white fixed top-0 left-0 right-0 bottom-0 m-auto z-50 flex items-center justify-center border-[0.1vh] border-gray-400 rounded-[1vh] transition-[width] duration-300"
+            : "w-[0%]"
         } 
             `}
       >
@@ -144,7 +153,8 @@ const response =  await FetchValidate(url, options, navigate);
             </div>
 
             <h1 className="text-[1.1vw] flex items-center text-center">
-              ¿Estás seguro que deseas eliminar {componentPrefix} siguiente {componentName}?
+              ¿Estás seguro que deseas eliminar {componentPrefix} siguiente{" "}
+              {componentName}?
             </h1>
             <div className="w-full flex flex-wrap items-center text-center justify-center">
               <p className="ml-[1vw] mr-[1vw] text-[1.0vw] text-center break-words mt-[3vh] max-w-full overflow-auto max-h-[6vh]">
@@ -173,7 +183,7 @@ const response =  await FetchValidate(url, options, navigate);
           </div>
         )}
       </div>
-      {loading && <Loading/>}
+      {loading && <Loading />}
     </div>
   );
 };

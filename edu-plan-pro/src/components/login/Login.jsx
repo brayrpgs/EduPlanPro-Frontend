@@ -11,13 +11,14 @@ import Loading from "../componentsgeneric/Loading.jsx";
 
 export const Login = () => {
   const navigate = useNavigate();
-  const [loading, setLoading] = useState(false); 
+  const [loading, setLoading] = useState(false);
 
   const [form, setForm] = useState({
     username: "",
     password: "",
   });
 
+  
   const handleChange = (e) => {
     const { name, value } = e.target;
 
@@ -45,7 +46,7 @@ export const Login = () => {
         confirmButtonText: "Aceptar",
         confirmButtonColor: "#A31E32",
         customClass: {
-          confirmButton: "custom-confirm-button",
+          confirmButton: "custom-confirm-button w-full",
         },
       });
 
@@ -57,7 +58,6 @@ export const Login = () => {
         document.getElementById("Lpassword").style.color = "";
       }, 3000);
     } else {
-
       const url = "http://localhost:3001/session";
 
       const body = {
@@ -73,11 +73,10 @@ export const Login = () => {
       };
 
       try {
-        
         setLoading(true);
         const response = await FetchValidate(url, options, navigate);
 
-        if(!response){
+        if (!response) {
           setLoading(false);
           return; // Hubo un error y se evita seguir con el flujo
         }
@@ -89,14 +88,18 @@ export const Login = () => {
             iconColor: "#7CDA24",
             confirmButtonText: "Aceptar",
             confirmButtonColor: "#A31E32",
-            customClass: {
-              confirmButton: "custom-confirm-button",
+            allowOutsideClick: true, 
+            willClose: () => {
+              
+              navigate("/coursesPlan");
             },
           }).then((result) => {
+           
             if (result.isConfirmed) {
               navigate("/coursesPlan");
             }
           });
+
         } else {
           Swal.fire({
             title: "Acceso inválido.",
@@ -120,11 +123,11 @@ export const Login = () => {
   };
 
   return (
-    <div className="grid grid-rows-[auto_1fr_auto] min-h-screen h-screen ">
+    <div className="grid grid-rows-[auto_1fr_auto] min-h-screen h-screen">
       <LoginHeader />
 
       <main>
-        <div className="mt-[5vh] justify-center items-center h-[80vh] flex flex-col">
+        <div className="mt-[5vh] justify-center items-center h-[80vh] flex flex-col ">
           <div className="w-[25%] h-[90%] bg-white text-center shadow-[0_0.5vh_1vh_rgba(0,0,0,0.5)] relative">
             <div className="h-[25%] mt-[5vh]">
               <LoginFinalLogo />
@@ -136,11 +139,12 @@ export const Login = () => {
                 className="relative mt-[5vh] w-full h-[4vh] flex justify-center items-center"
               >
                 <input
-                  className="w-[65%] p-[1%] h-full text-[1vw] text-gray-900 bg-transparent border-b-[0.2vh] border-gray-300
+                  className="w-[65%] p-[1%] h-full text-[0.9vw] text-gray-900 bg-transparent border-b-[0.2vh] border-gray-300
                     focus:outline-none focus:border-transparent peer box-border"
                   title={
                     field === "username" ? "Nombre de usuario" : "Contraseña"
                   }
+                  spellCheck="false"
                   name={field}
                   id={field}
                   type={field === "username" ? "text" : "password"}
@@ -165,8 +169,8 @@ export const Login = () => {
                   {field === "username" ? "Nombre de usuario" : "Contraseña"} *
                 </label>
                 <div
-                  className="absolute bottom-0 left-[50%] w-0 h-[0.2vh] bg-UNA-Red transition-width duration-300 ease-in-out 
-                    peer-focus:w-[65%] peer-focus:left-[18%]"
+                  className="absolute bottom-0 left-[50%] -translate-x-1/2 w-0 h-[0.2vh] bg-UNA-Red origin-center transition-[width] duration-300 ease-in-out 
+                  peer-focus:w-[65%]"
                 ></div>
               </div>
             ))}
@@ -202,8 +206,8 @@ export const Login = () => {
             </div>
           </div>
         </div>
-            
-        {loading && <Loading/>}
+
+        {loading && <Loading />}
       </main>
 
       <Footer />

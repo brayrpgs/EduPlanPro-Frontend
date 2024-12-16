@@ -112,7 +112,7 @@ const FacultyTable = () => {
           />
           <div
             title="Limpiar filtros."
-            className="flex h-[3.8vh] items-center cursor-pointer"
+            className="flex h-[3.8vh] items-center cursor-pointer hover:scale-110"
             onClick={handleClearFilters}
           >
             <FilterOffIcon />

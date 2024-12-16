@@ -13,22 +13,32 @@ const FacultyUpdate = ({ faculty, loadData, currentPage }) => {
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
 
+  function finallyActions(newName) {
+    loadData(currentPage);
+    setIsOpen(false);
+    setFacultyToUpdate(null);
+    setEditedName(newName);
+  }
+
   function validateData(data) {
     const patternString = /^[A-Za-zÁ-ÿ\s]+[A-Za-zÁ-ÿ\s.,]*[A-Za-zÁ-ÿ\s]*$/;
 
     if (data === "") {
       Swal.fire({
         icon: "error",
-        title: "Error al actualizar la facultad",
-        text: "El nombre de la facultad no puede ir vacia, agrega texto e intenta de nuevo!",
+        title: "No se pudo actualizar la facultad",
+        text: "El nombre de la facultad no puede ir vacío, completa el campo e intenta de nuevo.",
+        confirmButtonText: "Aceptar",
         confirmButtonColor: "#A31E32",
       });
       return false;
     } else if (!patternString.test(data)) {
       Swal.fire({
         icon: "error",
-        title: "Error al actualizar la facultad",
-        text: "El nombre de la facultad no puede contener numeros ni caracteres especiales!",
+        iconColor: "#a31e32",
+        title: "No se pudo actualizar la facultad",
+        text: "El nombre de la facultad debe contener solo letras, sin números ni caracteres especiales.",
+        confirmButtonText: "Aceptar",
         confirmButtonColor: "#A31E32",
       });
       return false;
@@ -38,7 +48,6 @@ const FacultyUpdate = ({ faculty, loadData, currentPage }) => {
   }
 
   const handleUpdate = async (newName) => {
-
     const url = "http://localhost:3001/faculty";
 
     const body = {
@@ -51,12 +60,11 @@ const FacultyUpdate = ({ faculty, loadData, currentPage }) => {
       method: "PATCH",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(body),
-      credentials: "include"
-    }
+      credentials: "include",
+    };
 
     if (validateData(newName.trim())) {
       try {
-        
         setLoading(true);
         const response = await FetchValidate(url, options, navigate);
 
@@ -68,23 +76,26 @@ const FacultyUpdate = ({ faculty, loadData, currentPage }) => {
         if (response.code === "200") {
           Swal.fire({
             icon: "success",
+            iconColor: "#7cda24",
             title: "Facultad actualizada",
-            text: "La información de la facultad se actualizó correctamente.",
+            text: "La facultad se actualizó correctamente.",
+            confirmButtonText: "Aceptar",
             confirmButtonColor: "#A31E32",
+            willClose: () => {
+              finallyActions(newName);
+            },
           }).then((result) => {
             if (result.isConfirmed) {
-              loadData(currentPage);
-
-              setIsOpen(false);
-              setFacultyToUpdate(null);
-              setEditedName(newName);
+              finallyActions(newName);
             }
           });
         } else if (response.code === "400") {
           Swal.fire({
             icon: "error",
-            title: "Error",
-            text: "No se pudo actualizar la facultad, ya existe una con ese nombre",
+            iconColor: "#a31e32",
+            title: "No se pudo actualizar la facultad",
+            text: "No se pudo actualizar la facultad, ya existe una con ese nombre.",
+            confirmButtonText: "Aceptar",
             confirmButtonColor: "#A31E32",
           });
         }
@@ -104,9 +115,10 @@ const FacultyUpdate = ({ faculty, loadData, currentPage }) => {
   };
 
   return (
-    <div >
-      <button title="Editar facultad."
-        className="h-[3vh] w-[1.5vw] flex items-center justify-center"
+    <div>
+      <button
+        title="Editar facultad."
+        className="h-[3vh] w-[1.5vw] flex items-center justify-center hover:scale-125"
         onClick={() => {
           setIsOpen(true);
           setFacultyToUpdate(faculty);
@@ -129,8 +141,8 @@ const FacultyUpdate = ({ faculty, loadData, currentPage }) => {
       <div
         className={`${
           isOpen
-            ? "w-[30vw] min-h-[30vh] overflow-auto bg-white fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 z-50 flex flex-col items-center justify-start border-[-1vh] border-gray-400 rounded-[1vh] "
-            : "w-[0%] h-[0%]"
+            ? "w-[30vw] min-h-[30vh] overflow-hidden bg-white fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 z-50 flex flex-col items-center justify-start border-[-1vh] border-gray-400 rounded-[1vh] transition-[width] duration-300"
+            : "w-[0%]"
         }`}
       >
         {isOpen && (
@@ -196,7 +208,7 @@ const FacultyUpdate = ({ faculty, loadData, currentPage }) => {
           </div>
         )}
       </div>
-      {loading && <Loading/>}
+      {loading && <Loading />}
     </div>
   );
 };

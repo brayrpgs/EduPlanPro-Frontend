@@ -30,7 +30,7 @@ function Pagination({ totalItems, itemsPerPage, currentPage, onPageChange }) {
           title={`Página ${i}`}
           key={i}
           onClick={() => handlePageChange(i)}
-          className={`w-[2.3vw] h-[4vh] flex justify-center items-center text-[2vh] rounded-[50%] ${
+          className={`w-[2.3vw] h-[4vh] flex justify-center items-center text-[2vh] rounded-[50%] hover:scale-125 ${
             currentPage === i ? "bg-UNA-Red text-white font-bold" : ""
           }`}        >
           {i}
@@ -43,7 +43,7 @@ function Pagination({ totalItems, itemsPerPage, currentPage, onPageChange }) {
   return (
     <div className="flex flex-row items-center justify-center w-full h-full mt-[1.5vh] gap-[0.5vw]">
       <button
-        className="disabled:cursor-not-allowed disabled:opacity-50 bg-none border-none margin-0 outline-none w-[3vw] h-[3vh] rounded-[50%] flex text-center justify-center items-center"
+        className="disabled:cursor-not-allowed disabled:opacity-50 bg-none border-none margin-0 outline-none w-[3vw] h-[3vh] rounded-[50%] flex text-center justify-center items-center hover:scale-125"
         title="Primera página"
         onClick={() => handlePageChange(1)}
         disabled={currentPage === 1}
@@ -52,7 +52,7 @@ function Pagination({ totalItems, itemsPerPage, currentPage, onPageChange }) {
       </button>
 
       <button
-        className="disabled:cursor-not-allowed disabled:opacity-50 bg-none border-none margin-0 outline-none w-[3vw] h-[3vh] rounded-[50%] flex text-center justify-center items-center"
+        className="disabled:cursor-not-allowed disabled:opacity-50 bg-none border-none margin-0 outline-none w-[3vw] h-[3vh] rounded-[50%] flex text-center justify-center items-center hover:scale-125"
         title="Página anterior"
         onClick={() => handlePageChange(currentPage - 1)}
         disabled={currentPage === 1}
@@ -65,7 +65,7 @@ function Pagination({ totalItems, itemsPerPage, currentPage, onPageChange }) {
       {endPage < totalPages && <span className="my-0 mx-[1vw]">...</span>}
 
       <button
-        className="disabled:cursor-not-allowed disabled:opacity-50 bg-none border-none margin-0 outline-none w-[3vw] h-[3vh] rounded-[50%] flex text-center justify-center items-center"
+        className="disabled:cursor-not-allowed disabled:opacity-50 bg-none border-none margin-0 outline-none w-[3vw] h-[3vh] rounded-[50%] flex text-center justify-center items-center hover:scale-125"
         title="Página siguiente"
         onClick={() => handlePageChange(currentPage + 1)}
         disabled={currentPage === totalPages}
@@ -74,7 +74,7 @@ function Pagination({ totalItems, itemsPerPage, currentPage, onPageChange }) {
       </button>
 
       <button
-        className="disabled:cursor-not-allowed disabled:opacity-50 bg-none border-none margin-0 outline-none w-[3vw] h-[3vh] rounded-[50%] flex text-center justify-center items-center"
+        className="disabled:cursor-not-allowed disabled:opacity-50 bg-none border-none margin-0 outline-none w-[3vw] h-[3vh] rounded-[50%] flex text-center justify-center items-center hover:scale-125"
         title="Última página"
         onClick={() => handlePageChange(totalPages)}
         disabled={currentPage === totalPages}

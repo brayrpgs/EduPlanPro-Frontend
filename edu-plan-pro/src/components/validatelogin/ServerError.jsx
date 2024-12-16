@@ -52,7 +52,7 @@ const ServerError = () => {
       <div
         className={`flex flex-col justify-center items-center mt-[10vh] text-[1.5vw] animate-pulse text-white transition-opacity duration-1000 ${visible ? "opacity-100" : "opacity-0"}`}
       >
-        Lo sentimos, no podemos acceder al servicio en este momento. El servidor no está disponible. Por favor, inténtalo de nuevo más tarde.
+        Lo sentimos, no podemos acceder al servicio en este momento. El servicio no está disponible en este momento. Por favor, inténtalo de nuevo más tarde.
         
         <button
           className="flex w-[15vw] h-[6vh] border-black border-[0.1vh] mt-[1vh] text-center items-center justify-center bg-UNA-Red rounded-[1vh]"

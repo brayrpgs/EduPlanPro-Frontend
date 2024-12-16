@@ -92,7 +92,7 @@ const SideBar = () => {
   };
 
   return (
-    <div className="flex fixed w-[2vw] h-[3vh] z-40">
+    <div className="flex fixed w-[2vw] h-[3vh] z-40 ">
       <button onClick={() => setIsOpen(true)}>
         <OpenSideBar />
       </button>
@@ -112,8 +112,8 @@ const SideBar = () => {
 
       <div
         className={`${
-          isOpen ? "w-[17vw] border-[0.3vh]  border-UNA-Blue-Light/95 " : "w-[0%]"
-        } bg-white min-h-screen top-0 right-0 fixed select-none`}
+          isOpen ? "w-[17vw] border-[0.3vh] transition-[width] duration-300 border-UNA-Blue-Light/80 " : "w-[0%] transition-[width] duration-300"
+        } bg-white min-h-screen top-0 right-0 fixed select-none transition-[width] duration-300`}
       >
         <div className={`${!isOpen && "hidden"}`}>
           <div className="flex fixed w-[2vw] h-[3vh] right-[2vh] top-[2.5vh]">
@@ -135,22 +135,22 @@ const SideBar = () => {
               <AccountCircleAdmin />
             </div>
 
-            <div className="flex justify-center overflow-hidden w-[80%] ">
+            <div className="flex justify-center overflow-hidden w-[80%] transition-none">
               <h1 className="text-[1.3vw] truncate">Usuario Administrador</h1>
             </div>
           </div>
 
-          <div className="text-center text-[1vw] cursor-pointer py-[1vh] mt-[2vh] hover:bg-UNA-Red hover:text-white">
+          <div className="transition-none text-center text-[1vw] cursor-pointer py-[1vh] mt-[2vh] hover:bg-UNA-Red hover:text-white">
             Mi perfil
           </div>
-          <div className="text-center text-[1vw] cursor-pointer py-[1vh] mt-[1vh] hover:bg-UNA-Red hover:text-white">
+          <div className="transition-none text-center text-[1vw] cursor-pointer py-[1vh] mt-[1vh] hover:bg-UNA-Red hover:text-white">
             Cambiar clave
           </div>
-          <div className="text-center text-[1vw] cursor-pointer py-[1vh] mt-[1vh] hover:bg-UNA-Red hover:text-white">
+          <div className="transition-none text-center text-[1vw] cursor-pointer py-[1vh] mt-[1vh] hover:bg-UNA-Red hover:text-white">
             Preferencias
           </div>
           <div
-            className={`text-center text-[1vw] flex flex-row items-center justify-center cursor-pointer py-[1vh] mt-[1vh] 
+            className={`transition-none text-center text-[1vw] flex flex-row items-center justify-center cursor-pointer py-[1vh] mt-[1vh] 
               ${showPeople || "group-hover:bg-UNA-Red"} ${
               showPeople
                 ? "bg-UNA-Red text-white"
@@ -192,7 +192,7 @@ const SideBar = () => {
             </div>
           )}
           <div
-            className={`text-center text-[1vw] flex flex-row items-center justify-center cursor-pointer py-[1vh] mt-[1vh] 
+            className={`transition-none text-center text-[1vw] flex flex-row items-center justify-center cursor-pointer py-[1vh] mt-[1vh] 
               ${showAdminModules || "group-hover:bg-UNA-Red"} ${
               showAdminModules
                 ? "bg-UNA-Red text-white"
@@ -206,7 +206,7 @@ const SideBar = () => {
             onMouseLeave={() => handleMouseLeave("adminModules")}
           >
             Modulos administrativos
-            <span className="absolute flex ml-[27vh] h-[3vh] group-hover:fill-black">
+            <span className="transition-none absolute flex ml-[27vh] h-[3vh] group-hover:fill-black">
               {!showAdminModulesIcon ? (
                 <ShowMore
                   fill={showAdminModules ? "white" : iconColor.adminModules}
@@ -219,7 +219,7 @@ const SideBar = () => {
             </span>
           </div>
           {showAdminModules && (
-            <div className="justify-center items-center flex flex-col text-[0.9vw] py-[0.5vh] mt-[0.5vh]">
+            <div className="transition-none justify-center items-center flex flex-col text-[0.9vw] py-[0.5vh] mt-[0.5vh]">
               <ul className="list-disc list-inside flex flex-col items-start w-full">
                 <li
                   className="hover:bg-UNA-Gray py-[0.5vh] px-[1vw] w-full text-center cursor-pointer"
@@ -238,7 +238,7 @@ const SideBar = () => {
           )}
 
           <div
-            className="text-center text-[1vw] cursor-pointer py-[1vh] mt-[1vh] hover:bg-UNA-Red hover:text-white"
+            className="transition-none text-center text-[1vw] cursor-pointer py-[1vh] mt-[1vh] hover:bg-UNA-Red hover:text-white"
             onClick={handleLogout}
           >
             Salir
