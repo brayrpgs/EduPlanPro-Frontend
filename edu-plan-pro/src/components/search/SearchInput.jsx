@@ -6,14 +6,8 @@ const SearchInput = ({ onSearch, className, inputStyle, filter, setFilter }) => 
         setFilter(event.target.value);
     };
 
-    const handleBlur = () => {
-        if (onSearch) {
-            onSearch(filter);
-        }
-    };
-
     const handleKeyDown = (event) => {
-        if (event.key === 'Enter' && onSearch) {
+        if ((event.key === 'Enter' && onSearch) || (event.key === 'Tab' && onSearch)) {
             onSearch(filter);
         }
     };
@@ -24,8 +18,7 @@ const SearchInput = ({ onSearch, className, inputStyle, filter, setFilter }) => 
                 
                 type="text"
                 value={filter}
-                onChange={handleInputChange}
-                onBlur={handleBlur} 
+                onChange={handleInputChange} 
                 onKeyDown={handleKeyDown}
                 className={className}  
                 style={{
