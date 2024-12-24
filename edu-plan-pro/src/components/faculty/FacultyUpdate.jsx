@@ -26,6 +26,7 @@ const FacultyUpdate = ({ faculty, loadData, currentPage }) => {
     if (data === "") {
       Swal.fire({
         icon: "error",
+        iconColor: "#A31E32",
         title: "No se pudo actualizar la facultad",
         text: "El nombre de la facultad no puede ir vacío, completa el campo e intenta de nuevo.",
         confirmButtonText: "Aceptar",

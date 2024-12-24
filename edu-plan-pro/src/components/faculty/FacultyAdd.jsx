@@ -78,7 +78,7 @@ const FacultyAdd = ({ totalItems, currentPage, loadData, textToAdd }) => {
             icon: "success",
             iconColor: "#7cda24",
             title: "Facultad agregada",
-            text: "La facultad se agrego correctamente.",
+            text: "La facultad se agregó correctamente.",
             confirmButtonText: "Aceptar",
             confirmButtonColor: "#A31E32",
             willClose: () => {

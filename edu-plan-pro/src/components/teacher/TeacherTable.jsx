@@ -7,6 +7,8 @@ import Pagination from "../pagination/Pagination";
 import Loading from "../componentsgeneric/Loading";
 import { FetchValidate } from "../../utilities/FetchValidate";
 import { useNavigate } from "react-router-dom";
+import TeacherUpdate from "./TeacherUpdate";
+import TeacherAdd from "./TeacherAdd"
 
 const TeacherTable = () => {
   const [teachers, setTeachers] = useState([]);
@@ -114,7 +116,12 @@ const TeacherTable = () => {
             Administrar profesores
           </h1>
           <div className="flex ml-auto justify-end mr-[1vw]">
-            <button>hola</button>
+            <TeacherAdd
+              totalItems={totalItems}
+              currentPage={currentPage}
+              loadData={loadTeacherData}
+              textToAdd={"Agregar profesor"}
+            />
           </div>
         </div>
       </div>
@@ -218,6 +225,11 @@ const TeacherTable = () => {
                     </td>
                     <td className="border-[0.1vh] border-gray-400 px-[1vw] py-[1vh] text-[0.9vw]">
                       <div className="flex items-center flex-row justify-center w-full h-full gap-[0.2vw]">
+                      <TeacherUpdate
+                          teacher={teacher}
+                          loadData={loadTeacherData}
+                          currentPage={currentPage}
+                        />
                         <DeleteModal
                           item={teacher}
                           itemName={"NOMBRE"}
@@ -237,6 +249,7 @@ const TeacherTable = () => {
                           componentName={"profesor"}
                           componentPrefix={"el"}
                         />
+                        
                       </div>
                     </td>
                   </tr>

@@ -127,7 +127,7 @@ const DeleteModal = ({
         className={`${
           isOpen
             ? "w-[30vw] h-[30vh] bg-white fixed top-0 left-0 right-0 bottom-0 m-auto z-50 flex items-center justify-center border-[0.1vh] border-gray-400 rounded-[1vh] transition-[width] duration-300"
-            : "w-[0%]"
+            : "w-[10%]"
         } 
             `}
       >

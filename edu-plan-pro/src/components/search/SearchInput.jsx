@@ -7,7 +7,7 @@ const SearchInput = ({ onSearch, className, inputStyle, filter, setFilter }) => 
     };
 
     const handleKeyDown = (event) => {
-        if ((event.key === 'Enter' && onSearch) || (event.key === 'Tab' && onSearch)) {
+        if (event.key === 'Enter' && onSearch) {
             onSearch(filter);
         }
     };
