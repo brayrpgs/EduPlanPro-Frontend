@@ -91,12 +91,12 @@ export const Login = () => {
             allowOutsideClick: true, 
             willClose: () => {
               
-              navigate("/coursesPlan");
+              navigate("/faculty");
             },
           }).then((result) => {
            
             if (result.isConfirmed) {
-              navigate("/coursesPlan");
+              navigate("/faculty");
             }
           });
 

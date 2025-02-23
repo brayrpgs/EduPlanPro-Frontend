@@ -92,7 +92,7 @@ const SideBar = () => {
   };
 
   return (
-    <div className="flex fixed w-[2vw] h-[3vh] z-40 ">
+    <div className="flex relative w-[2vw] h-[3vh] z-40 ">
       <button onClick={() => setIsOpen(true)}>
         <OpenSideBar />
       </button>

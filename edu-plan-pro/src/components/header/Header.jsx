@@ -7,7 +7,7 @@ const Header = () => {
   const navigate = useNavigate();
 
   const handleLogoClick = () => {
-    navigate("/coursesplan", {
+    navigate("/faculty", {
       replace: true,
       state: {
         logged: true,
