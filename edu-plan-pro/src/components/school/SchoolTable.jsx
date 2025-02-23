@@ -1,214 +1,206 @@
-import React, { useState, useEffect } from "react";
-import "./SchoolTable.css";
-import search from "../images/search.svg";
-import deleteIcon from "../icons/ActionIcons/delete.svg";
+import React, { useState, useEffect, useCallback } from "react";
 import DeleteModal from "../componentsgeneric/DeleteModal";
 import SearchInput from "../search/SearchInput";
 import FilterOffIcon from "../icons/MainIcons/FilterOffIcon";
-import UpdateSchool from "./UpdateSchool";
-import AddIcon from "../icons/CrudIcons/AddIcon";
-import SchoolModalAdd from "./SchoolModalAdd";
 import MainSearch from "../search/MainSearch";
 import Pagination from "../pagination/Pagination";
+import Loading from "../componentsgeneric/Loading";
+import { FetchValidate } from "../../utilities/FetchValidate";
+import { useNavigate } from "react-router-dom";
+import SchoolUpdate from "./SchoolUpdate";
+import SchoolAdd from "./SchoolAdd";
 
 const SchoolTable = () => {
+  // State Management
   const [schools, setSchools] = useState([]);
-  const [isModalOpen, setIsModalOpen] = useState(false);
-  const [schoolToDelete, setSchoolToDelete] = useState(null);
-  const [filteredSchool, setFilteredSchool] = useState([]);
-  const [searchTerm, setSearchTerm] = useState("");     
-  const [searchTerm2, setSearchTerm2] = useState("");
+  const [filteredSchools, setFilteredSchools] = useState([]);
+  const [searchTerms, setSearchTerms] = useState({
+    desc: "",
+    faculty: "",
+  });
   const [currentPage, setCurrentPage] = useState(1);
   const [totalItems, setTotalItems] = useState(0);
+  const [mainFilter, setMainFilter] = useState("");
+  const [nameFilter, setNameFilter] = useState("");
+  const [facultyFilter, setFacultyFilter] = useState("");
+  const [loading, setLoading] = useState(false);
+  const navigate = useNavigate();
 
-  const loadSchoolData = async (page) => {
-    const searchQuery = `&search=${searchTerm}&search2=${searchTerm2}`;
-    const response = await fetch(
-      `http://localhost:3001/searchschool?name=search-page&numPage=${page}${searchQuery}`,
-      {
-        method: "GET",
-        credentials: "include",
+ 
+  const loadSchoolData = useCallback(async (page) => {
+    setCurrentPage(page);
+    const searchQuery = searchTerms
+      ? `&search=${searchTerms["desc"]}&search2=${searchTerms["faculty"]}`
+      : "&search=&search2=";
+
+    const url = `http://localhost:3001/searchschool?name=search-page&numPage=${page}${searchQuery}`;
+    const options = {
+      method: "GET",
+      credentials: "include",
+    };
+
+    try {
+      setLoading(true);
+      const response = await FetchValidate(url, options, navigate);
+      console.log(response);
+
+      if (!response) {
+        console.error("Error in request");
+        return;
       }
-    );
 
-    if (!response.ok) {
-      console.error("Error en la solicitud");
-      return;
+      setFilteredSchools(response.data.rows || []);
+      setTotalItems(response.data.totalMatches || 0);
+    } catch (error) {
+      console.error("Error loading school data:", error);
+    } finally {
+      setLoading(false);
     }
-
-    const jsonResponse = await response.json();
-    setFilteredSchool(jsonResponse.data.rows || []);
-    setTotalItems(jsonResponse.data.totalMatches || 0);
-  };
+  }, [searchTerms, navigate]);
 
   useEffect(() => {
     loadSchoolData(currentPage);
-  }, [currentPage, searchTerm, searchTerm2]);
+  }, [currentPage, loadSchoolData]);
 
-
-  const handleDelete = async (id) => {
-    try {
-      const response = await fetch("http://localhost:3001/school", {
-        method: "PATCH",
-        credentials: "include",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          id: schoolToDelete.ID_SCHOOL,
-          desc: schoolToDelete["NOMBRE ESCUELA"],
-          facu: schoolToDelete.ID_FACULTY,
-          stat: "0",
-        }),
-      });
-
-      if (!response.ok) {
-        throw new Error("Error en la solicitud");
-      }
-
-      const result = await response.json();
-
-      if (result.code === "200") {
-        const updatedSchools = schools.filter(
-          (school) => school.ID_SCHOOL !== id
-        );
-        setSchools(updatedSchools);
-
-        const remainingItems = totalItems - 1;
-        const lastPage = Math.ceil(remainingItems / 8);
-        setCurrentPage(Math.min(currentPage, lastPage));
-
-        loadSchoolData(Math.min(currentPage, lastPage));
-
-        return true;
-
-      } else {
-        console.error("Error al eliminar:", result.data);
-        return false;
-      }
-    } catch (error) {
-      console.error("Error al eliminar la escuela:", error);
-      return false;
-    }
-  };
-
-  const openModal = (school) => {
-    setSchoolToDelete(school);
-    setIsModalOpen(true);
-  };
-
-  const closeModal = () => {
-    setIsModalOpen(false);
-    setSchoolToDelete(null);
-  };
-
+ 
   const handlePageChange = (page) => {
     setCurrentPage(page);
   };
 
-  const handleSearch = (value) => {
-    setSearchTerm(value);
-    setCurrentPage(1); // Reinicia a la página 1 al buscar
+  const handleSearch = (value, type = "main") => {
+    if (type === "main") {
+      if (nameFilter.trim() !== "") {
+        setNameFilter("");
+      }
+      setSearchTerms((prevState) => ({
+        ...prevState,
+        desc: value,
+      }));
+    } else if (type === "desc") {
+      if (mainFilter.trim() !== "") {
+        setMainFilter("");
+      }
+      setSearchTerms((prevState) => ({
+        ...prevState,
+        desc: value,
+      }));
+    } else if (["faculty"].includes(type)) {
+      setSearchTerms((prevState) => ({
+        ...prevState,
+        [type]: value,
+      }));
+    }
+
+    setCurrentPage(1);
   };
 
-  const handleSearch2 = (value) => {
-    setSearchTerm2(value);
-    setCurrentPage(1); // Reinicia a la página 1 al buscar
-  };
+  const handleClearFilters = () => {
+    setSearchTerms({ desc: "", faculty: "" });
+    setCurrentPage(1);
+    setMainFilter("");
+    setNameFilter("");
+    setFacultyFilter("");
 
-  const handleIconClick = () => {
-    window.location.reload(); 
   };
-
-  const disableInputSearch = true;
 
   return (
-    <div>
-      <h1 className="h1-school">Escuelas</h1>
+    <main>
+      <div className="mt-[3vh] justify-start flex pr-[15vw] pl-[15vw]">
+        <div className="bg-UNA-Blue-Dark w-full max-w-screens flex rounded-[0.5vh] items-center">
+          <h1 className="ml-[1vw] my-[0.5vh] text-[2vw] text-white">
+            Administrar Escuelas
+          </h1>
+          <div className="flex ml-auto justify-end mr-[1vw]">
+            <SchoolAdd
+              totalItems={totalItems}
+              currentPage={currentPage}
+              loadData={loadSchoolData}
+              textToAdd="Agregar escuela"
+            />
+          </div>
+        </div>
+      </div>
 
-      <div className="school-container">
-        <div className="container mt-5" title="Buscar escuelas.">
-          
-          <MainSearch placeholder={"Ingrese el nombre de una escuela"} onSearch={handleSearch}/>
-          <button
-            className="button-filter"
-            title="Restablecer filtros"
-            onClick={handleIconClick}
+      <div className="flex flex-col justify-center items-center w-full pl-[15vw] pr-[15vw]">
+        <div className="flex flex-row w-full items-center justify-end gap-[0.3vw]">
+          <MainSearch
+            placeholder="Ingrese el nombre de una escuela"
+            onSearch={(value) => handleSearch(value, "main")}
+            mainFilter={mainFilter}
+            setMainFilter={setMainFilter}
+          />
+          <div
+            title="Limpiar filtros."
+            className="flex h-[3.8vh] items-center cursor-pointer hover:scale-110"
+            onClick={handleClearFilters}
           >
             <FilterOffIcon />
-          </button>
-
-          <button
-            className="button-filter"
-            title="Agregar Escuela"
-            data-bs-toggle="modal"
-            data-bs-target="#schoolModalAdd"
-          >
-            <AddIcon />
-          </button>
+          </div>
         </div>
-
-        <div className="container mt-3">
-          <table className="table table-bordered">
-            <thead className="thead-light">
+        <div className="flex justify-center items-center mt-0 w-full overflow-x-auto">
+          <table className="w-full table-auto">
+            <thead>
               <tr>
-                <th className="th s-th">
-                  Escuela
-                  <div
-                    title="Filtrar por escuela."
-                    style={{ position: "relative" }}
-                  >
+                <th className="border-[0.1vh] border-gray-400 px-[1vw] py-[1vh] text-center text-[1vw] text-UNA-Red">
+                  Nombre
+                  <div className="w-full flex flex-col" title="Filtrar por nombre">
                     <SearchInput
-                      onSearch={(value) => handleSearch(value)}
-                      inputClassName="search-input pl-3"
+                      onSearch={(value) => handleSearch(value, "desc")}
+                      filter={nameFilter}
+                      setFilter={setNameFilter}
+                      className="bg-transparent text-black w-full outline-none border-b-[0.2vh] text-[0.9vw] border-solid border-UNA-Red"
                     />
                   </div>
                 </th>
-                <th className="th f-th">
+                <th className="border-[0.1vh] border-gray-400 px-[1vw] py-[1vh] text-center text-[1vw] text-UNA-Red">
                   Facultad
-                  <div
-                    title="Filtrar por facultad."
-                    style={{ position: "relative" }}
-                  >
+                  <div className="w-full flex flex-col" title="Filtrar por Facultad">
                     <SearchInput
-                      onSearch={(value) => handleSearch2(value)}
-                      inputClassName="search-input pl-3"
+                      onSearch={(value) => handleSearch(value, "faculty")}
+                      filter={facultyFilter}
+                      setFilter={setFacultyFilter}
+                      className="bg-transparent text-black w-full outline-none border-b-[0.2vh] text-[0.9vw] border-solid border-UNA-Red"
                     />
                   </div>
                 </th>
-                <th className="th a-th">
+                <th className="border-[0.1vh] border-gray-400 px-[1vw] py-[1vh] w-[10vw] text-[1vw] text-UNA-Red">
                   Acciones
-                  <div style={{ position: "relative" }}>
-                    <SearchInput
-                      disabled={disableInputSearch}
-                      inputClassName="search-input pl-3"
-                    />
-                  </div>
                 </th>
               </tr>
             </thead>
             <tbody>
-              {filteredSchool.length > 0 ? (
-                filteredSchool.map((school) => (
-                  <tr key={school.ID_SCHOOL} style={{ color: "#CD1719" }}>
-                    <td className="bg-light">{school["NOMBRE ESCUELA"]}</td>
-                    <td className="bg-light">{school["NOMBRE FACULTAD"]}</td>
-                    <td className="bg-light">
-                      <div
-                        style={{
-                          textAlign: "center",
-                          display: "flex",
-                          justifyContent: "center",
-                        }}
-                      >
-                        <UpdateSchool school={school} />
-                        
-                        <img
-                          title="Eliminar curso."
-                          src={deleteIcon}
-                          alt="Eliminar"
-                          style={{ cursor: "pointer" }}
-                          onClick={() => openModal(school)}
+              {filteredSchools.length > 0 ? (
+                filteredSchools.map((school) => (
+                  <tr key={school.ID_SCHOOL}>
+                    <td className="border-[0.1vh] border-gray-400 px-[1vw] py-[1.5vh] text-[0.9vw] text-center items-center break-words whitespace-normal max-w-[15vw]">
+                      {school["NOMBRE ESCUELA"]}
+                    </td>
+                    <td className="border-[0.1vh] border-gray-400 px-[1vw] py-[1.5vh] text-[0.9vw] text-center items-center break-words whitespace-normal max-w-[15vw]">
+                      {school["NOMBRE FACULTAD"]}
+                    </td>
+                    <td className="border-[0.1vh] border-gray-400 px-[1vw] py-[1vh] text-[0.9vw]">
+                      <div className="flex items-center flex-row justify-center w-full h-full gap-[0.2vw]">
+                        <SchoolUpdate
+                          school={school}
+                          loadData={loadSchoolData}
+                          currentPage={currentPage}
+                        />
+                        <DeleteModal
+                          deleteMethod={"PATCH"}
+                          item={school}
+                          itemName="NOMBRE ESCUELA"
+                          fields={[
+                            { field: "ID_SCHOOL", value: "id" },
+                            { field: "NOMBRE ESCUELA", value: "desc" },
+                          ]}
+                          items={schools}
+                          setItems={setSchools}
+                          totalItems={totalItems}
+                          currentPage={currentPage}
+                          loadData={loadSchoolData}
+                          destination="school"
+                          componentName="escuela"
+                          componentPrefix="la"
                         />
                       </div>
                     </td>
@@ -216,7 +208,10 @@ const SchoolTable = () => {
                 ))
               ) : (
                 <tr>
-                  <td colSpan="3" style={{ textAlign: "center" }}>
+                  <td
+                    colSpan={3}
+                    className="px-[1vw] py-[1vh] text-[0.9vw] text-center items-center pt-[3.5vh]"
+                  >
                     No se encontraron escuelas registradas.
                   </td>
                 </tr>
@@ -224,24 +219,17 @@ const SchoolTable = () => {
             </tbody>
           </table>
         </div>
-
-        <DeleteModal
-          isOpen={isModalOpen}
-          onClose={closeModal}
-          onDelete={handleDelete}
-          itemName={
-            schoolToDelete ? schoolToDelete["NOMBRE ESCUELA"] : "school"
-          }
-        />
-        <SchoolModalAdd />
-        <Pagination
-          totalItems={totalItems}
-          itemsPerPage={"8"}
-          currentPage={currentPage}
-          onPageChange={handlePageChange}
-        />
+        <div className="w-full h-[8vh] flex justify-center items-center">
+          <Pagination
+            totalItems={totalItems}
+            itemsPerPage="8"
+            currentPage={currentPage}
+            onPageChange={handlePageChange}
+          />
+        </div>
       </div>
-    </div>
+      {loading && <Loading />}
+    </main>
   );
 };
 

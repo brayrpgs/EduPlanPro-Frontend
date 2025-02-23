@@ -158,6 +158,7 @@ const FacultyTable = () => {
                         />
 
                         <DeleteModal
+                          deleteMethod={"PATCH"}
                           item={faculty}
                           itemName={"NOMBRE FACULTAD"}
                           fields={[

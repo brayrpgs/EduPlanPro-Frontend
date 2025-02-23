@@ -17,6 +17,7 @@ const SearchInput = ({ onSearch, className, inputStyle, filter, setFilter }) => 
             <input
                 
                 type="text"
+                autocomplete="off"
                 value={filter}
                 onChange={handleInputChange} 
                 onKeyDown={handleKeyDown}

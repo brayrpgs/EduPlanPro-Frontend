@@ -26,6 +26,7 @@ export function MainSearch({ onSearch, placeholder, title, mainFilter, setMainFi
       
       <div className="flex grow bg-UNA-Red relative w-full h-[2.9vh] rounded-l-[0.5vh]">
         <input
+          autocomplete="off"
           spellCheck="false"
           title={title}
           type="text"
