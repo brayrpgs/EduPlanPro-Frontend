@@ -1,250 +1,241 @@
-import React, { useState, useEffect } from "react";
-import "./UserTable.css";
-import DeleteModal from "../componentsgeneric/DeleteModal.jsx"
-import deleteIcon from "../icons/ActionIcons/delete.svg";
+import React, { useState, useEffect, useCallback } from "react";
+import DeleteModal from "../componentsgeneric/DeleteModal";
 import SearchInput from "../search/SearchInput";
 import FilterOffIcon from "../icons/MainIcons/FilterOffIcon";
-import AddIcon from "../icons/CrudIcons/AddIcon";
-import UserModalAdd from "./UserModalAdd.jsx";
-import MainSearch from "../search/MainSearch.jsx";
-import Pagination from "../pagination/Pagination.jsx";
-import UpdateUser from "./UpdateUser.jsx";
+import MainSearch from "../search/MainSearch";
+import Pagination from "../pagination/Pagination";
+import Loading from "../componentsgeneric/Loading";
+import { FetchValidate } from "../../utilities/FetchValidate";
+import { useNavigate } from "react-router-dom";
+import UserAdd from "./UserAdd";
+import UserUpdate from "./UserUpdate";
 
-
-const UserTable = () => {
-  
-  const [users, setUsers] = useState([]);
-  const [isModalOpen, setIsModalOpen] = useState(false);
-  const [userToDelete, setUserToDelete] = useState(null);
-  const [filteredUser, setFilteredUser] = useState([]);
-  const [nameUser, setNameUser] = useState("");
-  const [isEditModalOpen, setIsEditModalOpen] = useState(false);
-  const [selectedUser, setSelectedUser] = useState(null);
-  const [secName, setSecName] = useState("");
-  const [idCard, setIdCard] = useState("");
+const UsersTable = () => {
+  // State Management
+  const [Users, setUsers] = useState([]);
+  const [filteredUsers, setFilteredUsers] = useState([]);
+  const [searchTerms, setSearchTerms] = useState({
+    NOMBRE: "",
+    APELLIDOS: "",
+    IDENTIFICACION: "",
+    ROL: "",
+  });
   const [currentPage, setCurrentPage] = useState(1);
   const [totalItems, setTotalItems] = useState(0);
+  const [mainFilter, setMainFilter] = useState("");
+  const [nameFilter, setNameFilter] = useState("");
+  const [lastNameFilter, setLastNameFilter] = useState("");
+  const [idFilter, setIdFilter] = useState("");
+  const [roleFilter, setRoleFilter] = useState("");
+  const [loading, setLoading] = useState(false);
+  const navigate = useNavigate();
 
-  const loadUserData = async (page) => {
-    const searchQuery = `&nameUser=${nameUser}&secName=${secName}&idCard=${idCard}`;
-    const response = await fetch(
-      `http://localhost:3001/searchuser?name=search-page&numPage=${page}${searchQuery}`,
-      {
-        method: "GET",
-        credentials: "include",
-      }
-    );
+ 
+  const loadUsersData = useCallback(async (page) => {
+    setCurrentPage(page);
+    const searchQuery = searchTerms
+      ? `&nameUser=${searchTerms["NOMBRE"]}&secName=${searchTerms["APELLIDOS"]}&idCard=${searchTerms["IDENTIFICACION"]}`
+      : "&nameUser=&secName=&idCard=";
 
-    if (!response.ok) {
-      console.error("Error en la solicitud");
-      return;
-    }
+    const url = `http://localhost:3001/searchuser?name=search-page&numPage=${page}${searchQuery}`;
+    const options = {
+      method: "GET",
+      credentials: "include",
+    };
 
-    const jsonResponse = await response.json();
-    console.log(jsonResponse)
-    setFilteredUser(jsonResponse.data.rows || []);
-    setTotalItems(jsonResponse.data.totalMatches || 0);
-  };
-
-  useEffect(() => {
-    loadUserData(currentPage);
-  }, [currentPage, nameUser, secName, idCard]);
-
-  const handleDelete = async () => {
     try {
-      const response = await fetch("http://localhost:3001/user", {
-        method: "PATCH",
-        credentials: "include",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          id: userToDelete.ID_USER,
-          name: userToDelete.NOMBRE,
-          secName: userToDelete.APELLIDOS,
-          idcard: userToDelete.IDENTIFICACION,
-          idrol: userToDelete.ID_ROL, // se va null porque el backend no me lo manda, ni tiene metodo para obtenerlo
-          pass: userToDelete.PASSWORD || "",
-          stat: "0",
-          flagPass: userToDelete.FLAG_PASSWORD || "0"
-        }),
-      });
+      setLoading(true);
+      const response = await FetchValidate(url, options, navigate);
+      console.log(response);
 
-      if (!response.ok) {
-        throw new Error("Error en la solicitud");
+      if (!response) {
+        console.error("Error in request");
+        return;
       }
 
-      const result = await response.json();
-
-      if (result.code === "200") {
-        // Actualizar la lista de usuarios después de eliminar
-        const updatedUsers = users.filter(
-          (user) => user.ID_USER !== userToDelete.ID_USER
-        );
-        setUsers(updatedUsers);
-        return true;
-      } else {
-        console.error("Error al eliminar:", result.data);
-        return false;
-      }
+      setFilteredUsers(response.data.rows || []);
+      setTotalItems(response.data.totalMatches || 0);
     } catch (error) {
-      console.error("Error al eliminar el usuario:", error);
-      return false;
+      console.error("Error loading users data:", error);
+    } finally {
+      setLoading(false);
     }
-  };
+  }, [searchTerms, navigate]);
+console.log(Users);
+  useEffect(() => {
+    loadUsersData(currentPage);
+  }, [currentPage, loadUsersData]);
 
-  const openModal = (user) => {
-    setUserToDelete(user);
-    setIsModalOpen(true);
-  };
-
-  const closeModal = () => {
-    setIsModalOpen(false);
-    setUserToDelete(null);
-  };
-
-
+ 
   const handlePageChange = (page) => {
     setCurrentPage(page);
   };
 
-  const handleNameUser = (value) => {
-    setNameUser(value);
-    setCurrentPage(1); // Reinicia a la página 1 al buscar
+  const handleSearch = (value, type = "main") => {
+    if (type === "main") {
+      if (nameFilter.trim() !== "") {
+        setNameFilter("");
+      }
+      setSearchTerms((prevState) => ({
+        ...prevState,
+        Name: value,
+      }));
+    } else if (type === "NOMBRE") {
+      if (mainFilter.trim() !== "") {
+        setMainFilter("");
+      }
+      setSearchTerms((prevState) => ({
+        ...prevState,
+        Name: value,
+      }));
+    } else if (["APELLIDOS"].includes(type)) {
+      setSearchTerms((prevState) => ({
+        ...prevState,
+        [type]: value,
+      }));
+    }
+
+    setCurrentPage(1);
   };
 
-  const handleSecName = (value) => {
-    setSecName(value);
-    setCurrentPage(1); // Reinicia a la página 1 al buscar
-  };
+  const handleClearFilters = () => {
+    setSearchTerms({ NOMBRE: "", APELLIDOS: "", IDENTIFICACION: "", ROL: "" });
+    setCurrentPage(1);
+    setMainFilter("");
+    setNameFilter("");
+    setLastNameFilter("");
+    setIdFilter("");
+    setRoleFilter("");
+ 
 
-  const handleIdCard = (value) => {
-    setIdCard(value);
-    setCurrentPage(1); // Reinicia a la página 1 al buscar
   };
-  const handleEditUser = (User) => {
-    setSelectedUser(User);
-    setIsEditModalOpen(true);
-  };
-
-  const handleCloseModal = () => {
-    setIsEditModalOpen(false);
-    setSelectedUser(null);
-  };
-
-  const handleUpdateSuccess = () => {
-    loadUserData().then(data => setUsers(data));
-  };
-
-  const handleIconClick = () => {
-    window.location.reload();
-  };
-
-  
-
-  const disableInputSearch = true;
 
   return (
-    <div>
-      <h1 className="h1-user">Usuarios</h1>
+    <main>
+      <div className="mt-[3vh] justify-start flex pr-[15vw] pl-[15vw]">
+        <div className="bg-UNA-Blue-Dark w-full max-w-screens flex rounded-[0.5vh] items-center">
+          <h1 className="ml-[1vw] my-[0.5vh] text-[2vw] text-white">
+            Administrar Usuarios
+          </h1>
+          <div className="flex ml-auto justify-end mr-[1vw]">
+            <UserAdd
+              totalItems={totalItems}
+              currentPage={currentPage}
+              loadData={loadUsersData}
+              textToAdd="Agregar Usuario"
+            />
+          </div>
 
-      <div className="user-container">
-        <div className="container mt-5" title="Buscar usuarios.">
-        <MainSearch placeholder={"Ingrese el nombre de un usuario"} onSearch={handleNameUser}/>
-          <button
-            className="button-filter"
-            title="Restablecer filtros"
-            onClick={handleIconClick}
+        </div>
+      </div>
+
+      <div className="flex flex-col justify-center items-center w-full pl-[15vw] pr-[15vw]">
+        <div className="flex flex-row w-full items-center justify-end gap-[0.3vw]">
+          <MainSearch
+            placeholder="Ingrese el nombre del usuario"
+            onSearch={(value) => handleSearch(value, "main")}
+            mainFilter={mainFilter}
+            setMainFilter={setMainFilter}
+          />
+          <div
+            title="Limpiar filtros."
+            className="flex h-[3.8vh] items-center cursor-pointer hover:scale-110"
+            onClick={handleClearFilters}
           >
             <FilterOffIcon />
-          </button>
-
-          <button
-            className="button-filter"
-            title="Agregar Usuario"
-            data-bs-toggle="modal"
-            data-bs-target="#userModalAdd"
-          >
-            <AddIcon />
-          </button>
+          </div>
         </div>
-
-        <div className="container mt-3">
-          <table className="table table-bordered">
-            <thead className="thead-light">
+        <div className="flex justify-center items-center mt-0 w-full overflow-x-auto">
+          <table className="w-full table-auto">
+            <thead>
               <tr>
-                <th className="th s-th">
+                <th className="border-[0.1vh] border-gray-400 px-[1vw] py-[1vh] text-center text-[1vw] text-UNA-Red">
                   Nombre
-                  <div
-                    title="Filtrar por nombre."
-                    style={{ position: "relative" }}
-                  >
+                  <div className="w-full flex flex-col" title="Filtrar por nombre">
                     <SearchInput
-                      onSearch={(value) => handleNameUser(value)}
-                      inputClassName="search-input pl-3"
+                      onSearch={(value) => handleSearch(value, "NOBMRE")}
+                      filter={nameFilter}
+                      setFilter={setNameFilter}
+                      className="bg-transparent text-black w-full outline-none border-b-[0.2vh] text-[0.9vw] border-solid border-UNA-Red"
                     />
                   </div>
                 </th>
-                <th className="th f-th">
+                <th className="border-[0.1vh] border-gray-400 px-[1vw] py-[1vh] text-center text-[1vw] text-UNA-Red">
                   Apellidos
-                  <div
-                    title="Filtrar por apellidos."
-                    style={{ position: "relative" }}
-                  >
+                  <div className="w-full flex flex-col" title="Filtrar por Facultad">
                     <SearchInput
-                      onSearch={(value) => handleSecName(value)}
-                      inputClassName="search-input pl-3"
+                      onSearch={(value) => handleSearch(value, "APELLIDOS")}
+                      filter={lastNameFilter}
+                      setFilter={setLastNameFilter}
+                      className="bg-transparent text-black w-full outline-none border-b-[0.2vh] text-[0.9vw] border-solid border-UNA-Red"
                     />
                   </div>
                 </th>
-                <th className="th f-th">
-                  Cédula
-                  <div
-                    title="Filtrar por cédula."
-                    style={{ position: "relative" }}
-                  >
+                <th className="border-[0.1vh] border-gray-400 px-[1vw] py-[1vh] text-center text-[1vw] text-UNA-Red">
+                  Identificación
+                  <div className="w-full flex flex-col" title="Filtrar por Facultad">
                     <SearchInput
-                      onSearch={(value) => handleIdCard(value)}
-                      inputClassName="search-input pl-3"
+                      onSearch={(value) => handleSearch(value, "IDENTIFICACION")}
+                      filter={idFilter}
+                      setFilter={setIdFilter}
+                      className="bg-transparent text-black w-full outline-none border-b-[0.2vh] text-[0.9vw] border-solid border-UNA-Red"
                     />
                   </div>
                 </th>
-                <th className="th a-th">
+                <th className="border-[0.1vh] border-gray-400 px-[1vw] py-[1vh] text-center text-[1vw] text-UNA-Red">
+                  Rol
+                  <div className="w-full flex flex-col" title="Filtrar por Facultad">
+                    <SearchInput
+                      onSearch={(value) => handleSearch(value, "ROL")}
+                      filter={roleFilter}
+                      setFilter={setRoleFilter}
+                      className="bg-transparent text-black w-full outline-none border-b-[0.2vh] text-[0.9vw] border-solid border-UNA-Red"
+                    />
+                  </div>
+                </th>
+                <th className="border-[0.1vh] border-gray-400 px-[1vw] py-[1vh] w-[10vw] text-[1vw] text-UNA-Red">
                   Acciones
-                  <div style={{ position: "relative" }}>
-                    <SearchInput
-                      disabled={disableInputSearch}
-                      inputClassName="search-input pl-3"
-                    />
-                  </div>
                 </th>
               </tr>
             </thead>
             <tbody>
-              {filteredUser.length > 0 ? (
-                filteredUser.map((User) => (
-                  <tr key={User.ID_USER} style={{ color: "#CD1719" }}>
-                    <td className="bg-light">{User["NOMBRE"]}</td>
-                    <td className="bg-light">{User["APELLIDOS"]}</td>
-                    <td className="bg-light">{User["IDENTIFICACION"]}</td>
-                    <td className="bg-light">
-                      <div style={{ textAlign: "center" }}>
-                      <div
-                          onClick={() => handleEditUser(User)}
-                          style={{
-                            display: 'inline-block',
-                            cursor: 'pointer',
-                            marginRight: '10px'
-                          }}
-                        >
-                          
-                        </div>
-                        <img
-                          title="Eliminar usuario."
-                          src={deleteIcon}
-                          alt="Eliminar"
-                          style={{ cursor: "pointer" }}
-                          onClick={() => openModal(User)}
+              {filteredUsers.length > 0 ? (
+                filteredUsers.map((user) => (
+                  <tr key={user.ID_USER}>
+                    <td className="border-[0.1vh] border-gray-400 px-[1vw] py-[1.5vh] text-[0.9vw] text-center items-center break-words whitespace-normal max-w-[15vw]">
+                      {user["NOMBRE"]}
+                    </td>
+                    <td className="border-[0.1vh] border-gray-400 px-[1vw] py-[1.5vh] text-[0.9vw] text-center items-center break-words whitespace-normal max-w-[15vw]">
+                      {user["APELLIDOS"]}
+                    </td>
+                    <td className="border-[0.1vh] border-gray-400 px-[1vw] py-[1.5vh] text-[0.9vw] text-center items-center break-words whitespace-normal max-w-[15vw]">
+                      {user["IDENTIFICACION"]}
+                    </td>
+                    <td className="border-[0.1vh] border-gray-400 px-[1vw] py-[1.5vh] text-[0.9vw] text-center items-center break-words whitespace-normal max-w-[15vw]">
+                      {user["ROL"]}
+                    </td>
+                    <td className="border-[0.1vh] border-gray-400 px-[1vw] py-[1vh] text-[0.9vw]">
+                      <div className="flex items-center flex-row justify-center w-full h-full gap-[0.2vw]">
+                      <UserUpdate
+                          user={user}
+                          loadData={loadUsersData}
+                          currentPage={currentPage}
+                        />
+                        <DeleteModal
+                          deleteMethod="DELETE"
+                          item={user}
+                          itemName="NOMBRE"
+                          fields={[
+                            { field: "ID_USER", value: "id" }, 
+                          ]}
+                          items={Users}
+                          setItems={setUsers}
+                          totalItems={totalItems}
+                          currentPage={currentPage}
+                          loadData={loadUsersData}
+                          destination="user"
+                          componentName="usuario"
+                          componentPrefix="el"
                         />
                       </div>
                     </td>
@@ -252,36 +243,29 @@ const UserTable = () => {
                 ))
               ) : (
                 <tr>
-                  <td colSpan="5" style={{ textAlign: "center" }}>
-                    No se encontraron usuarios.
+                  <td
+                    colSpan={3}
+                    className="px-[1vw] py-[1vh] text-[0.9vw] text-center items-center pt-[3.5vh]"
+                  >
+                    No se encontraron Usurios registrados.
                   </td>
                 </tr>
               )}
             </tbody>
           </table>
         </div>
-        <UserModalAdd />
-        <UpdateUser
-          isOpen={isEditModalOpen}
-          user={selectedUser}
-          onClose={handleCloseModal}
-          onUpdate={handleUpdateSuccess}
-        />
-        <DeleteModal
-          isOpen={isModalOpen}
-          onClose={closeModal}
-          onDelete={handleDelete}
-          itemName={userToDelete ? `${userToDelete["NOMBRE"]} ${userToDelete["APELLIDOS"]}` : "usuario"}
-        />
-        <Pagination
-          totalItems={totalItems}
-          itemsPerPage={"8"}
-          currentPage={currentPage}
-          onPageChange={handlePageChange}
-        />
+        <div className="w-full h-[8vh] flex justify-center items-center">
+          <Pagination
+            totalItems={totalItems}
+            itemsPerPage="8"
+            currentPage={currentPage}
+            onPageChange={handlePageChange}
+          />
+        </div>
       </div>
-    </div>
+      {loading && <Loading />}
+    </main>
   );
 };
 
-export default UserTable;
+export default UsersTable;

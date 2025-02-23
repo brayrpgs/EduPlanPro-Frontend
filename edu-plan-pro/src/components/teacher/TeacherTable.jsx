@@ -46,7 +46,7 @@ const TeacherTable = () => {
       try {
         setLoading(true);
         const response = await FetchValidate(url, options, navigate);
-
+        console.log(response);
         if (!response) {
           console.error("Error en la solicitud");
           return;
@@ -231,6 +231,7 @@ const TeacherTable = () => {
                           currentPage={currentPage}
                         />
                         <DeleteModal
+                          deleteMethod={"PATCH"}
                           item={teacher}
                           itemName={"NOMBRE"}
                           fields={[

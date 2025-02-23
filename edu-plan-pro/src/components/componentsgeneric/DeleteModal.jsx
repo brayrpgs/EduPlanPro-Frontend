@@ -7,6 +7,7 @@ import { useNavigate } from "react-router-dom";
 import Loading from "./Loading";
 
 const DeleteModal = ({
+  deleteMethod,
   item,
   itemName,
   fields,
@@ -49,7 +50,7 @@ const DeleteModal = ({
     const url = `http://localhost:3001/${destination}`;
 
     const options = {
-      method: "PATCH",
+      method: deleteMethod,
       credentials: "include",
       headers: {
         "Content-Type": "application/json",
