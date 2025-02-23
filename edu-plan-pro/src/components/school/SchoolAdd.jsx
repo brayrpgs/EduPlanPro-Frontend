@@ -229,7 +229,7 @@ const SchoolAdd = ({ totalItems, currentPage, loadData, textToAdd }) => {
               </label>
 
               <input
-                className="w-[93%] mt-[1.1vh] text-[0.9vw] ml-[1vw] h-[5vh] px-[1vw] focus:border-UNA-Red rounded-[1vh] outline-none  border-[0.1vh]"
+                className="w-[94%] mt-[1.1vh] text-[0.9vw] ml-[1vw] h-[5vh] px-[1vw] focus:border-UNA-Red rounded-[1vh] outline-none  border-[0.1vh]"
                 autoComplete="off"
                 spellCheck="false"
                 title="Ingrese un nombre. Asegurate que no incluya números ni carácteres especiales."
@@ -245,7 +245,7 @@ const SchoolAdd = ({ totalItems, currentPage, loadData, textToAdd }) => {
                 Facultad
               </label>
               <select
-                className="w-[93%] mt-[1.1vh] text-[0.9vw] ml-[1vw] h-[5vh] px-[1vw] focus:border-UNA-Red rounded-[1vh] outline-none border-[0.1vh]"
+                className="w-[94%] mt-[1.1vh] text-[0.9vw] ml-[1vw] h-[5vh] px-[1vw] focus:border-UNA-Red rounded-[1vh] outline-none border-[0.1vh]"
                 title="Seleccione la facultad. Asegúrate de elegir una opción válida."
                 name="id"
                 id="id"

@@ -219,7 +219,7 @@ const UserAdd = ({ totalItems, currentPage, loadData, textToAdd }) => {
                 onBlur={(e) => e.target.setAttribute("readonly", true)}
                 value={userData.name}
                 onChange={handleChange}
-                className="ml-[1vw] w-[90%] h-[4vh] border border-gray-300 rounded-[0.5vh] p-[1vw]"
+                className="ml-[1vw] w-[94%] h-[4vh] border border-gray-300 rounded-[0.5vh] p-[1vw]"
               />
               <label className="text-left ml-[1vw] mt-[3vh] font-bold text-[1.2vw]" htmlFor="secName">
                 Apellidos del usuario
@@ -234,7 +234,7 @@ const UserAdd = ({ totalItems, currentPage, loadData, textToAdd }) => {
                 onBlur={(e) => e.target.setAttribute("readonly", true)}
                 value={userData.secName}
                 onChange={handleChange}
-                className="ml-[1vw] w-[90%] h-[4vh] border border-gray-300 rounded-[0.5vh] p-[1vw]"
+                className="ml-[1vw] w-[94%] h-[4vh] border border-gray-300 rounded-[0.5vh] p-[1vw]"
               />
               
 
@@ -252,14 +252,14 @@ const UserAdd = ({ totalItems, currentPage, loadData, textToAdd }) => {
   onBlur={(e) => e.target.setAttribute("readonly", true)}
   value={userData.idcard}
   onChange={handleChange}
-  className="ml-[1vw] w-[90%] h-[4vh] border border-gray-300 rounded-[0.5vh] p-[1vw]"
+  className="ml-[1vw] w-[94%] h-[4vh] border border-gray-300 rounded-[0.5vh] p-[1vw]"
 /> 
 
               <label className="text-left ml-[1vw] mt-[2vh] font-bold text-[1.2vw]" htmlFor="idRol">
                 Rol del usuario
               </label>
               <select
-                className="w-[93%] mt-[1.1vh] text-[0.9vw] ml-[1vw] h-[5vh] px-[1vw] focus:border-UNA-Red rounded-[1vh] outline-none border-[0.1vh]"
+                className="w-[94%] mt-[1.1vh] text-[0.9vw] ml-[1vw] h-[5vh] px-[1vw] focus:border-UNA-Red rounded-[1vh] outline-none border-[0.1vh]"
                 title="Seleccione un rol. Asegúrate de elegir una opción válida."
                 id="idRol"
                 name="idRol"
@@ -285,7 +285,7 @@ const UserAdd = ({ totalItems, currentPage, loadData, textToAdd }) => {
                 name="pass"
                 value={userData.pass}
                 onChange={handleChange}
-                className="ml-[1vw] w-[90%] h-[4vh] border border-gray-300 rounded-[0.5vh] p-[1vw]"
+                className="ml-[1vw] w-[94%] h-[4vh] border border-gray-300 rounded-[0.5vh] p-[1vw]"
               />
             </div>
             {loading && (
