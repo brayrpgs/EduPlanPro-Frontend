@@ -18,7 +18,6 @@ const UsersTable = () => {
     NOMBRE: "",
     APELLIDOS: "",
     IDENTIFICACION: "",
-    ROL: "",
   });
   const [currentPage, setCurrentPage] = useState(1);
   const [totalItems, setTotalItems] = useState(0);
@@ -78,7 +77,7 @@ console.log(Users);
       }
       setSearchTerms((prevState) => ({
         ...prevState,
-        Name: value,
+        NOMBRE: value,
       }));
     } else if (type === "NOMBRE") {
       if (mainFilter.trim() !== "") {
@@ -86,7 +85,7 @@ console.log(Users);
       }
       setSearchTerms((prevState) => ({
         ...prevState,
-        Name: value,
+        NOMBRE: value,
       }));
     } else if (["APELLIDOS"].includes(type)) {
       setSearchTerms((prevState) => ({
@@ -94,6 +93,12 @@ console.log(Users);
         [type]: value,
       }));
     }
+    else if (["IDENTIFICACION", "ROL"].includes(type)) {
+      setSearchTerms((prevState) => ({
+        ...prevState,
+        [`${type}`]: value,
+      }));
+    } 
 
     setCurrentPage(1);
   };
@@ -153,7 +158,7 @@ console.log(Users);
                   Nombre
                   <div className="w-full flex flex-col" title="Filtrar por nombre">
                     <SearchInput
-                      onSearch={(value) => handleSearch(value, "NOBMRE")}
+                      onSearch={(value) => handleSearch(value, "NOMBRE")}
                       filter={nameFilter}
                       setFilter={setNameFilter}
                       className="bg-transparent text-black w-full outline-none border-b-[0.2vh] text-[0.9vw] border-solid border-UNA-Red"
@@ -182,7 +187,7 @@ console.log(Users);
                     />
                   </div>
                 </th>
-                <th className="border-[0.1vh] border-gray-400 px-[1vw] py-[1vh] text-center text-[1vw] text-UNA-Red">
+                {/*<th className="border-[0.1vh] border-gray-400 px-[1vw] py-[1vh] text-center text-[1vw] text-UNA-Red">
                   Rol
                   <div className="w-full flex flex-col" title="Filtrar por Facultad">
                     <SearchInput
@@ -192,6 +197,10 @@ console.log(Users);
                       className="bg-transparent text-black w-full outline-none border-b-[0.2vh] text-[0.9vw] border-solid border-UNA-Red"
                     />
                   </div>
+                </th>
+                */}
+                <th className="border-[0.1vh] border-gray-400 px-[1vw] py-[1vh] w-[10vw] text-[1vw] text-UNA-Red">
+                  Rol
                 </th>
                 <th className="border-[0.1vh] border-gray-400 px-[1vw] py-[1vh] w-[10vw] text-[1vw] text-UNA-Red">
                   Acciones

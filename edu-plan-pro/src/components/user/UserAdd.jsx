@@ -213,6 +213,10 @@ const UserAdd = ({ totalItems, currentPage, loadData, textToAdd }) => {
                 type="text"
                 id="name"
                 name="name"
+                autoComplete="off"
+                readOnly
+                onFocus={(e) => e.target.removeAttribute("readonly")}
+                onBlur={(e) => e.target.setAttribute("readonly", true)}
                 value={userData.name}
                 onChange={handleChange}
                 className="ml-[1vw] w-[90%] h-[4vh] border border-gray-300 rounded-[0.5vh] p-[1vw]"
@@ -224,22 +228,32 @@ const UserAdd = ({ totalItems, currentPage, loadData, textToAdd }) => {
                 type="text"
                 id="secName"
                 name="secName"
+                autoComplete="off"
+                readOnly
+                onFocus={(e) => e.target.removeAttribute("readonly")}
+                onBlur={(e) => e.target.setAttribute("readonly", true)}
                 value={userData.secName}
                 onChange={handleChange}
                 className="ml-[1vw] w-[90%] h-[4vh] border border-gray-300 rounded-[0.5vh] p-[1vw]"
               />
+              
 
+              
               <label className="text-left ml-[1vw] mt-[2vh] font-bold text-[1.2vw]" htmlFor="idcard">
-                ID del usuario
+                Identificación
               </label>
               <input
-                type="text"
-                id="idcard"
-                name="idcard"
-                value={userData.idcard}
-                onChange={handleChange}
-                className="ml-[1vw] w-[90%] h-[4vh] border border-gray-300 rounded-[0.5vh] p-[1vw]"
-              />
+  type="text"
+  id="idcard"
+  name="idcard"
+  autoComplete="off"
+  readOnly
+  onFocus={(e) => e.target.removeAttribute("readonly")}
+  onBlur={(e) => e.target.setAttribute("readonly", true)}
+  value={userData.idcard}
+  onChange={handleChange}
+  className="ml-[1vw] w-[90%] h-[4vh] border border-gray-300 rounded-[0.5vh] p-[1vw]"
+/> 
 
               <label className="text-left ml-[1vw] mt-[2vh] font-bold text-[1.2vw]" htmlFor="idRol">
                 Rol del usuario
@@ -263,7 +277,9 @@ const UserAdd = ({ totalItems, currentPage, loadData, textToAdd }) => {
               <label className="text-left ml-[1vw] mt-[2vh] font-bold text-[1.2vw]" htmlFor="pass">
                 Contraseña
               </label>
+            
               <input
+                autocomplete="new-password"
                 type="password"
                 id="pass"
                 name="pass"

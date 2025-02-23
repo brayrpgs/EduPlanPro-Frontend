@@ -74,7 +74,7 @@ const SchoolTable = () => {
       }
       setSearchTerms((prevState) => ({
         ...prevState,
-        schoolName: value,
+        desc: value,
       }));
     } else if (type === "desc") {
       if (mainFilter.trim() !== "") {
@@ -82,7 +82,7 @@ const SchoolTable = () => {
       }
       setSearchTerms((prevState) => ({
         ...prevState,
-        schoolName: value,
+        desc: value,
       }));
     } else if (["faculty"].includes(type)) {
       setSearchTerms((prevState) => ({
