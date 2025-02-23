@@ -49,6 +49,7 @@ const DeleteModal = ({
     const url = `http://localhost:3001/${destination}`;
 
     const options = {
+      
       method: "PATCH",
       credentials: "include",
       headers: {
