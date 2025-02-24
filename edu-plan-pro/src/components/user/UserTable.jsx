@@ -45,7 +45,6 @@ const UsersTable = () => {
     try {
       setLoading(true);
       const response = await FetchValidate(url, options, navigate);
-      console.log(response);
 
       if (!response) {
         console.error("Error in request");
@@ -120,14 +119,14 @@ console.log(Users);
       <div className="mt-[3vh] justify-start flex pr-[15vw] pl-[15vw]">
         <div className="bg-UNA-Blue-Dark w-full max-w-screens flex rounded-[0.5vh] items-center">
           <h1 className="ml-[1vw] my-[0.5vh] text-[2vw] text-white">
-            Administrar Usuarios
+            Administrar usuarios
           </h1>
           <div className="flex ml-auto justify-end mr-[1vw]">
             <UserAdd
               totalItems={totalItems}
               currentPage={currentPage}
               loadData={loadUsersData}
-              textToAdd="Agregar Usuario"
+              textToAdd="Agregar usuario"
             />
           </div>
 
@@ -137,7 +136,7 @@ console.log(Users);
       <div className="flex flex-col justify-center items-center w-full pl-[15vw] pr-[15vw]">
         <div className="flex flex-row w-full items-center justify-end gap-[0.3vw]">
           <MainSearch
-            placeholder="Ingrese el nombre del usuario"
+            placeholder="Ingrese el nombre de un usuario"
             onSearch={(value) => handleSearch(value, "main")}
             mainFilter={mainFilter}
             setMainFilter={setMainFilter}
@@ -187,18 +186,6 @@ console.log(Users);
                     />
                   </div>
                 </th>
-                {/*<th className="border-[0.1vh] border-gray-400 px-[1vw] py-[1vh] text-center text-[1vw] text-UNA-Red">
-                  Rol
-                  <div className="w-full flex flex-col" title="Filtrar por Facultad">
-                    <SearchInput
-                      onSearch={(value) => handleSearch(value, "ROL")}
-                      filter={roleFilter}
-                      setFilter={setRoleFilter}
-                      className="bg-transparent text-black w-full outline-none border-b-[0.2vh] text-[0.9vw] border-solid border-UNA-Red"
-                    />
-                  </div>
-                </th>
-                */}
                 <th className="border-[0.1vh] border-gray-400 px-[1vw] py-[1vh] w-[10vw] text-[1vw] text-UNA-Red">
                   Rol
                 </th>
@@ -256,7 +243,7 @@ console.log(Users);
                     colSpan={3}
                     className="px-[1vw] py-[1vh] text-[0.9vw] text-center items-center pt-[3.5vh]"
                   >
-                    No se encontraron Usurios registrados.
+                    No se encontraron usuarios registrados.
                   </td>
                 </tr>
               )}

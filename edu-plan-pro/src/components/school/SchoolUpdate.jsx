@@ -51,33 +51,45 @@ const SchoolUpdate = ({ school, loadData, currentPage }) => {
   }
 
   function validateData() {
-    const patternString = /^[A-Za-zÁ-ÿ\s]*$/;
-
-    if (schoolData.desc === "" || schoolData.facu === "") {
-      Swal.fire({
-        icon: "error",
-        iconColor: "#A31E32",
-        title: "No se pudo actualizar la escuela",
-        text: "Los campos del formulario no pueden ir vacíos, completa todos los campos e intenta de nuevo.",
-        confirmButtonText: "Aceptar",
-        confirmButtonColor: "#A31E32",
-      });
-      return false;
-    } else {
-      if (!patternString.test(schoolData.desc)) {
+      const patternString = /^[A-Za-zÁ-ÿ\s]*$/;
+      const optionSelected = document.getElementById("facu");
+  
+      if (
+        schoolData.desc === "" ) {
         Swal.fire({
           icon: "error",
-          iconColor: "#a31e32",
-          title: "No se pudo actualizar la escuela",
-          text: "El nombre de la escuela debe contener solo letras, sin números ni caracteres especiales.",
+          iconColor: "#A31E32",
+          title: "No se pudo agregar la escuela",
+          text: "Los campos del formulario no pueden ir vacíos, completa todos los campos e intenta de nuevo.",
           confirmButtonText: "Aceptar",
           confirmButtonColor: "#A31E32",
         });
         return false;
+      } else if(optionSelected.value === ""){
+        Swal.fire({
+          icon: "error",
+          iconColor: "#A31E32",
+          title: "No se pudo agregar la escuela",
+          text: "Ninguna facultad ha sido seleccionada. Por favor, elige una y vuelve a intentarlo.",
+          confirmButtonText: "Aceptar",
+          confirmButtonColor: "#A31E32",
+        });
+        return false;
+      } else {
+        if (!patternString.test(schoolData.desc)) {
+          Swal.fire({
+            icon: "error",
+            iconColor: "#a31e32",
+            title: "No se pudo agregar la escuela",
+            text: "El nombre de la escuela debe contener solo letras, sin números ni caracteres especiales.",
+            confirmButtonText: "Aceptar",
+            confirmButtonColor: "#A31E32",
+          });
+          return false;
+        } 
+        return true;
       }
-      return true;
     }
-  }
 
   const handleUpdate = async () => {
     const url = "http://localhost:3001/school";
@@ -218,7 +230,7 @@ const SchoolUpdate = ({ school, loadData, currentPage }) => {
               </label>
 
               <select
-                className="w-[93%] mt-[1.1vh] text-[0.9vw] ml-[1vw] h-[5vh] px-[1vw] focus:border-UNA-Red rounded-[1vh] outline-none border-[0.1vh]"
+                className="appearance-none cursor-pointer w-[93%] mt-[1.1vh] text-[0.9vw] ml-[1vw] h-[5vh] px-[1vw] focus:border-UNA-Red rounded-[1vh] outline-none border-[0.1vh]"
                 name="facu"
                 id="facu"
                 value={schoolData.facu}

@@ -108,7 +108,7 @@ const SchoolTable = () => {
       <div className="mt-[3vh] justify-start flex pr-[15vw] pl-[15vw]">
         <div className="bg-UNA-Blue-Dark w-full max-w-screens flex rounded-[0.5vh] items-center">
           <h1 className="ml-[1vw] my-[0.5vh] text-[2vw] text-white">
-            Administrar Escuelas
+            Administrar escuelas
           </h1>
           <div className="flex ml-auto justify-end mr-[1vw]">
             <SchoolAdd

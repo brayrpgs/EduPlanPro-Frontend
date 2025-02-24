@@ -5,6 +5,7 @@ import Swal from "sweetalert2";
 import { useNavigate } from "react-router-dom";
 import { FetchValidate } from "../../utilities/FetchValidate";
 import Loading from "../componentsgeneric/Loading";
+import ShowMore from "../icons/AsideIcons/ShowMore";
 
 const SchoolAdd = ({ totalItems, currentPage, loadData, textToAdd }) => {
   const [isOpen, setIsOpen] = useState(false);
@@ -21,9 +22,9 @@ const SchoolAdd = ({ totalItems, currentPage, loadData, textToAdd }) => {
       method: 'GET',
       headers: {
         'Content-Type': 'application/json',
-        // Agrega aquí otros headers si son necesarios
+        
       },
-      credentials: 'include' // Esto enviará las cookies automáticamente
+      credentials: 'include' 
     })
       .then((response) => response.json())
       .then((data) => {
@@ -33,7 +34,7 @@ const SchoolAdd = ({ totalItems, currentPage, loadData, textToAdd }) => {
       })
       .catch((error) => console.error("Error al cargar las facultades:", error));
   }, []);
-  console.log(faculties);
+  
 
   function finallyActions() {
     const remainingItems = totalItems + 1;
@@ -66,17 +67,25 @@ const SchoolAdd = ({ totalItems, currentPage, loadData, textToAdd }) => {
 
   function validateData() {
     const patternString = /^[A-Za-zÁ-ÿ\s]*$/;
-    const patternNumbers = /^[0-9]*$/;
+    const optionSelected = document.getElementById("id");
 
     if (
-      schoolData.desc === "" ||
-      schoolData.id === ""
-    ) {
+      schoolData.desc === "" ) {
       Swal.fire({
         icon: "error",
         iconColor: "#A31E32",
-        title: "No se pudo actualizar la escuela",
+        title: "No se pudo agregar la escuela",
         text: "Los campos del formulario no pueden ir vacíos, completa todos los campos e intenta de nuevo.",
+        confirmButtonText: "Aceptar",
+        confirmButtonColor: "#A31E32",
+      });
+      return false;
+    } else if(optionSelected.value === ""){
+      Swal.fire({
+        icon: "error",
+        iconColor: "#A31E32",
+        title: "No se pudo agregar la escuela",
+        text: "Ninguna facultad ha sido seleccionada. Por favor, elige una y vuelve a intentarlo.",
         confirmButtonText: "Aceptar",
         confirmButtonColor: "#A31E32",
       });
@@ -86,27 +95,17 @@ const SchoolAdd = ({ totalItems, currentPage, loadData, textToAdd }) => {
         Swal.fire({
           icon: "error",
           iconColor: "#a31e32",
-          title: "No se pudo actualizar la escuela",
+          title: "No se pudo agregar la escuela",
           text: "El nombre de la escuela debe contener solo letras, sin números ni caracteres especiales.",
           confirmButtonText: "Aceptar",
           confirmButtonColor: "#A31E32",
         });
         return false;
-      } else if (!patternNumbers.test(schoolData.id)) {
-        Swal.fire({
-          icon: "error",
-          iconColor: "#a31e32",
-          title: "No se pudo actualizar el escuela",
-          text: "Ninguna de las las facultades fue seleccionadas.",
-          confirmButtonText: "Aceptar",
-          confirmButtonColor: "#A31E32",
-        });
-        return false;
-      }
+      } 
       return true;
     }
   }
-  console.log(schoolData);
+  
   const handleAdd = async () => {
     const url = "http://localhost:3001/school";
 
@@ -149,7 +148,7 @@ const SchoolAdd = ({ totalItems, currentPage, loadData, textToAdd }) => {
             icon: "error",
             iconColor: "#a31e32",
             title: "No se pudo agregar la escuela",
-            text: "No se pudo agregar la escuela, ya hay una agregada con este nombre.",
+            text: "No se pudo registrar la escuela, ya existe una con ese nombre.",
             confirmButtonText: "Aceptar",
             confirmButtonColor: "#A31E32",
           });
@@ -245,7 +244,7 @@ const SchoolAdd = ({ totalItems, currentPage, loadData, textToAdd }) => {
                 Facultad
               </label>
               <select
-                className="w-[94%] mt-[1.1vh] text-[0.9vw] ml-[1vw] h-[5vh] px-[1vw] focus:border-UNA-Red rounded-[1vh] outline-none border-[0.1vh]"
+                className="mb-[3vh] cursor-pointer appearance-none w-[94%] mt-[1.1vh] text-[0.9vw] ml-[1vw] h-[5vh] px-[1vw] focus:border-UNA-Red rounded-[1vh] outline-none border-[0.1vh]"
                 title="Seleccione la facultad. Asegúrate de elegir una opción válida."
                 name="id"
                 id="id"
@@ -260,6 +259,7 @@ const SchoolAdd = ({ totalItems, currentPage, loadData, textToAdd }) => {
                   </option>
                 ))}
               </select>
+              
             </div>
 
             {/* Add Loading State */}

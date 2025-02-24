@@ -40,12 +40,12 @@ const UserAdd = ({ totalItems, currentPage, loadData, textToAdd }) => {
     const newPage = Math.min(currentPage, lastPage);
     loadData(newPage);
     setIsOpen(false);
-    setUserData({ name: "", secName: "", idcard: "", idRol: "" , pass: ""});
+    setUserData({ name: "", secName: "", idcard: "", idRol: "", pass: "" });
   };
 
   const closeActions = () => {
     setIsOpen(false);
-    setUserData({ name: "", secName: "", idcard: "", idRol: "" , pass: ""});
+    setUserData({ name: "", secName: "", idcard: "", idRol: "", pass: "" });
   };
 
   const handleChange = (e) => {
@@ -58,15 +58,30 @@ const UserAdd = ({ totalItems, currentPage, loadData, textToAdd }) => {
 
   const validateData = () => {
     const patternString = /^[A-Za-zÁ-ÿ\s]*$/;
-    const patternNumbers = /^[0-9]*$/;
-    const patternId = /^[A-Za-z0-9]+$/;
+    const patternStringIdCard = /^(?=.*\d)[A-Za-zÁ-ÿ0-9]+$/;
+    const selectOption = document.getElementById("idRol");
 
-    if (userData.name === "" || userData.secName === "" || userData.idcard === "" || userData.idRol === "" || userData.pass === "") {
+    if (
+      userData.name === "" ||
+      userData.secName === "" ||
+      userData.idcard === "" ||
+      userData.pass === ""
+    ) {
       Swal.fire({
         icon: "error",
         iconColor: "#A31E32",
         title: "No se pudo agregar el usuario",
-        text: "Todos los campos son obligatorios. Por favor, complétalos e inténtalo de nuevo.",
+        text: "Los campos del formulario no pueden ir vacíos, completa todos los campos e intenta de nuevo.",
+        confirmButtonText: "Aceptar",
+        confirmButtonColor: "#A31E32",
+      });
+      return false;
+    } else if (selectOption.value === "") {
+      Swal.fire({
+        icon: "error",
+        iconColor: "#A31E32",
+        title: "No se pudo agregar el usuario",
+        text: "Ningún rol ha sido seleccionado. Por favor, elige uno y vuelve a intentarlo.",
         confirmButtonText: "Aceptar",
         confirmButtonColor: "#A31E32",
       });
@@ -75,8 +90,8 @@ const UserAdd = ({ totalItems, currentPage, loadData, textToAdd }) => {
       Swal.fire({
         icon: "error",
         iconColor: "#A31E32",
-        title: "Error en el nombre",
-        text: "El nombre solo puede contener letras y espacios.",
+        title: "No se pudo agregar el usuario",
+        text: "El nombre del usuario debe contener solo letras, sin números ni caracteres especiales.",
         confirmButtonText: "Aceptar",
         confirmButtonColor: "#A31E32",
       });
@@ -85,18 +100,18 @@ const UserAdd = ({ totalItems, currentPage, loadData, textToAdd }) => {
       Swal.fire({
         icon: "error",
         iconColor: "#A31E32",
-        title: "Error en el nombre",
-        text: "Los apellidos solo puede contener letras y espacios.",
+        title: "No se pudo agregar el usuario",
+        text: "Los apellidos del usuario deben contener solo letras, sin números ni caracteres especiales.",
         confirmButtonText: "Aceptar",
         confirmButtonColor: "#A31E32",
       });
       return false;
-    } else if (!patternId.test(userData.idcard)) {
+    } else if (!patternStringIdCard.test(userData.idcard)) {
       Swal.fire({
         icon: "error",
         iconColor: "#A31E32",
-        title: "Error en el ID",
-        text: "El ID solo puede contener letras y numeros.",
+        title: "No se pudo agregar el usuario",
+        text: "El número de cédula debe consistir solo en números y letras, sin caracteres especiales.",
         confirmButtonText: "Aceptar",
         confirmButtonColor: "#A31E32",
       });
@@ -179,21 +194,25 @@ const UserAdd = ({ totalItems, currentPage, loadData, textToAdd }) => {
       </div>
 
       <div
-        className={`${!isOpen && "hidden"
-          } bg-gray-600/50 min-h-screen w-full z-40 flex fixed top-0 right-0 left-0 backdrop-blur-[0.3vh]`}
+        className={`${
+          !isOpen && "hidden"
+        } bg-gray-600/50 min-h-screen w-full z-40 flex fixed top-0 right-0 left-0 backdrop-blur-[0.3vh]`}
         onClick={() => closeActions()}
       ></div>
 
       <div
-        className={`${isOpen
-          ? "w-[35vw] min-h-[30vh] overflow-hidden bg-white fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 z-50 flex flex-col items-center justify-start border-[-1vh] border-gray-400 rounded-[1vh] transition-[width] duration-300"
-          : "w-[15%]"
-          }`}
+        className={`${
+          isOpen
+            ? "w-[35vw] min-h-[30vh] overflow-hidden bg-white fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 z-50 flex flex-col items-center justify-start border-[-1vh] border-gray-400 rounded-[1vh] transition-[width] duration-300"
+            : "w-[15%]"
+        }`}
       >
         {isOpen && (
           <div className="w-full flex flex-col justify-center items-center">
             <div className="bg-UNA-Red w-full h-[7vh] flex top-0 fixed border-white z-50 rounded-t-[1vh] text-start items-center">
-              <h1 className="text-[3vh] ml-[1vw] text-white">Agregar Usuario</h1>
+              <h1 className="text-[3vh] ml-[1vw] text-white">
+                Agregar usuario
+              </h1>
               <div className="w-[5vw] right-0 h-full absolute flex text-center justify-center items-center">
                 <button
                   className="flex w-[60%] h-[60%] bg-UNA-Pink-Light rounded-[0.5vh] items-center justify-center"
@@ -206,11 +225,15 @@ const UserAdd = ({ totalItems, currentPage, loadData, textToAdd }) => {
               </div>
             </div>
             <div className="w-full max-w-full mt-[7vh] mb-[7vh] flex flex-col items-start relative">
-              <label className="text-left ml-[1vw] mt-[3vh] font-bold text-[1.2vw]" htmlFor="name">
+              <label
+                className="text-left ml-[1vw] mt-[3vh] font-bold text-[1.2vw]"
+                htmlFor="name"
+              >
                 Nombre del usuario
               </label>
               <input
                 type="text"
+                placeholder="Ingrese el nombre del usuario"
                 id="name"
                 name="name"
                 autoComplete="off"
@@ -219,47 +242,56 @@ const UserAdd = ({ totalItems, currentPage, loadData, textToAdd }) => {
                 onBlur={(e) => e.target.setAttribute("readonly", true)}
                 value={userData.name}
                 onChange={handleChange}
-                className="ml-[1vw] w-[94%] h-[4vh] border border-gray-300 rounded-[0.5vh] p-[1vw]"
+                className="w-[94%] mt-[1.1vh] text-[0.9vw] ml-[1vw] h-[5vh] px-[1vw] focus:border-UNA-Red rounded-[1vh] outline-none  border-[0.1vh]"
               />
-              <label className="text-left ml-[1vw] mt-[3vh] font-bold text-[1.2vw]" htmlFor="secName">
+              <label
+                className="text-left ml-[1vw] mt-[3vh] font-bold text-[1.2vw]"
+                htmlFor="secName"
+              >
                 Apellidos del usuario
               </label>
               <input
                 type="text"
                 id="secName"
                 name="secName"
+                placeholder="Ingrese los apellidos del usuario"
                 autoComplete="off"
                 readOnly
                 onFocus={(e) => e.target.removeAttribute("readonly")}
                 onBlur={(e) => e.target.setAttribute("readonly", true)}
                 value={userData.secName}
                 onChange={handleChange}
-                className="ml-[1vw] w-[94%] h-[4vh] border border-gray-300 rounded-[0.5vh] p-[1vw]"
+                className="w-[94%] mt-[1.1vh] text-[0.9vw] ml-[1vw] h-[5vh] px-[1vw] focus:border-UNA-Red rounded-[1vh] outline-none  border-[0.1vh]"
               />
-              
 
-              
-              <label className="text-left ml-[1vw] mt-[2vh] font-bold text-[1.2vw]" htmlFor="idcard">
-                Identificación
+              <label
+                className="text-left ml-[1vw] mt-[2vh] font-bold text-[1.2vw]"
+                htmlFor="idcard"
+              >
+                Identificación del usuario
               </label>
               <input
-  type="text"
-  id="idcard"
-  name="idcard"
-  autoComplete="off"
-  readOnly
-  onFocus={(e) => e.target.removeAttribute("readonly")}
-  onBlur={(e) => e.target.setAttribute("readonly", true)}
-  value={userData.idcard}
-  onChange={handleChange}
-  className="ml-[1vw] w-[94%] h-[4vh] border border-gray-300 rounded-[0.5vh] p-[1vw]"
-/> 
+                type="text"
+                id="idcard"
+                placeholder="Ingrese el número de identificacion del usuario"
+                name="idcard"
+                autoComplete="off"
+                readOnly
+                onFocus={(e) => e.target.removeAttribute("readonly")}
+                onBlur={(e) => e.target.setAttribute("readonly", true)}
+                value={userData.idcard}
+                onChange={handleChange}
+                className="w-[94%] mt-[1.1vh] text-[0.9vw] ml-[1vw] h-[5vh] px-[1vw] focus:border-UNA-Red rounded-[1vh] outline-none  border-[0.1vh]"
+              />
 
-              <label className="text-left ml-[1vw] mt-[2vh] font-bold text-[1.2vw]" htmlFor="idRol">
+              <label
+                className="text-left ml-[1vw] mt-[2vh] font-bold text-[1.2vw]"
+                htmlFor="idRol"
+              >
                 Rol del usuario
               </label>
               <select
-                className="w-[94%] mt-[1.1vh] text-[0.9vw] ml-[1vw] h-[5vh] px-[1vw] focus:border-UNA-Red rounded-[1vh] outline-none border-[0.1vh]"
+                className="appearance-none cursor-pointer w-[94%] mt-[1.1vh] text-[0.9vw] ml-[1vw] h-[5vh] px-[1vw] focus:border-UNA-Red rounded-[1vh] outline-none border-[0.1vh]"
                 title="Seleccione un rol. Asegúrate de elegir una opción válida."
                 id="idRol"
                 name="idRol"
@@ -267,25 +299,29 @@ const UserAdd = ({ totalItems, currentPage, loadData, textToAdd }) => {
                 value={userData.idRol}
                 onChange={handleChange}
               >
-                <option value="">Seleccionar rol</option>
+                <option value="">Seleccione un rol</option>
                 {roles.map((role) => (
                   <option key={role.ID_ROL} value={role.ID_ROL}>
                     {role["NOMBRE"]}
                   </option>
                 ))}
               </select>
-              <label className="text-left ml-[1vw] mt-[2vh] font-bold text-[1.2vw]" htmlFor="pass">
+              <label
+                className="text-left ml-[1vw] mt-[2vh] font-bold text-[1.2vw]"
+                htmlFor="pass"
+              >
                 Contraseña
               </label>
-            
+
               <input
-                autocomplete="new-password"
+                autoComplete="new-password"
                 type="password"
+                placeholder="Ingrese una contraseña"
                 id="pass"
                 name="pass"
                 value={userData.pass}
                 onChange={handleChange}
-                className="ml-[1vw] w-[94%] h-[4vh] border border-gray-300 rounded-[0.5vh] p-[1vw]"
+                className="mb-[3vh] w-[94%] mt-[1.1vh] text-[0.9vw] ml-[1vw] h-[5vh] px-[1vw] focus:border-UNA-Red rounded-[1vh] outline-none  border-[0.1vh]"
               />
             </div>
             {loading && (

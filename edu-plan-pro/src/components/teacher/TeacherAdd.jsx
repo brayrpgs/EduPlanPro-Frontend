@@ -63,7 +63,7 @@ const TeacherAdd = ({ totalItems, currentPage, loadData, textToAdd }) => {
       Swal.fire({
         icon: "error",
         iconColor: "#A31E32",
-        title: "No se pudo actualizar el profesor",
+        title: "No se pudo agregar el profesor",
         text: "Los campos del formulario no pueden ir vacíos, completa todos los campos e intenta de nuevo.",
         confirmButtonText: "Aceptar",
         confirmButtonColor: "#A31E32",
@@ -74,7 +74,7 @@ const TeacherAdd = ({ totalItems, currentPage, loadData, textToAdd }) => {
         Swal.fire({
           icon: "error",
           iconColor: "#a31e32",
-          title: "No se pudo actualizar el profesor",
+          title: "No se pudo agregar el profesor",
           text: "El nombre del profesor debe contener solo letras, sin números ni caracteres especiales.",
           confirmButtonText: "Aceptar",
           confirmButtonColor: "#A31E32",
@@ -84,7 +84,7 @@ const TeacherAdd = ({ totalItems, currentPage, loadData, textToAdd }) => {
         Swal.fire({
           icon: "error",
           iconColor: "#a31e32",
-          title: "No se pudo actualizar el profesor",
+          title: "No se pudo agregar el profesor",
           text: "Los apellidos del profesor deben contener solo letras, sin números ni caracteres especiales.",
           confirmButtonText: "Aceptar",
           confirmButtonColor: "#A31E32",
@@ -94,7 +94,7 @@ const TeacherAdd = ({ totalItems, currentPage, loadData, textToAdd }) => {
         Swal.fire({
           icon: "error",
           iconColor: "#a31e32",
-          title: "No se pudo actualizar el profesor",
+          title: "No se pudo agregar el profesor",
           text: "El número de cédula debe consistir solo en números y letras, sin caracteres especiales.",
           confirmButtonText: "Aceptar",
           confirmButtonColor: "#A31E32",

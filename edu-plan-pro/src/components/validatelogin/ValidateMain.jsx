@@ -22,7 +22,7 @@ const ValidateLogin = ({ Login }) => {
 
         if (response.code === "200") {
           setFlag(false);
-          navigate("/coursesPlan");
+          navigate("/faculty");
         } else {
           setFlag(true);
         }
