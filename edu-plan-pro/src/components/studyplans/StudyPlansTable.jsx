@@ -196,7 +196,7 @@ const StudyPlansTable = () => {
                   Carrera
                   <div
                     className="w-full flex flex-col "
-                    title="Filtrar por carrera."
+                    title="Filtrar por carreras."
                   >
                     <SearchInput
                       onSearch={(value) => handleSearch(value, "data4")}
