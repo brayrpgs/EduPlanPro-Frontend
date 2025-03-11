@@ -11,7 +11,7 @@ import { useNavigate } from "react-router-dom";
 const StudyPlansTable = () => {
   const [studyPlans, setStudyPlans] = useState([]);
 
-  // To formate the dates
+  // To formate the dates of the data received
   const formatDate = (date) => {
     const newDate = new Date(date);
     return newDate.toISOString().split('T')[0];
