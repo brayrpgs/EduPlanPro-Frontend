@@ -7,6 +7,7 @@ import Pagination from "../pagination/Pagination";
 import Loading from "../componentsgeneric/Loading";
 import { FetchValidate } from "../../utilities/FetchValidate";
 import { useNavigate } from "react-router-dom";
+import StudyPlansAdd from "./StudyPlansAdd";
 
 const StudyPlansTable = () => {
   const [studyPlans, setStudyPlans] = useState([]);
@@ -119,13 +120,13 @@ const StudyPlansTable = () => {
             Administrar planes de estudio
           </h1>
           <div className="flex ml-auto justify-end mr-[1vw]">
-            {/* 
-                <TeacherAdd
+             
+                <StudyPlansAdd
                 totalItems={totalItems}
                 currentPage={currentPage}
-                loadData={loadTeacherData}
-                textToAdd={"Agregar profesor"}
-            />*/}
+                loadData={loadStudyPlansData}
+                textToAdd={"Agregar plan de estudio"}
+            />
           </div>
         </div>
       </div>
@@ -285,7 +286,7 @@ const StudyPlansTable = () => {
                     colSpan={6}
                     className="px-[1vw] py-[1vh] text-[0.9vw] text-center items-center pt-[3.5vh]"
                   >
-                    No se encontraron profesores registrados.
+                    No se encontraron planes de estudio registrados.
                   </td>
                 </tr>
               )}
