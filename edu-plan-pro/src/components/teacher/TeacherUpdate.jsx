@@ -116,7 +116,6 @@ const TeacherUpdate = ({ teacher, loadData, currentPage }) => {
       try {
         setLoading(true);
         const response = await FetchValidate(url, options, navigate);
-        console.log(response)
         if (!response) {
           console.error("Error en la solicitud");
           return;

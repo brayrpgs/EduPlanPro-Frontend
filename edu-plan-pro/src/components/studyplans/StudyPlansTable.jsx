@@ -8,6 +8,7 @@ import Loading from "../componentsgeneric/Loading";
 import { FetchValidate } from "../../utilities/FetchValidate";
 import { useNavigate } from "react-router-dom";
 import StudyPlansAdd from "./StudyPlansAdd";
+import StudyPlansUpdate from "./StudyPlansUpdate"
 
 const StudyPlansTable = () => {
   const [studyPlans, setStudyPlans] = useState([]);
@@ -51,6 +52,7 @@ const StudyPlansTable = () => {
       try {
         setLoading(true);
         const response = await FetchValidate(url, options, navigate);
+        console.log(response)
         if (!response) {
           console.error("Error en la solicitud");
           return;
@@ -241,12 +243,19 @@ const StudyPlansTable = () => {
                     <td className="border-[0.1vh] border-gray-400 px-[1vw] py-[1.5vh] text-[0.9vw] text-center items-center break-words whitespace-normal max-w-[15vw]">
                       {studyPlans["CARRERA"]}
                     </td>
-                    <td className="border-[0.1vh] border-gray-400 px-[1vw] py-[1.5vh] text-[0.9vw] text-center items-center truncate whitespace-normal max-w-[10vw]"
+                    <td className="cursor-pointer border-[0.1vh] border-gray-400 px-[1vw] py-[1.5vh] text-[0.9vw] text-center items-center truncate whitespace-normal max-w-[10vw]"
                         title={studyPlans["PDF"]}>
-                      {studyPlans["PDF"]}
+                        SHOW
                     </td>
                     <td className="border-[0.1vh] border-gray-400 px-[1vw] py-[1vh] text-[0.9vw]">
                       <div className="flex items-center flex-row justify-center w-full h-full gap-[0.2vw]">
+
+                        <StudyPlansUpdate
+                          studyPlan = {studyPlans}
+                          loadData={loadStudyPlansData}
+                          currentPage={currentPage}
+                        />
+
                         {/* Actualizar y eliminar para despues
                       <TeacherUpdate
                           teacher={teacher}
@@ -274,8 +283,7 @@ const StudyPlansTable = () => {
                           componentPrefix={"el"}
                         />
                         */}
-                        <button>Editar</button>
-                        <button>Eliminar</button>
+                       
                       </div>
                     </td>
                   </tr>

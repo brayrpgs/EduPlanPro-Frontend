@@ -61,7 +61,7 @@ const DeleteModal = ({
     try {
       setLoading(true);
       const response = await FetchValidate(url, options, navigate);
-      console.log(response)
+
       if (!response) {
         throw new Error("Error en la solicitud");
       }

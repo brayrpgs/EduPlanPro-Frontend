@@ -59,7 +59,7 @@ const SchoolUpdate = ({ school, loadData, currentPage }) => {
         Swal.fire({
           icon: "error",
           iconColor: "#A31E32",
-          title: "No se pudo agregar la escuela",
+          title: "No se pudo actualizar la escuela",
           text: "Los campos del formulario no pueden ir vacíos, completa todos los campos e intenta de nuevo.",
           confirmButtonText: "Aceptar",
           confirmButtonColor: "#A31E32",
@@ -69,7 +69,7 @@ const SchoolUpdate = ({ school, loadData, currentPage }) => {
         Swal.fire({
           icon: "error",
           iconColor: "#A31E32",
-          title: "No se pudo agregar la escuela",
+          title: "No se pudo actualizar la escuela",
           text: "Ninguna facultad ha sido seleccionada. Por favor, elige una y vuelve a intentarlo.",
           confirmButtonText: "Aceptar",
           confirmButtonColor: "#A31E32",
@@ -80,7 +80,7 @@ const SchoolUpdate = ({ school, loadData, currentPage }) => {
           Swal.fire({
             icon: "error",
             iconColor: "#a31e32",
-            title: "No se pudo agregar la escuela",
+            title: "No se pudo actualizar la escuela",
             text: "El nombre de la escuela debe contener solo letras, sin números ni caracteres especiales.",
             confirmButtonText: "Aceptar",
             confirmButtonColor: "#A31E32",

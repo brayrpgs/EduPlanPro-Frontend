@@ -1,21 +1,25 @@
-import React, { useState } from "react";
-import AddIcon from "../icons/CrudIcons/AddIcon";
+import React, { useEffect, useState } from "react";
 import CancelActionIcon from "../icons/MainIcons/CancelActionIcon";
 import Swal from "sweetalert2";
 import { useNavigate } from "react-router-dom";
 import { FetchValidate } from "../../utilities/FetchValidate";
 import Loading from "../componentsgeneric/Loading";
 import { ChargePDF } from "../componentsgeneric/ChargePDF";
+import UpdateIcon from "../icons/CrudIcons/UpdateIcon";
 
-const StudyPlansAdd = ({ totalItems, currentPage, loadData, textToAdd }) => {
+const StudyPlansUpdate = ({ studyPlan, currentPage, loadData }) => {
   const [isOpen, setIsOpen] = useState(false);
   const [isChargePDF, setIsChargePDF] = useState(false);
+  const [carrerId, setCarrerId] = useState("")
+  const [newCarrerId, setNewCarrerId] = useState("")
   const [studyPlanData, setStudyPlanData] = useState({
-    DSC_NAME: "",
-    DAT_INIT: "",
-    DAT_MAX: "",
+    DSC_NAME: studyPlan["NOMBRE DEL PLAN DE ESTUDIO"],
+    DAT_INIT: studyPlan["FECHA INICIAL"].split("T")[0],
+    DAT_MAX: studyPlan["FECHA MAXIMA"].split("T")[0],
     ID_CAREER: "",
-    PDF_URL: "",
+    PDF_URL: studyPlan["PDF"],
+    STATE : "1",
+    ID_STUDY_PLAN : studyPlan["ID_STUDY_PLAN"]
   });
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
@@ -23,6 +27,7 @@ const StudyPlansAdd = ({ totalItems, currentPage, loadData, textToAdd }) => {
   const [carreers, setCarreers] = React.useState([]);
 
   React.useEffect(() => {
+    
     fetch("http://localhost:3001/carreer", {
       method: "GET",
       headers: {
@@ -39,36 +44,49 @@ const StudyPlansAdd = ({ totalItems, currentPage, loadData, textToAdd }) => {
       .catch((error) => console.error("Error al cargar las carreras:", error));
   }, []);
 
+  useEffect(() => {
+    if (carreers.length > 0 && studyPlan["CARRERA"]) {
+        
+      const carrer = carreers.find(
+        (carreer) => carreer["NOMBRE DE LA CARRERA"] === studyPlan["CARRERA"],
+        
+      );
+
+      setCarrerId(carrer ? carrer["ID_CAREER"] : ""); 
+      setNewCarrerId(carrer ? carrer["ID_CAREER"] : ""); 
+    }
+  }, [carreers]);
+
+  useEffect(() => {
+    setStudyPlanData((prevData) => ({
+      ...prevData,
+      ID_CAREER: newCarrerId,
+    }));
+  }, [newCarrerId]);
+
+
   const modalChargePDF = () => {
     setIsChargePDF(!isChargePDF);
   };
 
   function finallyActions() {
-    const remainingItems = totalItems + 1;
-    const lastPage = Math.ceil(remainingItems / 8);
-    const newPage = Math.min(currentPage, lastPage);
-    loadData(newPage);
+    loadData(currentPage);
     setIsOpen(false);
     setIsChargePDF(false);
-    setStudyPlanData({
-      DSC_NAME: "",
-      DAT_INIT: "",
-      DAT_MAX: "",
-      ID_CAREER: "",
-      PDF_URL: "",
-    });
   }
 
   function closeActions() {
     setIsOpen(false);
     setIsChargePDF(false);
     setStudyPlanData({
-      DSC_NAME: "",
-      DAT_INIT: "",
-      DAT_MAX: "",
-      ID_CAREER: "",
-      PDF_URL: "",
+        DSC_NAME: studyPlan["NOMBRE DEL PLAN DE ESTUDIO"],
+        DAT_INIT: studyPlan["FECHA INICIAL"].split("T")[0],
+        DAT_MAX: studyPlan["FECHA MAXIMA"].split("T")[0],
+        ID_CARREER: carrerId,
+        PDF_URL: studyPlan["PDF"],
     });
+
+    setNewCarrerId(carrerId)
   }
 
   const handleChange = (e) => {
@@ -77,12 +95,18 @@ const StudyPlansAdd = ({ totalItems, currentPage, loadData, textToAdd }) => {
       ...studyPlanData,
       [name]: value,
     });
+    
+    if(name === "ID_CAREER"){
+        setNewCarrerId(value)
+        
+    }
+    
   };
 
   function validateData() {
     const patternString = /^[A-Za-zÁ-ÿ\s]*$/;
     const optionSelected = document.getElementById("ID_CAREER");
-
+    
     if (
       studyPlanData.DSC_NAME === "" ||
       studyPlanData.DAT_INIT === "" ||
@@ -92,7 +116,7 @@ const StudyPlansAdd = ({ totalItems, currentPage, loadData, textToAdd }) => {
       Swal.fire({
         icon: "error",
         iconColor: "#A31E32",
-        title: "No se pudo agregar el plan de estudio",
+        title: "No se pudo actualizar el plan de estudio",
         text: "Los campos del formulario no pueden ir vacíos, completa todos los campos e intenta de nuevo.",
         confirmButtonText: "Aceptar",
         confirmButtonColor: "#A31E32",
@@ -103,7 +127,7 @@ const StudyPlansAdd = ({ totalItems, currentPage, loadData, textToAdd }) => {
         Swal.fire({
           icon: "error",
           iconColor: "#a31e32",
-          title: "No se pudo agregar el plan de estudio",
+          title: "No se pudo actualizar el plan de estudio",
           text: "El nombre del plan de estudio debe contener solo letras, sin números ni caracteres especiales.",
           confirmButtonText: "Aceptar",
           confirmButtonColor: "#A31E32",
@@ -113,7 +137,7 @@ const StudyPlansAdd = ({ totalItems, currentPage, loadData, textToAdd }) => {
         Swal.fire({
           icon: "error",
           iconColor: "#A31E32",
-          title: "No se pudo agregar el plan de estudio",
+          title: "No se pudo actualizar el plan de estudio",
           text: "Ninguna carrera ha sido seleccionada. Por favor, elige una y vuelve a intentarlo.",
           confirmButtonText: "Aceptar",
           confirmButtonColor: "#A31E32",
@@ -123,7 +147,7 @@ const StudyPlansAdd = ({ totalItems, currentPage, loadData, textToAdd }) => {
         Swal.fire({
           icon: "error",
           iconColor: "#A31E32",
-          title: "No se pudo agregar el plan de estudio",
+          title: "No se pudo actualizar el plan de estudio",
           text: "La fecha de inicio del plan de estudio no puede ser posterior a la fecha máxima establecida.",
           confirmButtonText: "Aceptar",
           confirmButtonColor: "#A31E32",
@@ -134,23 +158,21 @@ const StudyPlansAdd = ({ totalItems, currentPage, loadData, textToAdd }) => {
     }
   }
 
-  const handleAdd = async () => {
+  const handleUpdate = async () => {
     const url = "http://localhost:3001/studyplan";
 
     const options = {
-      method: "POST",
+      method: "PATCH",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(studyPlanData),
       credentials: "include",
     };
 
-
-
     if (validateData()) {
+        console.log(options.body)
       try {
         setLoading(true);
         const response = await FetchValidate(url, options, navigate);
-
         if (!response) {
           console.error("Error en la solicitud");
           return;
@@ -160,8 +182,8 @@ const StudyPlansAdd = ({ totalItems, currentPage, loadData, textToAdd }) => {
           Swal.fire({
             icon: "success",
             iconColor: "#7cda24",
-            title: "Plan de estudio agregado",
-            text: "El plan de estudio se agregó correctamente.",
+            title: "Plan de estudio actualizado",
+            text: "El plan de estudio se actualizó correctamente.",
             confirmButtonText: "Aceptar",
             confirmButtonColor: "#A31E32",
             willClose: () => {
@@ -176,8 +198,8 @@ const StudyPlansAdd = ({ totalItems, currentPage, loadData, textToAdd }) => {
           Swal.fire({
             icon: "error",
             iconColor: "#a31e32",
-            title: "No se pudo agregar plan de estudio",
-            text: "No se pudo agregar plan de estudio, ya existe un plan de estudio con estas caracteristicas.",
+            title: "No se pudo actualizar plan de estudio",
+            text: "No se pudo actualizar plan de estudio, ya existe un plan de estudio con estas caracteristicas.",
             confirmButtonText: "Aceptar",
             confirmButtonColor: "#A31E32",
           });
@@ -186,7 +208,7 @@ const StudyPlansAdd = ({ totalItems, currentPage, loadData, textToAdd }) => {
         setLoading(false);
         Swal.fire({
           icon: "error",
-          title: "Error al agregar el plan de estudio",
+          title: "Error al actualizar el plan de estudio",
           text: "Intenta de nuevo mas tarde.",
           confirmButtonColor: "#A31E32",
         });
@@ -199,21 +221,13 @@ const StudyPlansAdd = ({ totalItems, currentPage, loadData, textToAdd }) => {
 
   return (
     <div>
-      <div className="bg-UNA-Green-Light/70 flex flex-row justify-start items-center h-[3.8vh] rounded-[1vh] hover:scale-105">
-        <button
-          title="Agregar plan de estudio."
-          className="flex flex-row h-full items-center justify-start ml-[0.5vw] mr-[0.5vw] gap-[0.25vw]"
-          onClick={() => {
-            setIsOpen(true);
-          }}
-        >
-          <div className="flex h-[3vh]">
-            <AddIcon />
-          </div>
-
-          <span className="flex text-white text-[0.9vw]">{textToAdd}</span>
-        </button>
-      </div>
+      <button
+        title="Editar profesor."
+        className="h-[3vh] w-[1.5vw] flex items-center justify-center hover:scale-125"
+        onClick={() => setIsOpen(true)}
+      >
+        <UpdateIcon />
+      </button>
 
       <div
         className={`${
@@ -233,7 +247,7 @@ const StudyPlansAdd = ({ totalItems, currentPage, loadData, textToAdd }) => {
           <div className="w-full flex flex-col justify-center items-center ">
             <div className="bg-UNA-Red  w-full h-[7vh] flex top-0 fixed border-white z-50 rounded-t-[1vh] text-start items-center">
               <h1 className="text-[3vh] ml-[1vw] text-white">
-                Agregar plan de estudio
+                Editar plan de estudio
               </h1>
               <div className="w-[5vw] right-0 h-full absolute flex text-center justify-center items-center">
                 <button
@@ -313,7 +327,7 @@ const StudyPlansAdd = ({ totalItems, currentPage, loadData, textToAdd }) => {
                 name="ID_CAREER"
                 id="ID_CAREER"
                 type="number"
-                value={studyPlanData.ID_CAREER}
+                value={newCarrerId}
                 onChange={handleChange}
               >
                 <option value="">Seleccione una carrera</option>
@@ -332,7 +346,7 @@ const StudyPlansAdd = ({ totalItems, currentPage, loadData, textToAdd }) => {
               </label>
 
               <input
-                className="mb-[3vh] border-black text-white  bg-UNA-Blue-Light w-[94%] mt-[1.1vh] text-[0.9vw] ml-[1vw] h-[5vh] px-[1vw] rounded-[1vh]  border-[0.3vh] cursor-pointer"
+                className="mb-[3vh] border-black  text-white  bg-UNA-Blue-Light w-[94%] mt-[1.1vh] text-[0.9vw] ml-[1vw] h-[5vh] px-[1vw] rounded-[1vh]  border-[0.3vh] cursor-pointer"
                 value={
                   studyPlanData.PDF_URL
                     ? "PDF cargado correctamente"
@@ -344,18 +358,21 @@ const StudyPlansAdd = ({ totalItems, currentPage, loadData, textToAdd }) => {
                 onClick={modalChargePDF}
               />
 
-              {isChargePDF && <ChargePDF setIsChargePDF = {setIsChargePDF} 
-                    title = {"Cargar PDF del plan de estudio"}
-                    handleChange={handleChange}
-              />}
+              {isChargePDF && (
+                <ChargePDF
+                  setIsChargePDF={setIsChargePDF}
+                  title={"Cargar PDF del plan de estudio"}
+                  handleChange={handleChange}
+                />
+              )}
             </div>
             <div className="w-full h-[7vh] flex bottom-0 fixed border-white z-50 text-center justify-center items-center">
               <button
                 className="border-[0.1vh] bg-UNA-Red text-white text-[0.9vw] rounded-[0.3vw] h-[60%] border-black w-[50%] ml-[1vw] mr-[0.1vw]
               "
-                onClick={() => handleAdd()}
+                onClick={() => handleUpdate()}
               >
-                Agregar
+                Editar
               </button>
               <button
                 className="border-[0.1vh] bg-UNA-Blue-Dark text-white text-[0.9vw] rounded-[0.3vw] h-[60%] border-black w-[50%] mr-[1vw] ml-[0.1vw]
@@ -373,4 +390,4 @@ const StudyPlansAdd = ({ totalItems, currentPage, loadData, textToAdd }) => {
   );
 };
 
-export default StudyPlansAdd;
+export default StudyPlansUpdate;
