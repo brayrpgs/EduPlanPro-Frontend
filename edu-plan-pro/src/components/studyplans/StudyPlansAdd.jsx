@@ -332,7 +332,7 @@ const StudyPlansAdd = ({ totalItems, currentPage, loadData, textToAdd }) => {
               </label>
 
               <input
-                className="mb-[3vh] border-black text-white  bg-UNA-Blue-Light w-[94%] mt-[1.1vh] text-[0.9vw] ml-[1vw] h-[5vh] px-[1vw] rounded-[1vh]  border-[0.3vh] cursor-pointer"
+                className="mb-[3vh] border-black text-white  bg-UNA-Red w-[94%] mt-[1.1vh] text-[0.9vw] ml-[1vw] h-[5vh] px-[1vw] rounded-[1vh]  border-[0.3vh] cursor-pointer"
                 value={
                   studyPlanData.PDF_URL
                     ? "PDF cargado correctamente"
