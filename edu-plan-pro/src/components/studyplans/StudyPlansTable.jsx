@@ -247,7 +247,7 @@ const StudyPlansTable = () => {
                         title={studyPlans["PDF"]}>
                         SHOW
                     </td>
-                    <td className="border-[0.1vh] border-gray-400 px-[1vw] py-[1vh] text-[0.9vw]">
+                    <td className="border-[0.1vh]  border-gray-400 px-[1vw] py-[1vh] text-[0.9vw]">
                       <div className="flex items-center flex-row justify-center w-full h-full gap-[0.2vw]">
 
                         <StudyPlansUpdate
