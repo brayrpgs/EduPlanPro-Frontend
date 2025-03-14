@@ -40,13 +40,22 @@ const DeleteModal = ({
     setItemToDelete(null);
   }
 
+  function verifyState(){
+    return fields.some(({ field }) => field === "STATE");
+  }
+
   const handleDelete = async () => {
-    const dataToSend = { stat: 0 };
-
-    fields.forEach(({ field, value }) => {
-      dataToSend[value] = item[field];
+    let dataToSend = {}
+    if (!verifyState()){
+      dataToSend = { stat: 0 };
+    } else {
+      dataToSend = { STATE: 0 };
+    }
+    
+    fields.forEach(({ field, value, defaultValue }) => {
+      dataToSend[value] = item[field] !== undefined ? item[field] : defaultValue;
     });
-
+    
     const url = `http://localhost:3001/${destination}`;
 
     const options = {
@@ -61,7 +70,6 @@ const DeleteModal = ({
     try {
       setLoading(true);
       const response = await FetchValidate(url, options, navigate);
-      console.log(response)
       if (!response) {
         throw new Error("Error en la solicitud");
       }

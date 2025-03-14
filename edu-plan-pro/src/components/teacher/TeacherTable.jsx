@@ -46,7 +46,6 @@ const TeacherTable = () => {
       try {
         setLoading(true);
         const response = await FetchValidate(url, options, navigate);
-        console.log(response);
         if (!response) {
           console.error("Error en la solicitud");
           return;
@@ -111,7 +110,7 @@ const TeacherTable = () => {
   return (
     <main>
       <div className="mt-[3vh] justify-start flex pr-[15vw] pl-[15vw]">
-        <div className="bg-UNA-Blue-Dark w-full max-w-screens flex rounded-[0.5vh] items-center">
+        <div className="bg-UNA-Blue-Dark w-full max-w-screens flex rounded-[0.5vh] items-center md">
           <h1 className="ml-[1vw] my-[0.5vh] text-[2vw] text-white">
             Administrar profesores
           </h1>

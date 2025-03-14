@@ -59,7 +59,6 @@ const UsersTable = () => {
       setLoading(false);
     }
   }, [searchTerms, navigate]);
-console.log(Users);
   useEffect(() => {
     loadUsersData(currentPage);
   }, [currentPage, loadUsersData]);

@@ -125,7 +125,7 @@ const SchoolAdd = ({ totalItems, currentPage, loadData, textToAdd }) => {
           console.error("Error en la solicitud");
           return;
         }
-        console.log(response)
+
 
         if (response.code === "200") {
           Swal.fire({

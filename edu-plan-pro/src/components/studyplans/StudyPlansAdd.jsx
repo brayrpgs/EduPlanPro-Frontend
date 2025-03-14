@@ -5,17 +5,43 @@ import Swal from "sweetalert2";
 import { useNavigate } from "react-router-dom";
 import { FetchValidate } from "../../utilities/FetchValidate";
 import Loading from "../componentsgeneric/Loading";
+import { ChargePDF } from "../componentsgeneric/ChargePDF";
 
-const TeacherAdd = ({ totalItems, currentPage, loadData, textToAdd }) => {
+const StudyPlansAdd = ({ totalItems, currentPage, loadData, textToAdd }) => {
   const [isOpen, setIsOpen] = useState(false);
-  const [teacherData, setTeacherData] = useState({
-    name: "",
-    secName: "",
-    idcard: "",
-    email: "",
+  const [isChargePDF, setIsChargePDF] = useState(false);
+  const [studyPlanData, setStudyPlanData] = useState({
+    DSC_NAME: "",
+    DAT_INIT: "",
+    DAT_MAX: "",
+    ID_CAREER: "",
+    PDF_URL: "",
   });
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
+
+  const [carreers, setCarreers] = React.useState([]);
+
+  React.useEffect(() => {
+    fetch("http://localhost:3001/carreer", {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      credentials: "include",
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        if (data.code === "200") {
+          setCarreers(data.data);
+        }
+      })
+      .catch((error) => console.error("Error al cargar las carreras:", error));
+  }, []);
+
+  const modalChargePDF = () => {
+    setIsChargePDF(!isChargePDF);
+  };
 
   function finallyActions() {
     const remainingItems = totalItems + 1;
@@ -23,89 +49,82 @@ const TeacherAdd = ({ totalItems, currentPage, loadData, textToAdd }) => {
     const newPage = Math.min(currentPage, lastPage);
     loadData(newPage);
     setIsOpen(false);
-    setTeacherData({
-      name: "",
-      secName: "",
-      idcard: "",
-      email: "",
+    setIsChargePDF(false);
+    setStudyPlanData({
+      DSC_NAME: "",
+      DAT_INIT: "",
+      DAT_MAX: "",
+      ID_CAREER: "",
+      PDF_URL: "",
     });
   }
 
   function closeActions() {
     setIsOpen(false);
-    setTeacherData({
-      name: "",
-      secName: "",
-      idcard: "",
-      email: "",
+    setIsChargePDF(false);
+    setStudyPlanData({
+      DSC_NAME: "",
+      DAT_INIT: "",
+      DAT_MAX: "",
+      ID_CAREER: "",
+      PDF_URL: "",
     });
   }
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setTeacherData({
-      ...teacherData,
+    setStudyPlanData({
+      ...studyPlanData,
       [name]: value,
     });
   };
 
   function validateData() {
     const patternString = /^[A-Za-zÁ-ÿ\s]*$/;
-    const patternStringIdCard = /^(?=.*\d)[A-Za-zÁ-ÿ0-9]+$/;
-    const emailPattern = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+    const optionSelected = document.getElementById("ID_CAREER");
 
     if (
-      teacherData.name === "" ||
-      teacherData.secName === "" ||
-      teacherData.idcard === "" ||
-      teacherData.email === ""
+      studyPlanData.DSC_NAME === "" ||
+      studyPlanData.DAT_INIT === "" ||
+      studyPlanData.DAT_MAX === "" ||
+      studyPlanData.PDF_URL === ""
     ) {
       Swal.fire({
         icon: "error",
         iconColor: "#A31E32",
-        title: "No se pudo agregar el profesor",
+        title: "No se pudo agregar el plan de estudio",
         text: "Los campos del formulario no pueden ir vacíos, completa todos los campos e intenta de nuevo.",
         confirmButtonText: "Aceptar",
         confirmButtonColor: "#A31E32",
       });
       return false;
     } else {
-      if (!patternString.test(teacherData.name)) {
+      if (!patternString.test(studyPlanData.DSC_NAME)) {
         Swal.fire({
           icon: "error",
           iconColor: "#a31e32",
-          title: "No se pudo agregar el profesor",
-          text: "El nombre del profesor debe contener solo letras, sin números ni caracteres especiales.",
+          title: "No se pudo agregar el plan de estudio",
+          text: "El nombre del plan de estudio debe contener solo letras, sin números ni caracteres especiales.",
           confirmButtonText: "Aceptar",
           confirmButtonColor: "#A31E32",
         });
         return false;
-      } else if (!patternString.test(teacherData.secName)) {
+      } else if (optionSelected.value === "") {
         Swal.fire({
           icon: "error",
-          iconColor: "#a31e32",
-          title: "No se pudo agregar el profesor",
-          text: "Los apellidos del profesor deben contener solo letras, sin números ni caracteres especiales.",
+          iconColor: "#A31E32",
+          title: "No se pudo agregar el plan de estudio",
+          text: "Ninguna carrera ha sido seleccionada. Por favor, elige una y vuelve a intentarlo.",
           confirmButtonText: "Aceptar",
           confirmButtonColor: "#A31E32",
         });
         return false;
-      } else if (!patternStringIdCard.test(teacherData.idcard)) {
+      } else if (studyPlanData.DAT_INIT > studyPlanData.DAT_MAX) {
         Swal.fire({
           icon: "error",
-          iconColor: "#a31e32",
-          title: "No se pudo agregar el profesor",
-          text: "El número de cédula debe consistir solo en números y letras, sin caracteres especiales.",
-          confirmButtonText: "Aceptar",
-          confirmButtonColor: "#A31E32",
-        });
-        return false;
-      } else if (!emailPattern.test(teacherData.email)) {
-        Swal.fire({
-          icon: "error",
-          iconColor: "#a31e32",
-          title: "No se pudo actualizar el profesor",
-          text: "Por favor, ingrese un correo electrónico válido.",
+          iconColor: "#A31E32",
+          title: "No se pudo agregar el plan de estudio",
+          text: "La fecha de inicio del plan de estudio no puede ser posterior a la fecha máxima establecida.",
           confirmButtonText: "Aceptar",
           confirmButtonColor: "#A31E32",
         });
@@ -116,14 +135,16 @@ const TeacherAdd = ({ totalItems, currentPage, loadData, textToAdd }) => {
   }
 
   const handleAdd = async () => {
-    const url = "http://localhost:3001/teacher";
+    const url = "http://localhost:3001/studyplan";
 
     const options = {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(teacherData),
+      body: JSON.stringify(studyPlanData),
       credentials: "include",
     };
+
+
 
     if (validateData()) {
       try {
@@ -135,13 +156,12 @@ const TeacherAdd = ({ totalItems, currentPage, loadData, textToAdd }) => {
           return;
         }
 
-        
         if (response.code === "200") {
           Swal.fire({
             icon: "success",
             iconColor: "#7cda24",
-            title: "Profesor agregado",
-            text: "El profesor se agregó correctamente.",
+            title: "Plan de estudio agregado",
+            text: "El plan de estudio se agregó correctamente.",
             confirmButtonText: "Aceptar",
             confirmButtonColor: "#A31E32",
             willClose: () => {
@@ -156,8 +176,8 @@ const TeacherAdd = ({ totalItems, currentPage, loadData, textToAdd }) => {
           Swal.fire({
             icon: "error",
             iconColor: "#a31e32",
-            title: "No se pudo agregar el profesor",
-            text: "No se pudo agregar el profesor, el correo ya está registrado o asociado a otro profesor.",
+            title: "No se pudo agregar plan de estudio",
+            text: "No se pudo agregar plan de estudio, ya existe un plan de estudio con estas caracteristicas.",
             confirmButtonText: "Aceptar",
             confirmButtonColor: "#A31E32",
           });
@@ -166,7 +186,7 @@ const TeacherAdd = ({ totalItems, currentPage, loadData, textToAdd }) => {
         setLoading(false);
         Swal.fire({
           icon: "error",
-          title: "Error al agregar la facultad",
+          title: "Error al agregar el plan de estudio",
           text: "Intenta de nuevo mas tarde.",
           confirmButtonColor: "#A31E32",
         });
@@ -181,7 +201,7 @@ const TeacherAdd = ({ totalItems, currentPage, loadData, textToAdd }) => {
     <div>
       <div className="bg-UNA-Green-Light/70 flex flex-row justify-start items-center h-[3.8vh] rounded-[1vh] hover:scale-105">
         <button
-          title="Agregar facultad."
+          title="Agregar plan de estudio."
           className="flex flex-row h-full items-center justify-start ml-[0.5vw] mr-[0.5vw] gap-[0.25vw]"
           onClick={() => {
             setIsOpen(true);
@@ -213,7 +233,7 @@ const TeacherAdd = ({ totalItems, currentPage, loadData, textToAdd }) => {
           <div className="w-full flex flex-col justify-center items-center ">
             <div className="bg-UNA-Red  w-full h-[7vh] flex top-0 fixed border-white z-50 rounded-t-[1vh] text-start items-center">
               <h1 className="text-[3vh] ml-[1vw] text-white">
-                Agregar profesor
+                Agregar plan de estudio
               </h1>
               <div className="w-[5vw] right-0 h-full absolute flex text-center justify-center items-center">
                 <button
@@ -229,9 +249,9 @@ const TeacherAdd = ({ totalItems, currentPage, loadData, textToAdd }) => {
             <div className="w-full max-w-full mt-[7vh] mb-[7vh] flex flex-col items-start relative">
               <label
                 className="text-left ml-[1vw] mt-[3vh] font-bold text-[1.2vw]"
-                htmlFor="name"
+                htmlFor="DSC_NAME"
               >
-                Nombre del profesor
+                Nombre del plan de estudio
               </label>
 
               <input
@@ -239,71 +259,95 @@ const TeacherAdd = ({ totalItems, currentPage, loadData, textToAdd }) => {
                 autoComplete="off"
                 spellCheck="false"
                 title="Ingrese un nombre. Asegurate que no incluya números ni carácteres especiales."
-                placeholder="Ingrese el nombre del profesor"
-                value={teacherData.name}
+                placeholder="Ingrese el nombre del plan de estudio"
+                value={studyPlanData.DSC_NAME}
                 onChange={handleChange}
-                name="name"
-                id="name"
+                name="DSC_NAME"
+                id="DSC_NAME"
                 type="text"
               />
               <label
                 className="text-left ml-[1vw] mt-[2vh] font-bold text-[1.2vw]"
-                htmlFor="secName"
+                htmlFor="DAT_INIT"
               >
-                Apellidos del profesor
+                Fecha inicial
               </label>
 
               <input
                 className="w-[93%] mt-[1.1vh] text-[0.9vw] ml-[1vw] h-[5vh] px-[1vw] focus:border-UNA-Red rounded-[1vh] outline-none  border-[0.1vh]"
                 autoComplete="off"
-                spellCheck="false"
-                title="Ingrese los apellidos. Asegurate que no incluya números ni carácteres especiales."
-                placeholder="Ingrese los apellidos del profesor"
-                value={teacherData.secName}
+                title="Ingrese una fecha inicial para el plan de estudio."
+                value={studyPlanData.DAT_INIT}
                 onChange={handleChange}
-                name="secName"
-                id="secName"
-                type="text"
+                name="DAT_INIT"
+                id="DAT_INIT"
+                type="date"
               />
               <label
                 className="text-left ml-[1vw] mt-[2vh] font-bold text-[1.2vw]"
-                htmlFor="idcard"
+                htmlFor="DAT_MAX"
               >
-                Cédula del profesor
+                Fecha máxima
               </label>
 
               <input
                 className="w-[93%] mt-[1.1vh] text-[0.9vw] ml-[1vw] h-[5vh] px-[1vw] focus:border-UNA-Red rounded-[1vh] outline-none  border-[0.1vh]"
                 autoComplete="off"
-                spellCheck="false"
-                title="Ingresa una cédula."
-                placeholder="Ingrese la cédula del profesor"
-                value={teacherData.idcard}
+                title="Ingrese una fecha máxima para el plan de estudio."
+                value={studyPlanData.DAT_MAX}
                 onChange={handleChange}
-                name="idcard"
-                id="idcard"
-                type="text"
+                name="DAT_MAX"
+                id="DAT_MAX"
+                type="date"
               />
 
               <label
                 className="text-left ml-[1vw] mt-[2vh] font-bold text-[1.2vw]"
-                htmlFor="email"
+                htmlFor="ID_CAREER"
               >
-                Correo electrónico del profesor
+                Carrera
+              </label>
+              <select
+                className="cursor-pointer appearance-none w-[94%] mt-[1.1vh] text-[0.9vw] ml-[1vw] h-[5vh] px-[1vw] focus:border-UNA-Red rounded-[1vh] outline-none border-[0.1vh]"
+                title="Seleccione la carrera. Asegúrate de elegir una opción válida."
+                name="ID_CAREER"
+                id="ID_CAREER"
+                type="number"
+                value={studyPlanData.ID_CAREER}
+                onChange={handleChange}
+              >
+                <option value="">Seleccione una carrera</option>
+                {carreers.map((carreer) => (
+                  <option key={carreer.ID_CAREER} value={carreer.ID_CAREER}>
+                    {carreer["NOMBRE DE LA CARRERA"]}
+                  </option>
+                ))}
+              </select>
+
+              <label
+                className="text-left ml-[1vw] mt-[2vh] font-bold text-[1.2vw]"
+                htmlFor="PDF_URL"
+              >
+                PDF asociado
               </label>
 
               <input
-                className="w-[93%] mt-[1.1vh] text-[0.9vw] ml-[1vw] h-[5vh] px-[1vw] mb-[3vh] focus:border-UNA-Red rounded-[1vh] outline-none  border-[0.1vh]"
-                autoComplete="off"
-                spellCheck="false"
-                title="Ingresa un correo electrónico."
-                placeholder="Ingrese el correo electrónico del profesor"
-                value={teacherData.email}
-                onChange={handleChange}
-                name="email"
-                id="email"
-                type="email"
+                className="mb-[3vh] border-black text-white  bg-UNA-Red w-[94%] mt-[1.1vh] text-[0.9vw] ml-[1vw] h-[5vh] px-[1vw] rounded-[1vh]  border-[0.3vh] cursor-pointer"
+                value={
+                  studyPlanData.PDF_URL
+                    ? "PDF cargado correctamente"
+                    : "Seleccionar PDF"
+                }
+                name="PDF_URL"
+                id="PDF_URL"
+                type="button"
+                onClick={modalChargePDF}
               />
+
+              {isChargePDF && <ChargePDF setIsChargePDF = {setIsChargePDF} 
+                    title = {"Cargar PDF del plan de estudio"}
+                    handleChange={handleChange}
+              />}
             </div>
             <div className="w-full h-[7vh] flex bottom-0 fixed border-white z-50 text-center justify-center items-center">
               <button
@@ -316,7 +360,7 @@ const TeacherAdd = ({ totalItems, currentPage, loadData, textToAdd }) => {
               <button
                 className="border-[0.1vh] bg-UNA-Blue-Dark text-white text-[0.9vw] rounded-[0.3vw] h-[60%] border-black w-[50%] mr-[1vw] ml-[0.1vw]
               "
-              onClick={() => closeActions()}
+                onClick={() => closeActions()}
               >
                 Cancelar
               </button>
@@ -329,4 +373,4 @@ const TeacherAdd = ({ totalItems, currentPage, loadData, textToAdd }) => {
   );
 };
 
-export default TeacherAdd;
+export default StudyPlansAdd;

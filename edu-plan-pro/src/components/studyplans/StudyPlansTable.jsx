@@ -7,6 +7,10 @@ import Pagination from "../pagination/Pagination";
 import Loading from "../componentsgeneric/Loading";
 import { FetchValidate } from "../../utilities/FetchValidate";
 import { useNavigate } from "react-router-dom";
+import StudyPlansAdd from "./StudyPlansAdd";
+import StudyPlansUpdate from "./StudyPlansUpdate";
+import ShowIcon from "../icons/CrudIcons/ShowIcon";
+import { ShowPDF } from "../componentsgeneric/ShowPDF";
 
 const StudyPlansTable = () => {
   const [studyPlans, setStudyPlans] = useState([]);
@@ -14,8 +18,8 @@ const StudyPlansTable = () => {
   // To formate the dates of the data received
   const formatDate = (date) => {
     const newDate = new Date(date);
-    return newDate.toISOString().split('T')[0];
-  }
+    return newDate.toISOString().split("T")[0];
+  };
 
   const [filteredStudyPlans, setFilteredStudyPlans] = useState([]);
   const [searchTerms, setSearchTerms] = useState({
@@ -31,9 +35,27 @@ const StudyPlansTable = () => {
   const [data2Filter, setData2Filter] = useState("");
   const [data3Filter, setData3Filter] = useState("");
   const [data4Filter, setData4Filter] = useState("");
+  const [carrers, setCarreers] = React.useState([]);
   const [loading, setLoading] = useState(false);
 
   const navigate = useNavigate();
+
+  React.useEffect(() => {
+    fetch("http://localhost:3001/carreer", {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      credentials: "include",
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        if (data.code === "200") {
+          setCarreers(data.data);
+        }
+      })
+      .catch((error) => console.error("Error al cargar las carreras:", error));
+  }, []);
 
   const loadStudyPlansData = useCallback(
     async (page) => {
@@ -50,6 +72,7 @@ const StudyPlansTable = () => {
       try {
         setLoading(true);
         const response = await FetchValidate(url, options, navigate);
+        console.log(response);
         if (!response) {
           console.error("Error en la solicitud");
           return;
@@ -119,13 +142,12 @@ const StudyPlansTable = () => {
             Administrar planes de estudio
           </h1>
           <div className="flex ml-auto justify-end mr-[1vw]">
-            {/* 
-                <TeacherAdd
-                totalItems={totalItems}
-                currentPage={currentPage}
-                loadData={loadTeacherData}
-                textToAdd={"Agregar profesor"}
-            />*/}
+            <StudyPlansAdd
+              totalItems={totalItems}
+              currentPage={currentPage}
+              loadData={loadStudyPlansData}
+              textToAdd={"Agregar plan de estudio"}
+            />
           </div>
         </div>
       </div>
@@ -206,9 +228,7 @@ const StudyPlansTable = () => {
                     />
                   </div>
                 </th>
-                <th className="border-[0.1vh] border-gray-400 px-[1vw] py-[1vh] text-center text-[1vw] text-UNA-Red w-[5vw]">
-                  PDF
-                </th>
+            
                 <th className="border-[0.1vh] border-gray-400 px-[1vw] py-[1vh] w-[10vw] text-[1vw] text-UNA-Red">
                   Acciones
                 </th>
@@ -216,65 +236,76 @@ const StudyPlansTable = () => {
             </thead>
             <tbody>
               {filteredStudyPlans.length > 0 ? (
-                filteredStudyPlans.map((studyPlans) => (
-                  <tr key={studyPlans.ID_STUDY_PLAN}>
+                filteredStudyPlans.map((studyPlan) => (
+                  <tr key={studyPlan.ID_STUDY_PLAN}>
                     <td className="border-[0.1vh] border-gray-400 px-[1vw] py-[1.5vh] text-[0.9vw] text-center items-center break-words whitespace-normal max-w-[15vw]">
-                      {studyPlans["NOMBRE DEL PLAN DE ESTUDIO"]}
+                      {studyPlan["NOMBRE DEL PLAN DE ESTUDIO"]}
                     </td>
                     <td className="border-[0.1vh] border-gray-400 px-[1vw] py-[1.5vh] text-[0.9vw] text-center items-center break-words whitespace-normal max-w-[15vw]">
                       <input
-                        type="text" 
-                        value={formatDate(studyPlans["FECHA INICIAL"])} 
+                        type="text"
+                        value={formatDate(studyPlan["FECHA INICIAL"])}
                         readOnly
                         className="appearance-none focus:outline-none text-center text-[0.9vw] px-[1vw] py-[1.5vh] w-full h-[2vh] "
                       />
                     </td>
                     <td className="border-[0.1vh] border-gray-400 px-[1vw] py-[1.5vh] text-[0.9vw] text-center items-center break-words whitespace-normal max-w-[15vw]">
-                    <input
-                        type="text" 
-                        value={formatDate(studyPlans["FECHA MAXIMA"])} 
+                      <input
+                        type="text"
+                        value={formatDate(studyPlan["FECHA MAXIMA"])}
                         readOnly
                         className="appearance-none focus:outline-none text-center text-[0.9vw] px-[1vw] py-[1.5vh] w-full h-[2vh] "
                       />
                     </td>
                     <td className="border-[0.1vh] border-gray-400 px-[1vw] py-[1.5vh] text-[0.9vw] text-center items-center break-words whitespace-normal max-w-[15vw]">
-                      {studyPlans["CARRERA"]}
+                      {studyPlan["CARRERA"]}
                     </td>
-                    <td className="border-[0.1vh] border-gray-400 px-[1vw] py-[1.5vh] text-[0.9vw] text-center items-center truncate whitespace-normal max-w-[10vw]"
-                        title={studyPlans["PDF"]}>
-                      {studyPlans["PDF"]}
-                    </td>
-                    <td className="border-[0.1vh] border-gray-400 px-[1vw] py-[1vh] text-[0.9vw]">
+                    
+                    <td className="border-[0.1vh]  border-gray-400 px-[1vw] py-[1vh] text-[0.9vw]">
                       <div className="flex items-center flex-row justify-center w-full h-full gap-[0.2vw]">
-                        {/* Actualizar y eliminar para despues
-                      <TeacherUpdate
-                          teacher={teacher}
-                          loadData={loadTeacherData}
+                        <StudyPlansUpdate
+                          studyPlan={studyPlan}
+                          loadData={loadStudyPlansData}
                           currentPage={currentPage}
                         />
+
                         <DeleteModal
                           deleteMethod={"PATCH"}
-                          item={teacher}
-                          itemName={"NOMBRE"}
+                          item={studyPlan}
+                          itemName={"NOMBRE DEL PLAN DE ESTUDIO"}
                           fields={[
-                            { field: "ID_TEACHER", value: "id" },
-                            { field: "NOMBRE", value: "name" },
-                            { field: "APELLIDOS", value: "secName" },
-                            { field: "IDENTIFICACION", value: "idcard" },
-                            { field: "CORREO", value: "email" },
+                            { field: "ID_STUDY_PLAN", value: "ID_STUDY_PLAN" },
+                            {
+                              field: "NOMBRE DEL PLAN DE ESTUDIO",
+                              value: "DSC_NAME",
+                            },
+                            { field: "FECHA INICIAL", value: "DAT_INIT" },
+                            { field: "FECHA MAXIMA", value: "DAT_MAX" },
+                            {
+                              field: "ID_CAREER",
+                              value: "ID_CAREER",
+                              defaultValue:
+                                carrers.find(
+                                  (career) =>
+                                    career["NOMBRE DE LA CARRERA"] === studyPlan["CARRERA"]
+                                )?.ID_CAREER || "",
+                            },
+                            { field: "PDF", value: "PDF_URL" },
+                            { field: "STATE", value: ""},
                           ]}
-                          items={teachers}
-                          setItems={setTeachers}
+                          items={studyPlans}
+                          setItems={setStudyPlans}
                           totalItems={totalItems}
                           currentPage={currentPage}
-                          loadData={loadTeacherData}
-                          destination={"teacher"}
-                          componentName={"profesor"}
+                          loadData={loadStudyPlansData}
+                          destination={"studyplan"}
+                          componentName={"plan de estudio"}
                           componentPrefix={"el"}
                         />
-                        */}
-                        <button>Editar</button>
-                        <button>Eliminar</button>
+
+                        <ShowPDF title={"PDF asociado al plan de estudio"} 
+                          pdfUrl= {studyPlan["PDF"]}
+                        />
                       </div>
                     </td>
                   </tr>
@@ -285,7 +316,7 @@ const StudyPlansTable = () => {
                     colSpan={6}
                     className="px-[1vw] py-[1vh] text-[0.9vw] text-center items-center pt-[3.5vh]"
                   >
-                    No se encontraron profesores registrados.
+                    No se encontraron planes de estudio registrados.
                   </td>
                 </tr>
               )}
