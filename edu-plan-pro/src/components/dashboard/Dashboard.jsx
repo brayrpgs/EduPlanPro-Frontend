@@ -8,68 +8,35 @@ function Dashboard() {
 
   const modules = [
     {
-      title: "School",
+      title: "Escuela",
       icon: AccountCircleAdmin,
-      description: "Manage school information and settings",
+      description: "Gestionar información de las Escuelas",
       path: "/school",
       iconBg: "bg-blue-100",
     },
     {
-      title: "Faculty",
+      title: "Facultad",
       icon: AccountCircleAdmin,
-      description: "Add, edit, and manage faculty departments",
+      description: "Gestionar información de las Facultades",
       path: "/faculty",
       iconBg: "bg-green-100",
     },
     {
-      title: "Teacher",
+      title: "Docentes",
       icon: AccountCircleAdmin,
-      description: "View and manage teacher profiles",
+      description: "Gestionar información de los Docentes",
       path: "/teacher",
       iconBg: "bg-yellow-100",
     },
     {
-      title: "Users",
+      title: "Usuarios",
       icon: AccountCircleAdmin,
-      description: "Manage user accounts and permissions",
+      description: "Gestionar información de las Usuarios",
       path: "/user",
       iconBg: "bg-purple-100",
     },
-    {
-        title: "Users",
-        icon: AccountCircleAdmin,
-        description: "Manage user accounts and permissions",
-        path: "/user",
-        iconBg: "bg-purple-100",
-      },
-      {
-        title: "Users",
-        icon: AccountCircleAdmin,
-        description: "Manage user accounts and permissions",
-        path: "/user",
-        iconBg: "bg-purple-100",
-      },
-      {
-        title: "Users",
-        icon: AccountCircleAdmin,
-        description: "Manage user accounts and permissions",
-        path: "/user",
-        iconBg: "bg-purple-100",
-      },
-      {
-        title: "Users",
-        icon: AccountCircleAdmin,
-        description: "Manage user accounts and permissions",
-        path: "/user",
-        iconBg: "bg-purple-100",
-      },
-      {
-        title: "Users",
-        icon: AccountCircleAdmin,
-        description: "Manage user accounts and permissions",
-        path: "/user",
-        iconBg: "bg-purple-100",
-      },
+    
+       
   ]
 
   const handleNavigate = (path) => {
@@ -84,7 +51,7 @@ function Dashboard() {
         <div className="max-w-7xl mx-auto">
           <div className="mb-6">
             <h1 className="text-2xl font-bold">Dashboard</h1>
-            <p className="text-gray-600 mt-1">Access all your CRUD operations from this central dashboard.</p>
+            <p className="text-gray-600 mt-1">Gestion de Modulos.</p>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
@@ -100,7 +67,7 @@ function Dashboard() {
                 <h2 className="text-xl font-semibold mb-2">{module.title}</h2>
                 <p className="text-gray-600 mb-4">{module.description}</p>
                 <div className="flex items-center text-blue-600 font-medium">
-                  Go to {module.title}
+                  Gestionar {module.title}
                   <svg className="w-4 h-4 ml-1" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                     <path
                       d="M5 12H19M19 12L12 5M19 12L12 19"
