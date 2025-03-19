@@ -1,7 +1,6 @@
 import React from "react";
 import { BrowserRouter, Route, Routes, Navigate } from "react-router-dom";
 import { Login } from "./login/Login.jsx"
-import CoursesPlan from "./coursesplan/CoursesPlan.js";
 import School from "./school/School.jsx";
 import Faculty from "./faculty/Faculty.jsx";
 import Teacher from "./teacher/Teachear.jsx"
@@ -12,6 +11,7 @@ import ValidateMain from "./validatelogin/ValidateMain.jsx";
 import Pagination from "./pagination/Pagination.jsx";
 import ServerError from "./validatelogin/ServerError.jsx";
 import PageNotFound from "./componentsgeneric/PageNotFound.jsx";
+import CoursesProgram from "./coursesprogram/CoursesProgram.jsx";
 
 
 function App() {
@@ -23,7 +23,7 @@ function App() {
         
         <Route path="/" element={<Navigate to="/login" />} />
         <Route path="/login" element={<ValidateMain Login={Login} />} />
-        <Route path="/coursesPlan" element={<ValidateLogin Component={CoursesPlan} />} />
+        <Route path="/coursesProgram" element={<ValidateLogin Component={CoursesProgram} />} />
         <Route path="/school" element={<ValidateLogin Component={School} />} />
         <Route path="/faculty" element={<ValidateLogin Component={Faculty} />} />
         <Route path="/teacher" element={<ValidateLogin Component={Teacher} />} />

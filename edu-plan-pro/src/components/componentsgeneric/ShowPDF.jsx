@@ -9,10 +9,6 @@ export const ShowPDF = ({ title, pdfUrl }) => {
     setIsOpen(false);
   }
 
-  useEffect(() => {
-    console.log(pdfUrl);
-  }, []);
-
   return (
     <div>
       <button
