@@ -6,20 +6,24 @@ import { useNavigate } from "react-router-dom";
 import { FetchValidate } from "../../utilities/FetchValidate";
 import Loading from "../componentsgeneric/Loading";
 import { ChargePDF } from "../componentsgeneric/ChargePDF";
+import UpdateIcon from "../icons/CrudIcons/UpdateIcon";
 
-const CoursesProgramAdd = ({ loadData, totalItems, currentPage ,textToAdd, studyPlans, formatDate }) => {
+const CoursesProgramUpdate = ({ courseProgram, currentPage, loadData, studyPlans, formatDate }) => {
   const [isOpen, setIsOpen] = useState(false);
   const [isChargePDF, setIsChargePDF] = useState(false);
-  const [signature, setSignature] = useState(0);
+  const [signature, setSignature] = useState(parseInt(courseProgram["FIRMA"]));
+
   const [coursesProgramData, setCoursesProgramData] = useState({
-    DSC_NAME: "",
-    DAT_YEAR: "",
-    ID_STUDY_PLAN: "",
-    NRC: "",
-    CICLE: "",
-    NUM_CREDITS: "",
-    SIGNATURE: signature,
-    PDF_URL: "",
+    ID_COURSE_PROGRAM: courseProgram["ID_COURSE_PROGRAM"],
+    DSC_NAME: courseProgram["NOMBRE DEL PROGRAMA"],
+    DAT_YEAR: formatDate(courseProgram["FECHA"]),
+    ID_STUDY_PLAN: courseProgram["ID_STUDY_PLAN"],
+    NRC: courseProgram["NRC"],
+    SIGNATURE: courseProgram["FIRMA"],
+    CICLE: courseProgram["CICLO"],
+    NUM_CREDITS: courseProgram["CREDITOS"],
+    PDF_URL: courseProgram["PDF"],
+    STATE: "1"
   });
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
@@ -29,38 +33,26 @@ const CoursesProgramAdd = ({ loadData, totalItems, currentPage ,textToAdd, study
   };
 
   function finallyActions() {
-    const remainingItems = totalItems + 1;
-    const lastPage = Math.ceil(remainingItems / 8);
-    const newPage = Math.min(currentPage, lastPage);
-    loadData(newPage);
+    loadData(currentPage);
     setIsOpen(false);
     setIsChargePDF(false);
-    setSignature(0);
-    setCoursesProgramData({
-      DSC_NAME: "",
-      DAT_YEAR: "",
-      ID_STUDY_PLAN: "",
-      NRC: "",
-      CICLE: "",
-      NUM_CREDITS: "",
-      SIGNATURE: signature,
-      PDF_URL: "",
-    });
   }
 
   function closeActions() {
     setIsOpen(false);
     setIsChargePDF(false);
-    setSignature(0);
+    setSignature(parseInt(courseProgram["FIRMA"]))
     setCoursesProgramData({
-      DSC_NAME: "",
-      DAT_YEAR: "",
-      ID_STUDY_PLAN: "",
-      NRC: "",
-      CICLE: "",
-      NUM_CREDITS: "",
-      SIGNATURE: signature,
-      PDF_URL: "",
+        ID_COURSE_PROGRAM: courseProgram["ID_COURSE_PROGRAM"],
+        DSC_NAME: courseProgram["NOMBRE DEL PROGRAMA"],
+        DAT_YEAR: formatDate(courseProgram["FECHA"]),
+        ID_STUDY_PLAN: courseProgram["ID_STUDY_PLAN"],
+        NRC: courseProgram["NRC"],
+        SIGNATURE: courseProgram["FIRMA"],
+        CICLE: courseProgram["CICLO"],
+        NUM_CREDITS: courseProgram["CREDITOS"],
+        PDF_URL: "PDF",
+        STATE: "1"
     });
   }
 
@@ -75,7 +67,6 @@ const CoursesProgramAdd = ({ loadData, totalItems, currentPage ,textToAdd, study
   const handleSignatureChange = () => {
     const newSignature = signature === 0 ? 1 : 0;
     setSignature(newSignature)
-
     setCoursesProgramData({
       ...coursesProgramData,
       ["SIGNATURE"]: newSignature,
@@ -98,7 +89,7 @@ const CoursesProgramAdd = ({ loadData, totalItems, currentPage ,textToAdd, study
       Swal.fire({
         icon: "error",
         iconColor: "#A31E32",
-        title: "No se pudo agregar el programa de curso",
+        title: "No se pudo actualizar el programa de curso",
         text: "Los campos del formulario no pueden ir vacíos, completa todos los campos e intenta de nuevo.",
         confirmButtonText: "Aceptar",
         confirmButtonColor: "#A31E32",
@@ -109,7 +100,7 @@ const CoursesProgramAdd = ({ loadData, totalItems, currentPage ,textToAdd, study
         Swal.fire({
           icon: "error",
           iconColor: "#a31e32",
-          title: "No se pudo agregar el programa de curso",
+          title: "No se pudo actualizar el programa de curso",
           text: "El nombre del programa de curso debe contener solo letras, sin números ni caracteres especiales.",
           confirmButtonText: "Aceptar",
           confirmButtonColor: "#A31E32",
@@ -119,7 +110,7 @@ const CoursesProgramAdd = ({ loadData, totalItems, currentPage ,textToAdd, study
         Swal.fire({
           icon: "error",
           iconColor: "#A31E32",
-          title: "No se pudo agregar el programa de curso",
+          title: "No se pudo actualizar el programa de curso",
           text: "Ningún plan de estudio ha sido seleccionado. Por favor, elige uno y vuelve a intentarlo.",
           confirmButtonText: "Aceptar",
           confirmButtonColor: "#A31E32",
@@ -130,7 +121,7 @@ const CoursesProgramAdd = ({ loadData, totalItems, currentPage ,textToAdd, study
         Swal.fire({
           icon: "error",
           iconColor: "#A31E32",
-          title: "No se pudo agregar el programa de curso",
+          title: "No se pudo actualizar el programa de curso",
           text: "Ningún ciclo ha sido seleccionado. Por favor, elige uno y vuelve a intentarlo.",
           confirmButtonText: "Aceptar",
           confirmButtonColor: "#A31E32",
@@ -142,7 +133,7 @@ const CoursesProgramAdd = ({ loadData, totalItems, currentPage ,textToAdd, study
         Swal.fire({
           icon: "error",
           iconColor: "#A31E32",
-          title: "No se pudo agregar el programa de curso",
+          title: "No se pudo actualizar el plan de estudio",
           text: "El programa de curso debe tener al menos un crédito asignado.",
           confirmButtonText: "Aceptar",
           confirmButtonColor: "#A31E32",
@@ -153,21 +144,22 @@ const CoursesProgramAdd = ({ loadData, totalItems, currentPage ,textToAdd, study
     }
   }
 
-  const handleAdd = async () => {
+  const handleUpdate = async () => {
     const url = "http://localhost:3001/courseprogram";
 
     const options = {
-      method: "POST",
+      method: "PATCH",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(coursesProgramData),
       credentials: "include",
     };
+    
+    console.log(coursesProgramData)
 
-    if (validateData()) {
+    if (validateData) {
       try {
         setLoading(true);
         const response = await FetchValidate(url, options, navigate);
-
         if (!response) {
           console.error("Error en la solicitud");
           return;
@@ -177,8 +169,8 @@ const CoursesProgramAdd = ({ loadData, totalItems, currentPage ,textToAdd, study
           Swal.fire({
             icon: "success",
             iconColor: "#7cda24",
-            title: "Programa de curso creado",
-            text: "El programa de curso se agregó correctamente.",
+            title: "Programa de curso actualizado",
+            text: "El programa de curso se actualizó correctamente.",
             confirmButtonText: "Aceptar",
             confirmButtonColor: "#A31E32",
             willClose: () => {
@@ -193,8 +185,8 @@ const CoursesProgramAdd = ({ loadData, totalItems, currentPage ,textToAdd, study
           Swal.fire({
             icon: "error",
             iconColor: "#a31e32",
-            title: "No se pudo agregar el programa de curso",
-            text: "No se pudo agregar el programa de curso, ya existe un programa de cursoo con estas caracteristicas.",
+            title: "No se pudo actualizar el programa de curso",
+            text: "No se pudo actualizar el programa de curso, ya existe un programa de curso con estas caracteristicas.",
             confirmButtonText: "Aceptar",
             confirmButtonColor: "#A31E32",
           });
@@ -204,7 +196,7 @@ const CoursesProgramAdd = ({ loadData, totalItems, currentPage ,textToAdd, study
         Swal.fire({
           icon: "error",
           iconColor: "#a31e32",
-          title: "Error al el programa de curso",
+          title: "Error al actualizar el programa de curso",
           text: "Intenta de nuevo mas tarde.",
           confirmButtonColor: "#A31E32",
         });
@@ -214,24 +206,16 @@ const CoursesProgramAdd = ({ loadData, totalItems, currentPage ,textToAdd, study
       }
     }
   };
-
+  
   return (
     <div>
-      <div className="bg-UNA-Green-Light/70 flex flex-row justify-start items-center h-[3.8vh] rounded-[1vh] hover:scale-105">
-        <button
-          title="Agregar programa de curso."
-          className="flex flex-row h-full items-center justify-start ml-[0.5vw] mr-[0.5vw] gap-[0.25vw]"
-          onClick={() => {
-            setIsOpen(true);
-          }}
-        >
-          <div className="flex h-[3vh]">
-            <AddIcon />
-          </div>
-
-          <span className="flex text-white text-[0.9vw]">{textToAdd}</span>
-        </button>
-      </div>
+      <button
+        title="Editar profesor."
+        className="h-[3vh] w-[1.5vw] flex items-center justify-center hover:scale-125"
+        onClick={() => setIsOpen(true)}
+      >
+        <UpdateIcon />
+      </button>
 
       <div
         className={`${
@@ -264,7 +248,7 @@ const CoursesProgramAdd = ({ loadData, totalItems, currentPage ,textToAdd, study
           <div className="w-full flex flex-col justify-center items-center ">
             <div className="bg-UNA-Red  w-full h-[7vh] flex top-0 fixed border-white z-50 rounded-t-[1vh] text-start items-center">
               <h1 className="text-[3vh] ml-[1vw] text-white">
-                Agregar programa de curso
+                Editar programa de curso
               </h1>
               <div className="w-[5vw] right-0 h-full absolute flex text-center justify-center items-center">
                 <button
@@ -327,7 +311,7 @@ const CoursesProgramAdd = ({ loadData, totalItems, currentPage ,textToAdd, study
                 name="ID_STUDY_PLAN"
                 id="ID_STUDY_PLAN"
                 type="number"
-                value={studyPlans.ID_STUDY_PLAN}
+                value={coursesProgramData.ID_STUDY_PLAN}
                 onChange={handleChange}
               >
                 <option value="">Seleccione un plan de estudio</option>
@@ -444,9 +428,9 @@ const CoursesProgramAdd = ({ loadData, totalItems, currentPage ,textToAdd, study
               <button
                 className="border-[0.1vh] bg-UNA-Red text-white text-[0.9vw] rounded-[0.3vw] h-[60%] border-black w-[50%] ml-[1vw] mr-[0.1vw]
               "
-                onClick={() => handleAdd()}
+                onClick={() => handleUpdate()}
               >
-                Agregar
+                Editar
               </button>
               <button
                 className="border-[0.1vh] bg-UNA-Blue-Dark text-white text-[0.9vw] rounded-[0.3vw] h-[60%] border-black w-[50%] mr-[1vw] ml-[0.1vw]
@@ -464,4 +448,4 @@ const CoursesProgramAdd = ({ loadData, totalItems, currentPage ,textToAdd, study
   );
 };
 
-export default CoursesProgramAdd;
+export default CoursesProgramUpdate;

@@ -76,7 +76,7 @@ const StudyPlansTable = () => {
           console.error("Error en la solicitud");
           return;
         }
-
+        console.log(response)
         setFilteredStudyPlans(response.data.rows || []);
         setTotalItems(response.data.totalMatches || 0);
       } catch (error) {

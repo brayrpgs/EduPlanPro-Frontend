@@ -5,6 +5,7 @@ import Swal from "sweetalert2";
 export const ChargePDF = ({ setIsChargePDF, title, handleChange }) => {
   const [fileName, setFileName] = useState("Selecciona un archivo");
   const [pdfUrl, setPdfUrl] = useState("");
+  const [blobURL, setBlobURL] = useState("");
 
   const updateLabel = (event) => {
     const fileInput = event.target;
@@ -15,12 +16,26 @@ export const ChargePDF = ({ setIsChargePDF, title, handleChange }) => {
         pdfToBase64(file, (base64) => {
           const pdfUrl = "data:application/pdf;base64," + base64;
           setPdfUrl(pdfUrl);
+
+          const base64Data = base64; 
+          const binaryString = atob(base64Data); 
+
+          const byteArray = new Uint8Array(binaryString.length);
+          for (let i = 0; i < binaryString.length; i++) {
+            byteArray[i] = binaryString.charCodeAt(i);
+          }
+
+          const blob = new Blob([byteArray], { type: "application/pdf" });
+          const blobUrl = URL.createObjectURL(blob);
+
+          setBlobURL(blobUrl);
         });
       } else {
         console.error("Por favor, selecciona un archivo PDF válido.");
       }
     } else {
       setFileName("Selecciona un archivo");
+      setBlobURL("");
     }
   };
 
@@ -86,7 +101,9 @@ export const ChargePDF = ({ setIsChargePDF, title, handleChange }) => {
           <div className="w-[5vw] right-0 h-full absolute flex text-center justify-center items-center">
             <button
               className="flex w-[60%] h-[60%] bg-UNA-Pink-Light rounded-[0.5vh] items-center justify-center"
-              onClick={() => { handleClick("cancel"); }}
+              onClick={() => {
+                handleClick("cancel");
+              }}
             >
               <div className="flex w-[75%] h-[75%]">
                 <CancelActionIcon />
@@ -119,7 +136,7 @@ export const ChargePDF = ({ setIsChargePDF, title, handleChange }) => {
               <iframe
                 id="pdfViewer"
                 className="w-full h-[50vh] border-[0.2vw] border-black"
-                src={pdfUrl}
+                src={blobURL}
               ></iframe>
             ) : (
               <p className="w-full h-[50vh] border-[0.2vw] border-black"></p>
@@ -129,13 +146,17 @@ export const ChargePDF = ({ setIsChargePDF, title, handleChange }) => {
 
         <div className="w-full h-[7vh] flex bottom-0 fixed border-white z-50 text-center justify-center items-center">
           <button
-            onClick={() => { handleClick("continue"); }}
+            onClick={() => {
+              handleClick("continue");
+            }}
             className="border-[0.1vh] bg-UNA-Red text-white text-[0.9vw] rounded-[0.3vw] h-[60%] border-black w-[50%] ml-[1vw] mr-[0.1vw]"
           >
             Continuar
           </button>
           <button
-            onClick={() => { handleClick("cancel"); }}
+            onClick={() => {
+              handleClick("cancel");
+            }}
             className="border-[0.1vh] bg-UNA-Blue-Dark text-white text-[0.9vw] rounded-[0.3vw] h-[60%] border-black w-[50%] mr-[1vw] ml-[0.1vw]"
           >
             Cancelar

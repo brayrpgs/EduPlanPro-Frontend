@@ -4,10 +4,26 @@ import CancelActionIcon from "../icons/MainIcons/CancelActionIcon";
 
 export const ShowPDF = ({ title, pdfUrl }) => {
   const [isOpen, setIsOpen] = useState(false);
+  const [blobURL, setBlobURL] = useState("");
 
   function closeActions() {
     setIsOpen(false);
   }
+
+  useEffect(() => {
+    const base64Data = pdfUrl.split(",")[1];
+    const binaryString = atob(base64Data);
+
+    const byteArray = new Uint8Array(binaryString.length);
+    for (let i = 0; i < binaryString.length; i++) {
+      byteArray[i] = binaryString.charCodeAt(i);
+    }
+
+    const blob = new Blob([byteArray], { type: "application/pdf" });
+    const blobUrl = URL.createObjectURL(blob);
+
+    setBlobURL(blobUrl);
+  }, [pdfUrl]);
 
   return (
     <div>
@@ -51,7 +67,7 @@ export const ShowPDF = ({ title, pdfUrl }) => {
             <iframe
               id="pdfViewer"
               className="w-[58vw] mt-[9vh] h-[76vh] mx-[1vw] border-[0.2vw] border-black"
-              src={pdfUrl}
+              src={blobURL}
             ></iframe>
           </div>
         )}
