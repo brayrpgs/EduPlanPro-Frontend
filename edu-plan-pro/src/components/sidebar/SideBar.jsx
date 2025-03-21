@@ -149,75 +149,7 @@ const SideBar = () => {
           <div className="transition-none text-center text-[1vw] cursor-pointer py-[1vh] mt-[1vh] hover:bg-UNA-Red hover:text-white">
             Preferencias
           </div>
-          <div
-            className={`transition-none text-center text-[1vw] flex flex-row items-center justify-center cursor-pointer py-[1vh] mt-[1vh] 
-              ${showPeople || "group-hover:bg-UNA-Red"} ${
-              showPeople
-                ? "bg-UNA-Red text-white"
-                : "hover:bg-UNA-Red hover:text-white"
-            }`}
-            onClick={() => {
-              setShowPeople(!showPeople);
-              setShowPeopleIcon(!showPeopleIcon);
-            }}
-            onMouseEnter={() => handleMouseEnter("people")}
-            onMouseLeave={() => handleMouseLeave("people")}
-          >
-            Personas
-            <span className="absolute flex ml-[12vh] h-[3vh] group-hover:fill-black">
-              {!showPeopleIcon ? (
-                <ShowMore fill={showPeople ? "white" : iconColor.people} />
-              ) : (
-                <ShowLess fill={showPeople ? "white" : iconColor.people} />
-              )}
-            </span>
-          </div>
-          {showPeople && (
-            <div className="justify-center items-center flex flex-col text-[0.9vw] py-[0.5vh] mt-[0.5vh]">
-              <ul className="list-disc list-inside flex flex-col items-center w-full">
-                <li
-                  className="hover:bg-UNA-Gray py-[0.5vh] px-[1vw] w-full text-center cursor-pointer
-                "
-                  onClick={() => navigate("/user")}
-                >
-                  Usuarios
-                </li>
-                <li
-                  className="hover:bg-UNA-Gray py-[0.5vh] px-[1vw] w-full text-center cursor-pointer"
-                  onClick={() => navigate("/teacher")}
-                >
-                  Profesores
-                </li>
-              </ul>
-            </div>
-          )}
-          <div
-            className={`transition-none text-center text-[1vw] flex flex-row items-center justify-center cursor-pointer py-[1vh] mt-[1vh] 
-              ${showAdminModules || "group-hover:bg-UNA-Red"} ${
-              showAdminModules
-                ? "bg-UNA-Red text-white"
-                : "hover:bg-UNA-Red hover:text-white"
-            }`}
-            onClick={() => {
-              setShowAdminModules(!showAdminModules);
-              setShowAdminModulesIcon(!showAdminModulesIcon);
-            }}
-            onMouseEnter={() => handleMouseEnter("adminModules")}
-            onMouseLeave={() => handleMouseLeave("adminModules")}
-          >
-            Modulos administrativos
-            <span className="transition-none absolute flex ml-[27vh] h-[3vh] group-hover:fill-black">
-              {!showAdminModulesIcon ? (
-                <ShowMore
-                  fill={showAdminModules ? "white" : iconColor.adminModules}
-                />
-              ) : (
-                <ShowLess
-                  fill={showAdminModules ? "white" : iconColor.adminModules}
-                />
-              )}
-            </span>
-          </div>
+         
           <div 
             className="transition-none text-center text-[1vw] cursor-pointer py-[1vh] mt-[1vh] hover:bg-UNA-Red hover:text-white"
             onClick={() => navigate("/dashboard")}
