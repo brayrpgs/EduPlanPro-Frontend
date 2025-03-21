@@ -218,6 +218,12 @@ const SideBar = () => {
               )}
             </span>
           </div>
+          <div 
+            className="transition-none text-center text-[1vw] cursor-pointer py-[1vh] mt-[1vh] hover:bg-UNA-Red hover:text-white"
+            onClick={() => navigate("/dashboard")}
+          >
+            Dashboard
+          </div>
           {showAdminModules && (
             <div className="transition-none justify-center items-center flex flex-col text-[0.9vw] py-[0.5vh] mt-[0.5vh]">
               <ul className="list-disc list-inside flex flex-col items-start w-full">

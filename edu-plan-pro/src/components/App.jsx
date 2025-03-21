@@ -6,12 +6,14 @@ import School from "./school/School.jsx";
 import Faculty from "./faculty/Faculty.jsx";
 import Teacher from "./teacher/Teachear.jsx"
 import User from "./user/User.jsx"
+import Dashboard from "./dashboard/Dashboard.jsx";
 import StudyPlans from "./studyplans/StudyPlans.jsx"
 import ValidateLogin from "./validatelogin/ValidateLogin.jsx";
 import ValidateMain from "./validatelogin/ValidateMain.jsx";
 import Pagination from "./pagination/Pagination.jsx";
 import ServerError from "./validatelogin/ServerError.jsx";
 import PageNotFound from "./componentsgeneric/PageNotFound.jsx";
+
 
 
 function App() {
@@ -28,6 +30,7 @@ function App() {
         <Route path="/faculty" element={<ValidateLogin Component={Faculty} />} />
         <Route path="/teacher" element={<ValidateLogin Component={Teacher} />} />
         <Route path="/user" element={<ValidateLogin Component={User} />} />
+        <Route path="/dashboard" element={<ValidateLogin Component={Dashboard} />} />
         <Route path="/studyPlans" element={<ValidateLogin Component={StudyPlans} />} />
         <Route path="/pagination" element={<ValidateLogin Component={Pagination} />} />
         <Route path="/serverError" element={<ServerError/>} />
