@@ -10,6 +10,7 @@ import MainSearch from "../search/MainSearch";
 import FilterOffIcon from "../icons/MainIcons/FilterOffIcon";
 import SearchInput from "../search/SearchInput";
 import CoursesProgramUpdate from "./CoursesProgramUpdate";
+import { AttachmentTeachers } from "./AttachmentTeachers";
 
 const CoursesProgramTable = () => {
   const [coursesProgram, setCoursesProgram] = useState([]);
@@ -53,11 +54,19 @@ const CoursesProgramTable = () => {
   const loadCoursesProgramData = useCallback(
     async (page) => {
       setCurrentPage(page);
+      let flag = false;
+
+      if(page == 0){
+        setCurrentPage(1);
+        flag = true;
+      }
+
       const searchQuery = searchTerms
         ? `&data=${searchTerms["data"]}&data2=${searchTerms["data2"]}&data3=${searchTerms["data3"]}&data4=${searchTerms["data4"]}&data5=${searchTerms["data5"]}&data6=${searchTerms["data6"]}`
         : "&data=&data2=&data3=&data4=&data5=&data6=";
 
-      const url = `http://localhost:3001/searchcourseprogram?name=search-page${searchQuery}&numPage=${page}`;
+      const newPage = flag? page + 1 : page;
+      const url = `http://localhost:3001/searchcourseprogram?name=search-page${searchQuery}&numPage=${newPage}`;
       const options = {
         method: "GET",
         credentials: "include",
@@ -65,7 +74,7 @@ const CoursesProgramTable = () => {
       try {
         setLoading(true);
         const response = await FetchValidate(url, options, navigate);
-        
+        console.log(response);
         if (!response) {
           console.error("Error en la solicitud");
           return;
@@ -165,13 +174,15 @@ const CoursesProgramTable = () => {
       const options = [
         { check: "Primer ciclo", value: 1 },
         { check: "Segundo ciclo", value: 2 },
-        { check: "Verano", value: "V" }
+        { check: "Verano", value: "V" },
       ];
-    
-      const matchedOption = options.find(option => checkOptions(option.check, value));
-    
+
+      const matchedOption = options.find((option) =>
+        checkOptions(option.check, value)
+      );
+
       const newData4 = matchedOption ? matchedOption.value : value;
-    
+
       setSearchTerms((prevState) => ({
         ...prevState,
         ["data4"]: newData4,
@@ -181,11 +192,13 @@ const CoursesProgramTable = () => {
         { check: "Si", value: 1 },
         { check: "No", value: 0 },
       ];
-    
-      const matchedOption = options.find(option => checkOptions(option.check, value));
-    
+
+      const matchedOption = options.find((option) =>
+        checkOptions(option.check, value)
+      );
+
       const newData6 = matchedOption ? matchedOption.value : value;
-    
+
       setSearchTerms((prevState) => ({
         ...prevState,
         ["data6"]: newData6,
@@ -349,13 +362,59 @@ const CoursesProgramTable = () => {
 
                     <td className="border-[0.1vh]  border-gray-400 px-[1vw] py-[1vh] text-[0.9vw]">
                       <div className="flex items-center flex-row justify-center w-full h-full gap-[0.2vw]">
-                      <CoursesProgramUpdate
+                        <CoursesProgramUpdate
                           courseProgram={courseProgram}
                           studyPlans={studyPlans}
                           formatDate={formatDate}
                           loadData={loadCoursesProgramData}
                           currentPage={currentPage}
                         />
+
+                        <DeleteModal
+                          deleteMethod={"PATCH"}
+                          item={courseProgram}
+                          itemName={"NOMBRE DEL PROGRAMA"}
+                          fields={[
+                            {
+                              field: "ID_COURSE_PROGRAM",
+                              value: "ID_COURSE_PROGRAM",
+                            },
+                            {
+                              field: "NOMBRE DEL PROGRAMA",
+                              value: "DSC_NAME",
+                            },
+                            { field: "FECHA", value: "DAT_YEAR" },
+                            { field: "ID_STUDY_PLAN", value: "ID_STUDY_PLAN" },
+                            {
+                              field: "NRC", value: "NRC" },
+                            {
+                              field: "CICLO", value: "CICLE"},
+                            {
+                              field: "CREDITOS",
+                              value: "NUM_CREDITS" },
+                            {
+                              field: "FIRMA",
+                              value: "SIGNATURE",
+                            },
+                            { field: "PDF", value: "PDF_URL" },
+                            { field: "STATE", value: "" },
+                          ]}
+                          items={coursesProgram}
+                          setItems={setCoursesProgram}
+                          totalItems={totalItems}
+                          currentPage={currentPage}
+                          loadData={loadCoursesProgramData}
+                          destination={"courseprogram"}
+                          componentName={"programa de curso"}
+                          componentPrefix={"el"}
+                        />
+
+                        <ShowPDF
+                          title={"PDF asociado al programa de curso"}
+                          pdfUrl={courseProgram["PDF"]}
+                        />
+
+                        <AttachmentTeachers idCourseProgram={courseProgram["ID_COURSE_PROGRAM"]}/>
                       </div>
                     </td>
                   </tr>
@@ -382,7 +441,7 @@ const CoursesProgramTable = () => {
           />
         </div>
       </div>
-      
+
       {loading && <Loading />}
     </main>
   );

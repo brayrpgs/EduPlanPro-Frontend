@@ -7,7 +7,14 @@ import { FetchValidate } from "../../utilities/FetchValidate";
 import Loading from "../componentsgeneric/Loading";
 import { ChargePDF } from "../componentsgeneric/ChargePDF";
 
-const CoursesProgramAdd = ({ loadData, totalItems, currentPage ,textToAdd, studyPlans, formatDate }) => {
+const CoursesProgramAdd = ({
+  loadData,
+  totalItems,
+  currentPage,
+  textToAdd,
+  studyPlans,
+  formatDate,
+}) => {
   const [isOpen, setIsOpen] = useState(false);
   const [isChargePDF, setIsChargePDF] = useState(false);
   const [signature, setSignature] = useState(0);
@@ -74,17 +81,17 @@ const CoursesProgramAdd = ({ loadData, totalItems, currentPage ,textToAdd, study
 
   const handleSignatureChange = () => {
     const newSignature = signature === 0 ? 1 : 0;
-    setSignature(newSignature)
+    setSignature(newSignature);
 
     setCoursesProgramData({
       ...coursesProgramData,
       ["SIGNATURE"]: newSignature,
     });
-    
   };
 
   function validateData() {
     const patternString = /^[A-Za-zÁ-ÿ\s]*$/;
+    const patternString2 = /^(?=.*[a-zA-Z])(?=.*\d)[a-zA-Z\d]*$/;
     const optionSelectedStudyPlan = document.getElementById("ID_STUDY_PLAN");
     const optionSelectedCicle = document.getElementById("CICLE");
 
@@ -115,6 +122,16 @@ const CoursesProgramAdd = ({ loadData, totalItems, currentPage ,textToAdd, study
           confirmButtonColor: "#A31E32",
         });
         return false;
+      } else if (!patternString2.test(coursesProgramData.NRC)) {
+        Swal.fire({
+          icon: "error",
+          iconColor: "#a31e32",
+          title: "No se pudo actualizar el programa de curso",
+          text: "El NRC no es válido, asegúrate de que contenga una combinación de letras y números, por ejemplo: EIF201.",
+          confirmButtonText: "Aceptar",
+          confirmButtonColor: "#A31E32",
+        });
+        return false;
       } else if (optionSelectedStudyPlan.value === "") {
         Swal.fire({
           icon: "error",
@@ -125,8 +142,7 @@ const CoursesProgramAdd = ({ loadData, totalItems, currentPage ,textToAdd, study
           confirmButtonColor: "#A31E32",
         });
         return false;
-      }
-      else if (optionSelectedCicle.value === "") {
+      } else if (optionSelectedCicle.value === "") {
         Swal.fire({
           icon: "error",
           iconColor: "#A31E32",
@@ -136,9 +152,7 @@ const CoursesProgramAdd = ({ loadData, totalItems, currentPage ,textToAdd, study
           confirmButtonColor: "#A31E32",
         });
         return false;
-      }
-      
-      else if (coursesProgramData.NUM_CREDITS < 1) {
+      } else if (coursesProgramData.NUM_CREDITS < 1) {
         Swal.fire({
           icon: "error",
           iconColor: "#A31E32",
@@ -172,7 +186,7 @@ const CoursesProgramAdd = ({ loadData, totalItems, currentPage ,textToAdd, study
           console.error("Error en la solicitud");
           return;
         }
-        
+
         if (response.code === "200") {
           Swal.fire({
             icon: "success",
@@ -336,7 +350,11 @@ const CoursesProgramAdd = ({ loadData, totalItems, currentPage ,textToAdd, study
                     key={studyPlans.ID_STUDY_PLAN}
                     value={studyPlans.ID_STUDY_PLAN}
                   >
-                    {studyPlans["DSC_NAME"] + " " + formatDate(studyPlans["DAT_INIT"]) + " → " + formatDate(studyPlans["DAT_MAX"])}
+                    {studyPlans["DSC_NAME"] +
+                      " " +
+                      formatDate(studyPlans["DAT_INIT"]) +
+                      " → " +
+                      formatDate(studyPlans["DAT_MAX"])}
                   </option>
                 ))}
               </select>
@@ -403,7 +421,6 @@ const CoursesProgramAdd = ({ loadData, totalItems, currentPage ,textToAdd, study
               />
 
               <div className="flex items-center w-[94%] mt-[3vh] text-[0.9vw] h-[5vh] px-[1vw]">
-                
                 <input
                   type="checkbox"
                   id="SIGNATURE"

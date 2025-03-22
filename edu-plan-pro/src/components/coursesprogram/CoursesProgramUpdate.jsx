@@ -8,7 +8,13 @@ import Loading from "../componentsgeneric/Loading";
 import { ChargePDF } from "../componentsgeneric/ChargePDF";
 import UpdateIcon from "../icons/CrudIcons/UpdateIcon";
 
-const CoursesProgramUpdate = ({ courseProgram, currentPage, loadData, studyPlans, formatDate }) => {
+const CoursesProgramUpdate = ({
+  courseProgram,
+  currentPage,
+  loadData,
+  studyPlans,
+  formatDate,
+}) => {
   const [isOpen, setIsOpen] = useState(false);
   const [isChargePDF, setIsChargePDF] = useState(false);
   const [signature, setSignature] = useState(parseInt(courseProgram["FIRMA"]));
@@ -23,7 +29,7 @@ const CoursesProgramUpdate = ({ courseProgram, currentPage, loadData, studyPlans
     CICLE: courseProgram["CICLO"],
     NUM_CREDITS: courseProgram["CREDITOS"],
     PDF_URL: courseProgram["PDF"],
-    STATE: "1"
+    STATE: "1",
   });
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
@@ -41,18 +47,18 @@ const CoursesProgramUpdate = ({ courseProgram, currentPage, loadData, studyPlans
   function closeActions() {
     setIsOpen(false);
     setIsChargePDF(false);
-    setSignature(parseInt(courseProgram["FIRMA"]))
+    setSignature(parseInt(courseProgram["FIRMA"]));
     setCoursesProgramData({
-        ID_COURSE_PROGRAM: courseProgram["ID_COURSE_PROGRAM"],
-        DSC_NAME: courseProgram["NOMBRE DEL PROGRAMA"],
-        DAT_YEAR: formatDate(courseProgram["FECHA"]),
-        ID_STUDY_PLAN: courseProgram["ID_STUDY_PLAN"],
-        NRC: courseProgram["NRC"],
-        SIGNATURE: courseProgram["FIRMA"],
-        CICLE: courseProgram["CICLO"],
-        NUM_CREDITS: courseProgram["CREDITOS"],
-        PDF_URL: "PDF",
-        STATE: "1"
+      ID_COURSE_PROGRAM: courseProgram["ID_COURSE_PROGRAM"],
+      DSC_NAME: courseProgram["NOMBRE DEL PROGRAMA"],
+      DAT_YEAR: formatDate(courseProgram["FECHA"]),
+      ID_STUDY_PLAN: courseProgram["ID_STUDY_PLAN"],
+      NRC: courseProgram["NRC"],
+      SIGNATURE: courseProgram["FIRMA"],
+      CICLE: courseProgram["CICLO"],
+      NUM_CREDITS: courseProgram["CREDITOS"],
+      PDF_URL: "PDF",
+      STATE: "1",
     });
   }
 
@@ -66,16 +72,16 @@ const CoursesProgramUpdate = ({ courseProgram, currentPage, loadData, studyPlans
 
   const handleSignatureChange = () => {
     const newSignature = signature === 0 ? 1 : 0;
-    setSignature(newSignature)
+    setSignature(newSignature);
     setCoursesProgramData({
       ...coursesProgramData,
       ["SIGNATURE"]: newSignature,
     });
-    
   };
 
   function validateData() {
     const patternString = /^[A-Za-zÁ-ÿ\s]*$/;
+    const patternString2 = /^(?=.*[a-zA-Z])(?=.*\d)[a-zA-Z\d]*$/;
     const optionSelectedStudyPlan = document.getElementById("ID_STUDY_PLAN");
     const optionSelectedCicle = document.getElementById("CICLE");
 
@@ -106,6 +112,16 @@ const CoursesProgramUpdate = ({ courseProgram, currentPage, loadData, studyPlans
           confirmButtonColor: "#A31E32",
         });
         return false;
+      } else if (!patternString2.test(coursesProgramData.NRC)) {
+        Swal.fire({
+          icon: "error",
+          iconColor: "#a31e32",
+          title: "No se pudo actualizar el programa de curso",
+          text: "El NRC no es válido, asegúrate de que contenga una combinación de letras y números, por ejemplo: EIF201.",
+          confirmButtonText: "Aceptar",
+          confirmButtonColor: "#A31E32",
+        });
+        return false;
       } else if (optionSelectedStudyPlan.value === "") {
         Swal.fire({
           icon: "error",
@@ -116,8 +132,7 @@ const CoursesProgramUpdate = ({ courseProgram, currentPage, loadData, studyPlans
           confirmButtonColor: "#A31E32",
         });
         return false;
-      }
-      else if (optionSelectedCicle.value === "") {
+      } else if (optionSelectedCicle.value === "") {
         Swal.fire({
           icon: "error",
           iconColor: "#A31E32",
@@ -127,9 +142,7 @@ const CoursesProgramUpdate = ({ courseProgram, currentPage, loadData, studyPlans
           confirmButtonColor: "#A31E32",
         });
         return false;
-      }
-      
-      else if (coursesProgramData.NUM_CREDITS < 1) {
+      } else if (coursesProgramData.NUM_CREDITS < 1) {
         Swal.fire({
           icon: "error",
           iconColor: "#A31E32",
@@ -153,10 +166,10 @@ const CoursesProgramUpdate = ({ courseProgram, currentPage, loadData, studyPlans
       body: JSON.stringify(coursesProgramData),
       credentials: "include",
     };
-    
-    console.log(coursesProgramData)
 
-    if (validateData) {
+    console.log(coursesProgramData);
+
+    if (validateData()) {
       try {
         setLoading(true);
         const response = await FetchValidate(url, options, navigate);
@@ -164,7 +177,7 @@ const CoursesProgramUpdate = ({ courseProgram, currentPage, loadData, studyPlans
           console.error("Error en la solicitud");
           return;
         }
-        
+
         if (response.code === "200") {
           Swal.fire({
             icon: "success",
@@ -206,7 +219,7 @@ const CoursesProgramUpdate = ({ courseProgram, currentPage, loadData, studyPlans
       }
     }
   };
-  
+
   return (
     <div>
       <button
@@ -320,7 +333,11 @@ const CoursesProgramUpdate = ({ courseProgram, currentPage, loadData, studyPlans
                     key={studyPlans.ID_STUDY_PLAN}
                     value={studyPlans.ID_STUDY_PLAN}
                   >
-                    {studyPlans["DSC_NAME"] + " " + formatDate(studyPlans["DAT_INIT"]) + " → " + formatDate(studyPlans["DAT_MAX"])}
+                    {studyPlans["DSC_NAME"] +
+                      " " +
+                      formatDate(studyPlans["DAT_INIT"]) +
+                      " → " +
+                      formatDate(studyPlans["DAT_MAX"])}
                   </option>
                 ))}
               </select>
@@ -387,7 +404,6 @@ const CoursesProgramUpdate = ({ courseProgram, currentPage, loadData, studyPlans
               />
 
               <div className="flex items-center w-[94%] mt-[3vh] text-[0.9vw] h-[5vh] px-[1vw]">
-                
                 <input
                   type="checkbox"
                   id="SIGNATURE"
