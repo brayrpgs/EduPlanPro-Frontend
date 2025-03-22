@@ -35,6 +35,13 @@ function Dashboard() {
       path: "/user",
       iconBg: "bg-purple-100",
     },
+    {
+      title: "Reportes",
+      icon: AccountCircleAdmin,
+      description: "Gestionar información de los reportes",
+      path: "/report",
+      iconBg: "bg-purple-100",
+    },
     
     
     
