@@ -81,8 +81,11 @@ const ReportTable = () => {
     try {
       // Preparar los parámetros
       const params = columns.map(column => {
-        if (column === "AÑO" || column === "CREDITOS") {
+        if (column === "CREDITOS") {
           return filters[column] ? parseInt(filters[column]) : null;
+        }
+        if (column === "AÑO") {
+          return filters[column] ? filters[column] : null;
         }
         return filters[column];
       });
