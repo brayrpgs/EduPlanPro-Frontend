@@ -15,9 +15,6 @@ const ReportTable = () => {
   const [filtersApplied, setFiltersApplied] = useState(false);
   const navigate = useNavigate();
   
-  // Referencia para el timeout de debounce
-  const searchTimeoutRef = useRef(null);
-  
   // Flag para controlar si se está ejecutando una búsqueda
   const isSearchingRef = useRef(false);
   
@@ -106,7 +103,7 @@ const ReportTable = () => {
         body: JSON.stringify(requestData)
       };
 
-      console.log("Realizando búsqueda con página:", page);
+      console.log("Realizando búsqueda con página:", page, "Filtros:", filters);
       
       const response = await FetchValidate(url, options, navigate);
 
@@ -132,46 +129,35 @@ const ReportTable = () => {
     // Actualizar la página actual
     setCurrentPage(page);
     
-    // Cancelar cualquier búsqueda pendiente
-    if (searchTimeoutRef.current) {
-      clearTimeout(searchTimeoutRef.current);
-      searchTimeoutRef.current = null;
-    }
-    
     // Realizar la búsqueda inmediatamente con la nueva página
     performSearch(page);
   };
 
-  // Manejador para el cambio de filtros
-  const handleSearch = (value, column) => {
-    // Actualizar el filtro
+  // Manejador para cuando el usuario modifica un valor en un input
+  const handleFilterChange = (value, column) => {
+    // Actualizar el filtro directamente
     setFilters(prevFilters => ({
       ...prevFilters,
       [column]: value
     }));
+  };
+
+  // Manejador para cuando el usuario completa la entrada (sale del campo o presiona Tab/Enter)
+  const handleCompleteFilter = (column) => {
+    console.log("Completando filtro para:", column, "con valor:", filters[column]);
     
-    // Cancelar cualquier búsqueda pendiente
-    if (searchTimeoutRef.current) {
-      clearTimeout(searchTimeoutRef.current);
-      searchTimeoutRef.current = null;
-    }
-    
-    // Programar una nueva búsqueda con debounce
-    searchTimeoutRef.current = setTimeout(() => {
-      setCurrentPage(1); // Restablecer a la primera página
+    // Solo iniciar búsqueda si hay al menos un filtro con valor
+    if (hasActiveFilter()) {
+      // Reiniciar a la primera página
+      setCurrentPage(1);
+      
+      // Realizar la búsqueda con los filtros actuales
       performSearch(1);
-      searchTimeoutRef.current = null;
-    }, 500);
+    }
   };
 
   // Manejador para limpiar filtros
   const handleClearFilters = () => {
-    // Cancelar cualquier búsqueda pendiente
-    if (searchTimeoutRef.current) {
-      clearTimeout(searchTimeoutRef.current);
-      searchTimeoutRef.current = null;
-    }
-    
     // Restablecer todos los filtros
     const resetFilters = {};
     columns.forEach(column => {
@@ -189,6 +175,31 @@ const ReportTable = () => {
   // Seleccionar las 6 primeras columnas para mostrar
   const visibleColumns = columns.slice(0, 6);
   const hiddenColumns = columns.slice(6);
+
+  // Función para renderizar un campo de búsqueda
+  const renderSearchInput = (column) => {
+    return (
+      <div className="w-full flex flex-col" title={`Filtrar por ${column}`}>
+        <input
+          type="text"
+          value={filters[column]}
+          onChange={(e) => handleFilterChange(e.target.value, column)}
+          onBlur={() => handleCompleteFilter(column)}
+          onKeyDown={(e) => {
+            if (e.key === 'Enter' || e.key === 'Tab') {
+              // Prevenir comportamiento por defecto para Tab dentro del input
+              if (e.key === 'Tab') {
+                e.preventDefault();
+              }
+              handleCompleteFilter(column);
+            }
+          }}
+          className="bg-transparent text-black w-full outline-none border-b-[0.2vh] text-[0.9vw] border-solid border-UNA-Red"
+          
+        />
+      </div>
+    );
+  };
 
   return (
     <main>
@@ -231,14 +242,7 @@ const ReportTable = () => {
                     {visibleColumns.map((column) => (
                       <th key={column} className="border-[0.1vh] border-gray-400 px-[1vw] py-[1vh] text-center text-[1vw] text-UNA-Red whitespace-nowrap min-w-[12vw] bg-white">
                         {column}
-                        <div className="w-full flex flex-col" title={`Filtrar por ${column}`}>
-                          <SearchInput
-                            onSearch={(value) => handleSearch(value, column)}
-                            filter={filters[column]}
-                            setFilter={(value) => handleSearch(value, column)}
-                            className="bg-transparent text-black w-full outline-none border-b-[0.2vh] text-[0.9vw] border-solid border-UNA-Red"
-                          />
-                        </div>
+                        {renderSearchInput(column)}
                       </th>
                     ))}
                     
@@ -246,14 +250,7 @@ const ReportTable = () => {
                     {hiddenColumns.map((column) => (
                       <th key={column} className="border-[0.1vh] border-gray-400 px-[1vw] py-[1vh] text-center text-[1vw] text-UNA-Red whitespace-nowrap min-w-[12vw] bg-white">
                         {column}
-                        <div className="w-full flex flex-col" title={`Filtrar por ${column}`}>
-                          <SearchInput
-                            onSearch={(value) => handleSearch(value, column)}
-                            filter={filters[column]}
-                            setFilter={(value) => handleSearch(value, column)}
-                            className="bg-transparent text-black w-full outline-none border-b-[0.2vh] text-[0.9vw] border-solid border-UNA-Red"
-                          />
-                        </div>
+                        {renderSearchInput(column)}
                       </th>
                     ))}
                     
