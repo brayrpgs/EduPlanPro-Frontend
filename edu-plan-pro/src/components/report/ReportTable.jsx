@@ -13,6 +13,7 @@ const ReportTable = () => {
   const [totalItems, setTotalItems] = useState(0);
   const [loading, setLoading] = useState(false);
   const [filtersApplied, setFiltersApplied] = useState(false);
+  const [selectedReports, setSelectedReports] = useState([]); // State for tracking selected reports
   const navigate = useNavigate();
   
   // Flag para controlar si se está ejecutando una búsqueda
@@ -118,6 +119,8 @@ const ReportTable = () => {
       setReports(response.data?.rows || []);
       setTotalItems(response.data?.totalMatches || 0);
       setFiltersApplied(true);
+      // Limpiar selecciones al cargar nuevos datos
+      setSelectedReports([]);
     } catch (error) {
       console.error("Error cargando datos de reportes:", error);
     } finally {
@@ -173,6 +176,83 @@ const ReportTable = () => {
     setReports([]);
     setTotalItems(0);
     setFiltersApplied(false);
+    // Limpiar selecciones
+    setSelectedReports([]);
+  };
+
+  // Funciones para manejar selección de reportes
+  const toggleReportSelection = (index) => {
+    setSelectedReports(prevSelected => {
+      if (prevSelected.includes(index)) {
+        return prevSelected.filter(i => i !== index);
+      } else {
+        return [...prevSelected, index];
+      }
+    });
+  };
+
+  // Función para descargar los PDFs seleccionados
+  const downloadSelectedPDFs = async () => {
+    if (selectedReports.length === 0) {
+      alert("Por favor seleccione al menos un reporte para descargar");
+      return;
+    }
+    
+    setLoading(true);
+    
+    try {
+      // Obtener los reportes seleccionados
+      const reportsToDownload = selectedReports.map(index => reports[index]);
+      
+      // Procesar cada reporte seleccionado
+      for (const report of reportsToDownload) {
+        const pdfUrl = report.PDF_URL;
+        
+        if (!pdfUrl) {
+          console.warn(`No hay URL de PDF disponible para el reporte: ${report["PROGRAMA DEL CURSO"]}`);
+          continue;
+        }
+        
+        // Construir nombre de archivo
+        const fileName = `${report["PROGRAMA DEL CURSO"]}_${report["NRC"]}_${report["AÑO"]}.pdf`;
+        
+        // Descargar el archivo
+        try {
+          const response = await fetch(pdfUrl, {
+            method: "GET",
+            credentials: "include",
+          });
+          
+          if (!response.ok) {
+            throw new Error(`Error al descargar: ${response.status} ${response.statusText}`);
+          }
+          
+          const blob = await response.blob();
+          const url = window.URL.createObjectURL(blob);
+          
+          // Crear enlace y descargar
+          const link = document.createElement('a');
+          link.href = url;
+          link.setAttribute('download', fileName);
+          document.body.appendChild(link);
+          link.click();
+          link.remove();
+          
+          // Liberar la URL del objeto
+          window.URL.revokeObjectURL(url);
+        } catch (error) {
+          console.error(`Error descargando ${fileName}:`, error);
+        }
+      }
+      
+      // Desmarcar las selecciones después de la descarga
+      setSelectedReports([]);
+      
+    } catch (error) {
+      console.error("Error en la descarga de PDFs:", error);
+    } finally {
+      setLoading(false);
+    }
   };
 
   // Seleccionar las 6 primeras columnas para mostrar
@@ -207,10 +287,25 @@ const ReportTable = () => {
   return (
     <main>
       <div className="mt-[3vh] justify-start flex pr-[15vw] pl-[15vw]">
-        <div className="bg-UNA-Blue-Dark w-full max-w-screens flex rounded-[0.5vh] items-center">
+        <div className="bg-UNA-Blue-Dark w-full max-w-screens flex rounded-[0.5vh] items-center justify-between">
           <h1 className="ml-[1vw] my-[0.5vh] text-[2vw] text-white">
             Reportes
           </h1>
+          {/* Botón de descarga */}
+          <button 
+            onClick={downloadSelectedPDFs}
+            disabled={selectedReports.length === 0}
+            className={`mr-[1vw] px-[1vw] py-[0.5vh] rounded-[0.3vh] text-white text-[1vw] ${
+              selectedReports.length > 0 
+                ? 'bg-green-600 hover:bg-green-700' 
+                : 'bg-gray-500 cursor-not-allowed'
+            }`}
+            title={selectedReports.length > 0 
+              ? `Descargar ${selectedReports.length} reporte(s) seleccionado(s)`
+              : 'Seleccione al menos un reporte para descargar'}
+          >
+            Descargar PDFs ({selectedReports.length})
+          </button>
         </div>
       </div>
 
@@ -258,7 +353,7 @@ const ReportTable = () => {
                     ))}
                     
                     {/* Columna de acciones fija */}
-                    <th className="border-[0.1vh] border-gray-400 px-[1vw] py-[1vh] w-[8vw] text-[1vw] text-UNA-Red sticky right-0 bg-white z-10 shadow-md">
+                    <th className="border-[0.1vh] border-gray-400 px-[1vw] py-[1vh] w-[10vw] text-[1vw] text-UNA-Red sticky right-0 bg-white z-10 shadow-md">
                       Acciones
                     </th>
                   </tr>
@@ -283,10 +378,26 @@ const ReportTable = () => {
                         
                         {/* Columna de acciones fija */}
                         <td className="border-[0.1vh] border-gray-400 px-[1vw] py-[1vh] text-[0.9vw] sticky right-0 bg-white z-10 shadow-md">
-                          <div className="flex items-center flex-row justify-center w-full h-full gap-[0.2vw]">
+                          <div className="flex items-center flex-row justify-center w-full h-full gap-[0.5vw]">
                             <button className="bg-UNA-Blue-Dark text-white px-[0.5vw] py-[0.3vh] rounded hover:bg-UNA-Blue-Light">
                               Ver
                             </button>
+                            {/* Checkbox para seleccionar reporte */}
+                            <div className="flex items-center">
+                              <input
+                                type="checkbox"
+                                checked={selectedReports.includes(index)}
+                                onChange={() => toggleReportSelection(index)}
+                                className="w-[1vw] h-[1vw] cursor-pointer"
+                                title="Seleccionar para descargar PDF"
+                              />
+                              <label 
+                                className="ml-[0.3vw] text-[0.8vw] cursor-pointer" 
+                                onClick={() => toggleReportSelection(index)}
+                              >
+                                PDF
+                              </label>
+                            </div>
                           </div>
                         </td>
                       </tr>
