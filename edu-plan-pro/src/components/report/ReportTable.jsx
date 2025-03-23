@@ -282,7 +282,7 @@ const ReportTable = () => {
               handleCompleteFilter(column);
             }
           }}
-          className="bg-transparent text-black w-full outline-none border-b-[0.2vh] text-[0.9vw] border-solid border-UNA-Red"
+          className="bg-transparent text-black w-full outline-none border-b-[0.2vh] text-[0.9vw] border-solid border-UNA-Red font-normal"
           
         />
       </div>
@@ -315,7 +315,7 @@ const ReportTable = () => {
       </div>
 
       <div className="flex flex-col justify-center items-center w-full pl-[15vw] pr-[15vw]">
-        <div className="flex flex-row w-full items-center justify-end gap-[0.3vw] mb-[1vh]">
+        <div className="flex flex-row w-full items-center justify-end gap-[0.3vw]">
           <div
             title="Limpiar filtros."
             className="flex h-[3.8vh] items-center cursor-pointer hover:scale-110"
@@ -326,19 +326,19 @@ const ReportTable = () => {
         </div>
         
         {/* Contenedor principal con ancho fijo para controlar la visibilidad */}
-        <div className="w-full flex justify-center items-center mt-0">
+        <div className="flex justify-center items-center mt-0 w-full overflow-x-auto">
           {/* Añadimos un contenedor con ancho fijo para las primeras 6 columnas */}
           <div style={{ 
-            width: '72vw', /* 6 columnas × 12vw = 72vw */
-            position: 'relative',
+            width: '70vw', /* 6 columnas × 12vw = 72vw */
+            position: 'static ',
             overflow: 'hidden' 
           }}>
             {/* Contenedor con scroll horizontal */}
             <div className="overflow-x-auto" style={{ 
-              width: '100%',
+              width: '98%',
               position: 'relative'
             }}>
-              <table className="table-auto" style={{ minWidth: '168vw' }}> {/* 14 columnas × 12vw = 168vw */}
+              <table className="table-auto" style={{ minWidth: '100vw' }}> {/* 14 columnas × 12vw = 168vw */}
                 <thead>
                   <tr>
                     {/* Primeras 6 columnas visibles */}
