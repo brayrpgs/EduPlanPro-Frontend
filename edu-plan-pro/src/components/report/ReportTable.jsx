@@ -18,6 +18,11 @@ const ReportTable = () => {
   
   // Flag para controlar si se está ejecutando una búsqueda
   const isSearchingRef = useRef(false);
+
+  const formatDate = (date) => {
+    const newDate = new Date(date);
+    return newDate.toISOString().split("T")[0];
+  };
   
   // Columnas de la tabla
   const columns = [
@@ -283,7 +288,7 @@ const ReportTable = () => {
       </div>
     );
   };
-
+  
   return (
     <main>
       <div className="mt-[3vh] justify-start flex pr-[15vw] pl-[15vw]">
@@ -365,8 +370,8 @@ const ReportTable = () => {
                         {/* Primeras 6 columnas visibles */}
                         {visibleColumns.map((column) => (
                           <td key={`${index}-${column}`} className="border-[0.1vh] border-gray-400 px-[1vw] py-[1.5vh] text-[0.9vw] text-center items-center break-words whitespace-normal max-w-[15vw] bg-white">
-                            {report[column]}
-                          </td>
+                          {column === "AÑO" ? formatDate(report[column]) : report[column]}
+                        </td>
                         ))}
                         
                         {/* Columnas ocultas que aparecerán al hacer scroll */}
