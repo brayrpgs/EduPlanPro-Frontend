@@ -6,6 +6,7 @@ import Loading from "../componentsgeneric/Loading";
 import { FetchValidate } from "../../utilities/FetchValidate";
 import SearchIcon from "../icons/SearchIcons/SearchIcon";
 import FilterOffIcon from "../icons/MainIcons/FilterOffIcon.jsx";
+import Swal from "sweetalert2";
 
 export const AttachmentTeachers = ({ idCourseProgram }) => {
   const [isOpen, setIsOpen] = useState(false);
@@ -31,6 +32,17 @@ export const AttachmentTeachers = ({ idCourseProgram }) => {
     setSelectedTeachers([]);
     setTeachers([]);
     setIsOpen(false);
+  }
+
+  function finallyActions(){
+    setSearchQuery({
+      nameTeach: "",
+      secName: "",
+      idCard: "",
+      email: "",
+    });
+    setSelectedTeachers([]);
+    setTeachers([]);
   }
 
   const handleSelectChange = (event) => {
@@ -71,25 +83,35 @@ export const AttachmentTeachers = ({ idCourseProgram }) => {
 
   const asociateTeachersAndCoursesPrograms = async () => {
     const url = "http://localhost:3001/teachercourseprogram";
-  
+    let response;
+
     try {
       setLoading(true);
-
+      if(selectedTeachers.length < 1){
+        Swal.fire({
+          title: "No has seleccionado ningún profesor para asociar",
+          text: "Selecciona al menos un profesor y vuelvelo a intentar.",
+          icon: "info",
+          iconColor: "#0C71C3",
+          confirmButtonColor: "#a31e32",
+          confirmButtonText: "Aceptar",
+          
+        });
+        setLoading(false)
+      }
       for (let i = 0; i < selectedTeachers.length; i++) {
-        
         const teacher = selectedTeachers[i];
         const options = {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({
             ID_TEACHER: teacher.ID_TEACHER,
-            ID_COURSE_PROGRAM: idCourseProgram
+            ID_COURSE_PROGRAM: idCourseProgram,
           }),
           credentials: "include",
-          
         };
 
-        const response = await FetchValidate(url, options, navigate);
+        response = await FetchValidate(url, options, navigate);
         console.log(`Respuesta del profesor ${teacher.ID_TEACHER}:`, response);
 
         if (!response) {
@@ -97,8 +119,25 @@ export const AttachmentTeachers = ({ idCourseProgram }) => {
             "Error en la solicitud para el profesor:",
             teacher.ID_TEACHER
           );
-          continue; 
+          continue;
         }
+
+      }
+      if (response.code === "200") {
+        Swal.fire({
+          title: "¡La asociación se completó exitosamente!",
+          icon: "success",
+          iconColor: "#7cda24",
+          confirmButtonColor: "#a31e32",
+          confirmButtonText: "Aceptar",
+          willClose: () => {
+            finallyActions();
+          },
+        }).then((result) => {
+          if (result.isConfirmed) {
+            finallyActions();
+          }
+        });
       }
     } catch (error) {
       setLoading(false);
@@ -279,7 +318,7 @@ export const AttachmentTeachers = ({ idCourseProgram }) => {
                 Profesores seleccionados
               </h1>
 
-              <div className=" h-full w-full flex flex-row justify-center border-black border-[0.2vw] overflow-y-auto gap-[0.6%] flex-wrap">
+              <div className=" h-full w-full flex flex-row content-start justify-center border-black border-[0.2vw] overflow-y-auto gap-[0.6%] flex-wrap">
                 {selectedTeachers.map((teacher) => (
                   <div
                     key={teacher.ID_TEACHER}
