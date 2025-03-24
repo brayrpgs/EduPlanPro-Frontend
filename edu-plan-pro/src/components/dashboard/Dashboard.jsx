@@ -10,28 +10,28 @@ function Dashboard() {
     {
       title: "Escuela",
       icon: AccountCircleAdmin,
-      description: "Gestionar información de las Escuelas",
+      description: "Gestionar información de las escuelas",
       path: "/school",
       iconBg: "bg-blue-100",
     },
     {
       title: "Facultad",
       icon: AccountCircleAdmin,
-      description: "Gestionar información de las Facultades",
+      description: "Gestionar información de las facultades",
       path: "/faculty",
       iconBg: "bg-green-100",
     },
     {
       title: "Docentes",
       icon: AccountCircleAdmin,
-      description: "Gestionar información de los Docentes",
+      description: "Gestionar información de los docentes",
       path: "/teacher",
       iconBg: "bg-yellow-100",
     },
     {
       title: "Usuarios",
       icon: AccountCircleAdmin,
-      description: "Gestionar información de las Usuarios",
+      description: "Gestionar información de las usuarios",
       path: "/user",
       iconBg: "bg-purple-100",
     },
@@ -42,6 +42,22 @@ function Dashboard() {
       path: "/report",
       iconBg: "bg-purple-100",
     },
+    {
+      title: "Planes de estudio",
+      icon: AccountCircleAdmin,
+      description: "Gestionar información de los planes de estudio",
+      path: "/studyplans",
+      iconBg: "bg-purple-100",
+    },
+    
+    {
+      title: "Programas del Curso",
+      icon: AccountCircleAdmin,
+      description: "Gestionar información de los programas del curso",
+      path: "/coursesprogram",
+      iconBg: "bg-purple-100",
+    },
+ 
   ]
 
   const handleNavigate = (path) => {
@@ -55,7 +71,7 @@ function Dashboard() {
       <main className="overflow-auto p-[1.5vh] bg-gray-50">
         <div className="max-w-[70vw] mx-auto">
           <div className="mb-[1.5vh]">
-            <h1 className="text-[2vw] font-bold">Dashboard</h1>
+            <h1 className="text-[2vw] font-bold">Inicio</h1>
            
           </div>
 
@@ -72,7 +88,7 @@ function Dashboard() {
                 <h2 className="text-[1.2vw] font-semibold mb-[0.5vh]">{module.title}</h2>
                 <p className="text-gray-600 mb-[1vh] text-[0.9vw]">{module.description}</p>
                 <div className="flex items-center text-blue-600 font-medium text-[0.9vw]">
-                  Administrar {module.title}
+                  Administrar {module.title.toLowerCase()}
                   <svg className="w-[1vw] h-[1vw] ml-[0.25vw]" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                     <path
                       d="M5 12H19M19 12L12 5M19 12L12 19"

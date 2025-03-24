@@ -5,6 +5,7 @@ import Pagination from "../pagination/Pagination";
 import Loading from "../componentsgeneric/Loading";
 import { FetchValidate } from "../../utilities/FetchValidate";
 import { useNavigate } from "react-router-dom";
+import { ShowPDF } from "../componentsgeneric/ShowPDF";
 
 const ReportTable = () => {
   // State Management
@@ -112,9 +113,11 @@ const ReportTable = () => {
         body: JSON.stringify(requestData)
       };
 
-      console.log("Realizando búsqueda con página:", page, "Filtros:", filters);
+  
       
       const response = await FetchValidate(url, options, navigate);
+
+      console.log("Respuesta de búsqueda:", response);
 
       if (!response) {
         console.error("Error en la solicitud");
@@ -155,7 +158,7 @@ const ReportTable = () => {
 
   // Manejador para cuando el usuario completa la entrada (sale del campo o presiona Tab/Enter)
   const handleCompleteFilter = (column) => {
-    console.log("Completando filtro para:", column, "con valor:", filters[column]);
+   
     
     // Solo iniciar búsqueda si hay al menos un filtro con valor
     if (hasActiveFilter()) {
@@ -358,7 +361,7 @@ const ReportTable = () => {
                     ))}
                     
                     {/* Columna de acciones fija */}
-                    <th className="border-[0.1vh] border-gray-400 px-[1vw] py-[1vh] w-[10vw] text-[1vw] text-UNA-Red sticky right-0 bg-white z-10 shadow-md">
+                    <th className="border-[0.1vh] border-gray-400 px-[1vw] py-[1vh] w-[10vw] text-[1vw] text-UNA-Red  right-0 bg-white z-10 shadow-md">
                       Acciones
                     </th>
                   </tr>
@@ -382,11 +385,13 @@ const ReportTable = () => {
                         ))}
                         
                         {/* Columna de acciones fija */}
-                        <td className="border-[0.1vh] border-gray-400 px-[1vw] py-[1vh] text-[0.9vw] sticky right-0 bg-white z-10 shadow-md">
+                        <td className="border-[0.1vh] border-gray-400 px-[1vw] py-[1vh] text-[0.9vw]  right-0 bg-white z-10 shadow-md">
                           <div className="flex items-center flex-row justify-center w-full h-full gap-[0.5vw]">
-                            <button className="bg-UNA-Blue-Dark text-white px-[0.5vw] py-[0.3vh] rounded hover:bg-UNA-Blue-Light">
-                              Ver
-                            </button>
+                          <ShowPDF title={"PDF asociado al plan de estudio"} 
+                              pdfUrl= {report["PDF_URL"]}
+                            />
+                            
+                            
                             {/* Checkbox para seleccionar reporte */}
                             <div className="flex items-center">
                               <input
