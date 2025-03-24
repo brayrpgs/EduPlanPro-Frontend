@@ -16,7 +16,7 @@ const ReportTable = () => {
   const [filtersApplied, setFiltersApplied] = useState(false);
   const [selectedReports, setSelectedReports] = useState([]); // State for tracking selected reports
   const navigate = useNavigate();
-  
+
   // Flag para controlar si se está ejecutando una búsqueda
   const isSearchingRef = useRef(false);
 
@@ -24,7 +24,7 @@ const ReportTable = () => {
     const newDate = new Date(date);
     return newDate.toISOString().split("T")[0];
   };
-  
+
   // Columnas de la tabla
   const columns = [
     "PROGRAMA DEL CURSO",
@@ -72,7 +72,7 @@ const ReportTable = () => {
     if (isSearchingRef.current) {
       return;
     }
-    
+
     // No realizar búsqueda si no hay filtros
     if (!hasActiveFilter()) {
       setReports([]);
@@ -80,11 +80,11 @@ const ReportTable = () => {
       setFiltersApplied(false);
       return;
     }
-    
+
     // Marcar que estamos buscando
     isSearchingRef.current = true;
     setLoading(true);
-    
+
     try {
       // Preparar los parámetros
       const params = columns.map(column => {
@@ -113,8 +113,8 @@ const ReportTable = () => {
         body: JSON.stringify(requestData)
       };
 
-  
-      
+
+
       const response = await FetchValidate(url, options, navigate);
 
       console.log("Respuesta de búsqueda:", response);
@@ -142,7 +142,7 @@ const ReportTable = () => {
   const handlePageChange = (page) => {
     // Actualizar la página actual
     setCurrentPage(page);
-    
+
     // Realizar la búsqueda inmediatamente con la nueva página
     performSearch(page);
   };
@@ -158,13 +158,13 @@ const ReportTable = () => {
 
   // Manejador para cuando el usuario completa la entrada (sale del campo o presiona Tab/Enter)
   const handleCompleteFilter = (column) => {
-   
-    
+
+
     // Solo iniciar búsqueda si hay al menos un filtro con valor
     if (hasActiveFilter()) {
       // Reiniciar a la primera página
       setCurrentPage(1);
-      
+
       // Realizar la búsqueda con los filtros actuales
       performSearch(1);
     }
@@ -178,7 +178,7 @@ const ReportTable = () => {
       resetFilters[column] = "";
     });
     setFilters(resetFilters);
-    
+
     // Limpiar resultados y estado
     setCurrentPage(1);
     setReports([]);
@@ -205,39 +205,39 @@ const ReportTable = () => {
       alert("Por favor seleccione al menos un reporte para descargar");
       return;
     }
-    
+
     setLoading(true);
-    
+
     try {
       // Obtener los reportes seleccionados
       const reportsToDownload = selectedReports.map(index => reports[index]);
-      
+
       // Procesar cada reporte seleccionado
       for (const report of reportsToDownload) {
         const pdfUrl = report.PDF_URL;
-        
+
         if (!pdfUrl) {
           console.warn(`No hay URL de PDF disponible para el reporte: ${report["PROGRAMA DEL CURSO"]}`);
           continue;
         }
-        
+
         // Construir nombre de archivo
         const fileName = `${report["PROGRAMA DEL CURSO"]}_${report["NRC"]}_${report["AÑO"]}.pdf`;
-        
+
         // Descargar el archivo
         try {
           const response = await fetch(pdfUrl, {
             method: "GET",
             credentials: "include",
           });
-          
+
           if (!response.ok) {
             throw new Error(`Error al descargar: ${response.status} ${response.statusText}`);
           }
-          
+
           const blob = await response.blob();
           const url = window.URL.createObjectURL(blob);
-          
+
           // Crear enlace y descargar
           const link = document.createElement('a');
           link.href = url;
@@ -245,17 +245,17 @@ const ReportTable = () => {
           document.body.appendChild(link);
           link.click();
           link.remove();
-          
+
           // Liberar la URL del objeto
           window.URL.revokeObjectURL(url);
         } catch (error) {
           console.error(`Error descargando ${fileName}:`, error);
         }
       }
-      
+
       // Desmarcar las selecciones después de la descarga
       setSelectedReports([]);
-      
+
     } catch (error) {
       console.error("Error en la descarga de PDFs:", error);
     } finally {
@@ -275,23 +275,20 @@ const ReportTable = () => {
           type="text"
           value={filters[column]}
           onChange={(e) => handleFilterChange(e.target.value, column)}
-          onBlur={() => handleCompleteFilter(column)}
+
           onKeyDown={(e) => {
-            if (e.key === 'Enter' || e.key === 'Tab') {
-              // Prevenir comportamiento por defecto para Tab dentro del input
-              if (e.key === 'Tab') {
-                e.preventDefault();
-              }
+            if (e.key === 'Enter') {
+
               handleCompleteFilter(column);
             }
           }}
           className="bg-transparent text-black w-full outline-none border-b-[0.2vh] text-[0.9vw] border-solid border-UNA-Red font-normal"
-          
+
         />
       </div>
     );
   };
-  
+
   return (
     <main>
       <div className="mt-[3vh] justify-start flex pr-[15vw] pl-[15vw]">
@@ -300,15 +297,14 @@ const ReportTable = () => {
             Reportes
           </h1>
           {/* Botón de descarga */}
-          <button 
+          <button
             onClick={downloadSelectedPDFs}
             disabled={selectedReports.length === 0}
-            className={`mr-[1vw] px-[1vw] py-[0.5vh] rounded-[0.3vh] text-white text-[1vw] ${
-              selectedReports.length > 0 
-                ? 'bg-green-600 hover:bg-green-700' 
+            className={`mr-[1vw] px-[1vw] py-[0.5vh] rounded-[0.3vh] text-white text-[1vw] ${selectedReports.length > 0
+                ? 'bg-green-600 hover:bg-green-700'
                 : 'bg-gray-500 cursor-not-allowed'
-            }`}
-            title={selectedReports.length > 0 
+              }`}
+            title={selectedReports.length > 0
               ? `Descargar ${selectedReports.length} reporte(s) seleccionado(s)`
               : 'Seleccione al menos un reporte para descargar'}
           >
@@ -318,30 +314,30 @@ const ReportTable = () => {
       </div>
 
       <div className="flex flex-col justify-center items-center w-full pl-[15vw] pr-[15vw]">
-        <div className="flex flex-row w-full items-center justify-end gap-[0.3vw]">
+        <div className="flex flex-row w-full items-center justify-center gap-[0.3vw] mt-[2vh]">
           <div
             title="Limpiar filtros."
-            className="flex h-[3.8vh] items-center cursor-pointer hover:scale-110"
+            className="flex h-[5vh] items-center cursor-pointer hover:scale-110"
             onClick={handleClearFilters}
           >
             <FilterOffIcon />
           </div>
         </div>
-        
+
         {/* Contenedor principal con ancho fijo para controlar la visibilidad */}
-        <div className="flex justify-center items-center mt-0 w-full overflow-x-auto">
+        <div className="flex justify-center items-center mt-[2vh] w-full overflow-x-auto">
           {/* Añadimos un contenedor con ancho fijo para las primeras 6 columnas */}
-          <div style={{ 
+          <div style={{
             width: '70vw', /* 6 columnas × 12vw = 72vw */
             position: 'static ',
-            overflow: 'hidden' 
+            overflow: 'hidden'
           }}>
             {/* Contenedor con scroll horizontal */}
-            <div className="overflow-x-auto" style={{ 
+            <div className="overflow-x-auto" style={{
               width: '98%',
               position: 'relative'
             }}>
-              <table className="table-auto" style={{ minWidth: '100vw' }}> {/* 14 columnas × 12vw = 168vw */}
+              <table className="table-auto" style={{ minWidth: '100vw' }}>
                 <thead>
                   <tr>
                     {/* Primeras 6 columnas visibles */}
@@ -351,7 +347,7 @@ const ReportTable = () => {
                         {renderSearchInput(column)}
                       </th>
                     ))}
-                    
+
                     {/* Columnas ocultas que aparecerán al hacer scroll */}
                     {hiddenColumns.map((column) => (
                       <th key={column} className="border-[0.1vh] border-gray-400 px-[1vw] py-[1vh] text-center text-[1vw] text-UNA-Red whitespace-nowrap min-w-[12vw] bg-white">
@@ -359,7 +355,7 @@ const ReportTable = () => {
                         {renderSearchInput(column)}
                       </th>
                     ))}
-                    
+
                     {/* Columna de acciones fija */}
                     <th className="border-[0.1vh] border-gray-400 px-[1vw] py-[1vh] w-[10vw] text-[1vw] text-UNA-Red  right-0 bg-white z-10 shadow-md">
                       Acciones
@@ -373,25 +369,25 @@ const ReportTable = () => {
                         {/* Primeras 6 columnas visibles */}
                         {visibleColumns.map((column) => (
                           <td key={`${index}-${column}`} className="border-[0.1vh] border-gray-400 px-[1vw] py-[1.5vh] text-[0.9vw] text-center items-center break-words whitespace-normal max-w-[15vw] bg-white">
-                          {column === "AÑO" ? formatDate(report[column]) : report[column]}
-                        </td>
+                            {column === "AÑO" ? formatDate(report[column]) : report[column]}
+                          </td>
                         ))}
-                        
+
                         {/* Columnas ocultas que aparecerán al hacer scroll */}
                         {hiddenColumns.map((column) => (
                           <td key={`${index}-${column}`} className="border-[0.1vh] border-gray-400 px-[1vw] py-[1.5vh] text-[0.9vw] text-center items-center break-words whitespace-normal max-w-[15vw] bg-white">
                             {report[column]}
                           </td>
                         ))}
-                        
+
                         {/* Columna de acciones fija */}
                         <td className="border-[0.1vh] border-gray-400 px-[1vw] py-[1vh] text-[0.9vw]  right-0 bg-white z-10 shadow-md">
                           <div className="flex items-center flex-row justify-center w-full h-full gap-[0.5vw]">
-                          <ShowPDF title={"PDF asociado al plan de estudio"} 
-                              pdfUrl= {report["PDF_URL"]}
+                            <ShowPDF title={"PDF asociado al plan de estudio"}
+                              pdfUrl={report["PDF_URL"]}
                             />
-                            
-                            
+
+
                             {/* Checkbox para seleccionar reporte */}
                             <div className="flex items-center">
                               <input
@@ -401,8 +397,8 @@ const ReportTable = () => {
                                 className="w-[1vw] h-[1vw] cursor-pointer"
                                 title="Seleccionar para descargar PDF"
                               />
-                              <label 
-                                className="ml-[0.3vw] text-[0.8vw] cursor-pointer" 
+                              <label
+                                className="ml-[0.3vw] text-[0.8vw] cursor-pointer"
                                 onClick={() => toggleReportSelection(index)}
                               >
                                 PDF
@@ -418,7 +414,7 @@ const ReportTable = () => {
                         colSpan={columns.length + 1}
                         className="px-[1vw] py-[1vh] text-[0.9vw] text-center items-center pt-[3.5vh]"
                       >
-                        {!filtersApplied 
+                        {!filtersApplied
                           ? "Ingrese al menos un filtro para buscar reportes."
                           : "No se encontraron reportes con los filtros seleccionados."}
                       </td>
@@ -429,7 +425,7 @@ const ReportTable = () => {
             </div>
           </div>
         </div>
-        
+
         <div className="w-full h-[8vh] flex justify-center items-center">
           {filtersApplied && totalItems > 0 && (
             <Pagination
