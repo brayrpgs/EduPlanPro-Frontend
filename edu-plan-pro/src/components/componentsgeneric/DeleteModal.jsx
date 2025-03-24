@@ -47,9 +47,9 @@ const DeleteModal = ({
   const handleDelete = async () => {
     let dataToSend = {}
     if (!verifyState()){
-      dataToSend = { stat: 0 };
+      dataToSend = { stat: "0" };
     } else {
-      dataToSend = { STATE: 0 };
+      dataToSend = { STATE: "0" };
     }
     
     fields.forEach(({ field, value, defaultValue }) => {
