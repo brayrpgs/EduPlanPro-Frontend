@@ -42,10 +42,6 @@ function Dashboard() {
       path: "/report",
       iconBg: "bg-purple-100",
     },
-    
-    
-    
-       
   ]
 
   const handleNavigate = (path) => {
@@ -56,28 +52,28 @@ function Dashboard() {
     <div className="grid grid-rows-[auto_1fr_auto] min-h-screen h-screen">
       <Header />
 
-      <main className="overflow-auto p-6 bg-gray-50">
-        <div className="max-w-7xl mx-auto">
-          <div className="mb-6">
-            <h1 className="text-2xl font-bold">Dashboard</h1>
-            <p className="text-gray-600 mt-1">Administración</p>
+      <main className="overflow-auto p-[1.5vh] bg-gray-50">
+        <div className="max-w-[70vw] mx-auto">
+          <div className="mb-[1.5vh]">
+            <h1 className="text-[2vw] font-bold">Dashboard</h1>
+           
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-[1.5vw]">
             {modules.map((module) => (
               <div
                 key={module.path}
-                className="border rounded-lg p-6 bg-white shadow-sm hover:shadow-md transition-shadow cursor-pointer"
+                className="border rounded-[0.5vh] p-[1.5vh] bg-white shadow-sm hover:shadow-md transition-shadow cursor-pointer"
                 onClick={() => handleNavigate(module.path)}
               >
-                <div className={`w-12 h-12 rounded-full ${module.iconBg} flex items-center justify-center mb-4`}>
-                  <module.icon className="w-6 h-6" />
+                <div className={`w-[3vw] h-[3vw] rounded-full ${module.iconBg} flex items-center justify-center mb-[1vh]`}>
+                  <module.icon className="w-[1.5vw] h-[1.5vw]" />
                 </div>
-                <h2 className="text-xl font-semibold mb-2">{module.title}</h2>
-                <p className="text-gray-600 mb-4">{module.description}</p>
-                <div className="flex items-center text-blue-600 font-medium">
+                <h2 className="text-[1.2vw] font-semibold mb-[0.5vh]">{module.title}</h2>
+                <p className="text-gray-600 mb-[1vh] text-[0.9vw]">{module.description}</p>
+                <div className="flex items-center text-blue-600 font-medium text-[0.9vw]">
                   Administrar {module.title}
-                  <svg className="w-4 h-4 ml-1" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <svg className="w-[1vw] h-[1vw] ml-[0.25vw]" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                     <path
                       d="M5 12H19M19 12L12 5M19 12L12 19"
                       stroke="currentColor"
