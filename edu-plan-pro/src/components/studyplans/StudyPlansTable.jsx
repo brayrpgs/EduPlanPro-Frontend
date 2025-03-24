@@ -9,7 +9,6 @@ import { FetchValidate } from "../../utilities/FetchValidate";
 import { useNavigate } from "react-router-dom";
 import StudyPlansAdd from "./StudyPlansAdd";
 import StudyPlansUpdate from "./StudyPlansUpdate";
-import ShowIcon from "../icons/CrudIcons/ShowIcon";
 import { ShowPDF } from "../componentsgeneric/ShowPDF";
 
 const StudyPlansTable = () => {
@@ -72,12 +71,12 @@ const StudyPlansTable = () => {
       try {
         setLoading(true);
         const response = await FetchValidate(url, options, navigate);
-        console.log(response);
+      
         if (!response) {
           console.error("Error en la solicitud");
           return;
         }
-
+        console.log(response)
         setFilteredStudyPlans(response.data.rows || []);
         setTotalItems(response.data.totalMatches || 0);
       } catch (error) {
