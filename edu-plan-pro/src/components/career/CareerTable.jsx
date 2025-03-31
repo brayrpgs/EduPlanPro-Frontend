@@ -2,17 +2,18 @@ import React, { useState, useEffect, useCallback } from "react";
 import DeleteModal from "../componentsgeneric/DeleteModal";
 import SearchInput from "../search/SearchInput";
 import FilterOffIcon from "../icons/MainIcons/FilterOffIcon";
-import FacultyAdd from "./CareerAdd";
+import CareerAdd from "./CareerAdd";
 import MainSearch from "../search/MainSearch";
 import Pagination from "../pagination/Pagination";
-import FacultyUpdate from "./CareerUpdate";
+import CareerUpdate from "./CareerUpdate";
 import Loading from "../componentsgeneric/Loading";
 import { FetchValidate } from "../../utilities/FetchValidate";
 import { useNavigate } from "react-router-dom";
 
-const FacultyTable = () => {
-  const [faculties, setFaculties] = useState([]);
-  const [filteredFaculty, setFilteredFaculty] = useState([]);
+const CareerTable = () => {
+
+  const [careers, setCareers] = useState([]);
+  const [filteredCareers, setFilteredCareers] = useState([]);
   const [searchTerm, setSearchTerm] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
   const [totalItems, setTotalItems] = useState(0);
@@ -22,11 +23,10 @@ const FacultyTable = () => {
 
   const navigate = useNavigate();
 
-  const loadFacultyData = useCallback(
+  const loadCareerData = useCallback(
     async (page) => {
       setCurrentPage(page);
       const searchQuery = searchTerm ? `&search=${searchTerm}` : "&search=";
-
       const url = `http://localhost:3001/searchcareer?name=search-page&numPage=${page}${searchQuery}`;
 
       const options = {
@@ -43,10 +43,10 @@ const FacultyTable = () => {
           return;
         }
 
-        setFilteredFaculty(response.data.rows || []);
+        setFilteredCareers(response.data.rows || []);
         setTotalItems(response.data.totalMatches || 0);
       } catch (error) {
-        setLoading(false);
+        console.error(error);
       } finally {
         setLoading(false);
       }
@@ -55,8 +55,8 @@ const FacultyTable = () => {
   );
 
   useEffect(() => {
-    loadFacultyData(currentPage);
-  }, [currentPage, loadFacultyData]);
+    loadCareerData(currentPage);
+  }, [currentPage, loadCareerData]);
 
   const handlePageChange = (page) => {
     setCurrentPage(page);
@@ -64,13 +64,9 @@ const FacultyTable = () => {
 
   const handleSearch = (value, type = "main") => {
     if (type === "main") {
-      if (filter.trim() !== "") {
-        setFilter("");
-      }
+      if (filter.trim() !== "") setFilter("");
     } else if (type === "filter") {
-      if (mainFilter.trim() !== "") {
-        setMainFilter("");
-      }
+      if (mainFilter.trim() !== "") setMainFilter("");
     }
 
     setSearchTerm(value);
@@ -87,16 +83,16 @@ const FacultyTable = () => {
   return (
     <main>
       <div className="mt-[3vh] justify-start flex pr-[15vw] pl-[15vw]">
-        <div className="bg-UNA-Blue-Dark w-full max-w-screens flex rounded-[0.5vh] items-center">
+        <div className="bg-UNA-Blue-Dark w-full flex rounded-[0.5vh] items-center">
           <h1 className="ml-[1vw] my-[0.5vh] text-[2vw] text-white">
-            Administrar facultades
+            Administrar escuelas
           </h1>
           <div className="flex ml-auto justify-end mr-[1vw]">
-            <FacultyAdd
+            <CareerAdd
               totalItems={totalItems}
               currentPage={currentPage}
-              loadData={loadFacultyData}
-              textToAdd={"Agregar facultad"}
+              loadData={loadCareerData}
+              textToAdd={"Agregar escuela"}
             />
           </div>
         </div>
@@ -105,7 +101,7 @@ const FacultyTable = () => {
       <div className="flex flex-col justify-center items-center w-full pl-[15vw] pr-[15vw]">
         <div className="flex flex-row w-full items-center justify-end gap-[0.3vw]">
           <MainSearch
-            placeholder={"Ingrese el nombre de una facultad"}
+            placeholder={"Ingrese el nombre de una escuela"}
             onSearch={(value) => handleSearch(value, "main")}
             mainFilter={mainFilter}
             setMainFilter={setMainFilter}
@@ -124,10 +120,10 @@ const FacultyTable = () => {
             <thead>
               <tr>
                 <th className="border-[0.1vh] border-gray-400 px-[1vw] py-[1vh] text-center text-[1vw] text-UNA-Red">
-                  Facultad
+                  Escuela
                   <div
                     className="w-full flex flex-col "
-                    title="Filtrar por facultad."
+                    title="Filtrar por escuela."
                   >
                     <SearchInput
                       onSearch={(value) => handleSearch(value, "filter")}
@@ -143,35 +139,34 @@ const FacultyTable = () => {
               </tr>
             </thead>
             <tbody>
-              {filteredFaculty.length > 0 ? (
-                filteredFaculty.map((faculty) => (
-                  <tr key={faculty.ID_FACULTY}>
-                    <td className="border-[0.1vh] border-gray-400 px-[1vw] py-[1.5vh] text-[0.9vw] text-center items-center break-words whitespace-normal max-w-[15vw]">
-                      {faculty["NOMBRE FACULTAD"]}
+              {filteredCareers.length > 0 ? (
+                filteredCareers.map((career) => (
+                  <tr key={career.ID_CAREER}>
+                    <td className="border-[0.1vh] border-gray-400 px-[1vw] py-[1.5vh] text-[0.9vw] text-center break-words max-w-[15vw]">
+                      {career["NOMBRE ESCUELA"]}
                     </td>
                     <td className="border-[0.1vh] border-gray-400 px-[1vw] py-[1vh] text-[0.9vw]">
-                      <div className="flex items-center flex-row justify-center w-full h-full gap-[0.2vw]">
-                        <FacultyUpdate
-                          faculty={faculty}
+                      <div className="flex justify-center items-center gap-[0.2vw]">
+                        <CareerUpdate
+                          faculty={career}
                           currentPage={currentPage}
-                          loadData={loadFacultyData}
+                          loadData={loadCareerData}
                         />
-
                         <DeleteModal
                           deleteMethod={"PATCH"}
-                          item={faculty}
-                          itemName={"NOMBRE FACULTAD"}
+                          item={career}
+                          itemName={"NOMBRE ESCUELA"}
                           fields={[
-                            { field: "NOMBRE FACULTAD", value: "desc" },
-                            { field: "ID_FACULTY", value: "id" },
+                            { field: "NOMBRE ESCUELA", value: "desc" },
+                            { field: "ID_CAREER", value: "id" },
                           ]}
-                          items={faculties}
-                          setItems={setFaculties}
+                          items={careers}
+                          setItems={setCareers}
                           totalItems={totalItems}
                           currentPage={currentPage}
-                          loadData={loadFacultyData}
-                          destination={"faculty"}
-                          componentName={"facultad"}
+                          loadData={loadCareerData}
+                          destination={"career"}
+                          componentName={"escuela"}
                           componentPrefix={"la"}
                         />
                       </div>
@@ -182,15 +177,16 @@ const FacultyTable = () => {
                 <tr>
                   <td
                     colSpan={2}
-                    className="px-[1vw] py-[1vh] text-[0.9vw] text-center items-center pt-[3.5vh]"
+                    className="px-[1vw] py-[1vh] text-[0.9vw] text-center pt-[3.5vh]"
                   >
-                    No se encontraron facultades registradas.
+                    No se encontraron escuelas registradas.
                   </td>
                 </tr>
               )}
             </tbody>
           </table>
         </div>
+
         <div className="w-full h-[8vh] flex justify-center items-center">
           <Pagination
             totalItems={totalItems}
@@ -205,4 +201,4 @@ const FacultyTable = () => {
   );
 };
 
-export default FacultyTable;
+export default CareerTable;

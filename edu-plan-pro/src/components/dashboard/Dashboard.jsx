@@ -26,7 +26,7 @@ function Dashboard() {
       title: "Carreras",
       icon: AccountCircleAdmin,
       description: "Gestionar información Carreras",
-      path: "/faculty", //cambiar a carrera
+      path: "/career", //cambiar a carrera
       iconBg: "bg-green-100",
     },
     {

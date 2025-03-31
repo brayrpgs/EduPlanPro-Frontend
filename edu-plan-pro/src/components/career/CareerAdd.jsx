@@ -6,7 +6,7 @@ import { useNavigate } from "react-router-dom";
 import { FetchValidate } from "../../utilities/FetchValidate";
 import Loading from "../componentsgeneric/Loading";
 
-const FacultyAdd = ({ totalItems, currentPage, loadData, textToAdd }) => {
+const CareerAdd = ({ totalItems, currentPage, loadData, textToAdd }) => {
   const [isOpen, setIsOpen] = useState(false);
   const [name, setName] = useState("");
   const [loading, setLoading] = useState(false);
@@ -28,8 +28,8 @@ const FacultyAdd = ({ totalItems, currentPage, loadData, textToAdd }) => {
       Swal.fire({
         icon: "error",
         iconColor: "#a31e32",
-        title: "No se pudo agregar la facultad",
-        text: "El nombre de la facultad no puede ir vacío, completa el campo e intenta de nuevo.",
+        title: "No se pudo agregar la escuela",
+        text: "El nombre de la escuela no puede ir vacío, completa el campo e intenta de nuevo.",
         confirmButtonText: "Aceptar",
         confirmButtonColor: "#A31E32",
       });
@@ -38,8 +38,8 @@ const FacultyAdd = ({ totalItems, currentPage, loadData, textToAdd }) => {
       Swal.fire({
         icon: "error",
         iconColor: "#a31e32",
-        title: "No se pudo agregar la facultad",
-        text: "El nombre de la facultad debe contener solo letras, sin números ni caracteres especiales.",
+        title: "No se pudo agregar la escuela",
+        text: "El nombre de la escuela debe contener solo letras, sin números ni caracteres especiales.",
         confirmButtonText: "Aceptar",
         confirmButtonColor: "#A31E32",
       });
@@ -53,9 +53,7 @@ const FacultyAdd = ({ totalItems, currentPage, loadData, textToAdd }) => {
     if (validateData(nameInput.trim())) {
       const url = "http://localhost:3001/career";
 
-      const body = {
-        name: nameInput,
-      };
+      const body = { name: nameInput };
 
       const options = {
         method: "POST",
@@ -77,34 +75,29 @@ const FacultyAdd = ({ totalItems, currentPage, loadData, textToAdd }) => {
           Swal.fire({
             icon: "success",
             iconColor: "#7cda24",
-            title: "Facultad agregada",
-            text: "La facultad se agregó correctamente.",
+            title: "Escuela agregada",
+            text: "La escuela se agregó correctamente.",
             confirmButtonText: "Aceptar",
             confirmButtonColor: "#A31E32",
-            willClose: () => {
-              finallyActions();
-            },
+            willClose: () => finallyActions(),
           }).then((result) => {
-            if (result.isConfirmed) {
-              finallyActions();
-            }
+            if (result.isConfirmed) finallyActions();
           });
         } else if (response.code === "500") {
           Swal.fire({
             icon: "error",
             iconColor: "#a31e32",
-            title: "No se pudo agregar la facultad",
-            text: "No se pudo registrar la facultad, ya existe una con ese nombre.",
+            title: "No se pudo agregar la escuela",
+            text: "Ya existe una escuela con ese nombre.",
             confirmButtonText: "Aceptar",
             confirmButtonColor: "#A31E32",
           });
         }
       } catch (error) {
-        setLoading(false);
         Swal.fire({
           icon: "error",
-          title: "Error al agregar la facultad",
-          text: "Intenta de nuevo mas tarde.",
+          title: "Error al agregar la escuela",
+          text: "Intenta de nuevo más tarde.",
           confirmButtonColor: "#A31E32",
         });
         console.error(error);
@@ -118,7 +111,7 @@ const FacultyAdd = ({ totalItems, currentPage, loadData, textToAdd }) => {
     <div>
       <div className="bg-UNA-Green-Light/70 flex flex-row justify-start items-center h-[3.8vh] rounded-[1vh] hover:scale-105">
         <button
-          title="Agregar facultad."
+          title="Agregar escuela."
           className="flex flex-row h-full items-center justify-start ml-[0.5vw] mr-[0.5vw] gap-[0.25vw]"
           onClick={() => {
             setIsOpen(true);
@@ -128,80 +121,65 @@ const FacultyAdd = ({ totalItems, currentPage, loadData, textToAdd }) => {
           <div className="flex h-[3vh]">
             <AddIcon />
           </div>
-
           <span className="flex text-white text-[0.9vw]">{textToAdd}</span>
         </button>
       </div>
 
-      <div
-        className={`${
-          !isOpen && "hidden"
-        } bg-gray-600/50 min-h-screen w-full z-40 flex fixed top-0 right-0 left-0 backdrop-blur-[0.3vh]`}
-        onClick={() => {
-          setIsOpen(false);
-          setName("");
-        }}
-      ></div>
+      {isOpen && (
+        <>
+          <div
+            className="bg-gray-600/50 min-h-screen w-full z-40 flex fixed top-0 right-0 left-0 backdrop-blur-[0.3vh]"
+            onClick={() => {
+              setIsOpen(false);
+              setName("");
+            }}
+          ></div>
 
-      <div
-        className={` ${
-          isOpen
-            ? "w-[30vw] min-h-[30vh] overflow-hidden bg-white fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 z-50 flex flex-col items-center justify-start border-[-1vh] border-gray-400 rounded-[1vh] transition-[width] duration-300"
-            : "w-[0%]"
-        }`}
-      >
-        {isOpen && (
-          <div className="w-full flex flex-col justify-center items-center ">
-            <div className="bg-UNA-Red w-full h-[7vh] flex top-0 absolute border-white z-50 rounded-t-[1vh] text-start items-center">
-              <h1 className="text-[3vh] ml-[1vw] text-white">
-                Agregar facultad
-              </h1>
-
-              <div className="w-[5vw] right-0 h-full absolute flex text-center justify-center items-center">
-                <button
-                  className="flex w-[60%] h-[60%] bg-UNA-Pink-Light rounded-[0.5vh] items-center justify-center"
-                  onClick={() => {
-                    setIsOpen(false);
-                    setName("");
-                  }}
-                >
-                  <div className="flex w-[75%] h-[75%]">
-                    <CancelActionIcon />
-                  </div>
-                </button>
-              </div>
+          <div className="w-[30vw] min-h-[30vh] overflow-hidden bg-white fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 z-50 flex flex-col items-center justify-start border-[-1vh] border-gray-400 rounded-[1vh] transition-[width] duration-300">
+            <div className="bg-UNA-Red w-full h-[7vh] flex items-center justify-between px-[1vw] rounded-t-[1vh]">
+              <h1 className="text-[3vh] text-white">Agregar escuela</h1>
+              <button
+                className="flex w-[2.5vw] h-[2.5vw] bg-UNA-Pink-Light rounded-[0.5vh] items-center justify-center"
+                onClick={() => {
+                  setIsOpen(false);
+                  setName("");
+                }}
+              >
+                <div className="w-[75%] h-[75%]">
+                  <CancelActionIcon />
+                </div>
+              </button>
             </div>
 
-            <div className="w-full max-w-full mt-[7vh] mb-[7vh] flex flex-col items-start relative">
+            <div className="w-full mt-[7vh] mb-[7vh] flex flex-col items-start px-[1vw]">
               <label
-                className="text-left text- ml-[1vw] mt-[3vh] font-bold text-[1.3vw]"
-                htmlFor="facultyName"
+                htmlFor="careerName"
+                className="font-bold text-[1.3vw] mt-[3vh]"
               >
-                Nombre de la facultad
+                Nombre de la escuela
               </label>
-
               <input
-                className="w-[93%] mt-[1.1vh] ml-[1vw] h-[5vh] px-[1vw] focus:border-UNA-Red rounded-[1vh] outline-none text-[0.9vw] border-[0.1vh]"
+                id="careerName"
+                type="text"
+                className="w-full mt-[1.1vh] h-[5vh] px-[1vw] focus:border-UNA-Red rounded-[1vh] outline-none border-[0.1vh] text-[0.9vw]"
                 autoComplete="off"
                 spellCheck="false"
-                title="Ingrese un nombre. Asegurate que no incluya números ni carácteres especiales."
-                placeholder="Ingrese el nombre de la facultad"
+                placeholder="Ingrese el nombre de la escuela"
+                title="Ingrese un nombre. Asegúrese que no incluya números ni caracteres especiales."
                 value={name}
                 onChange={(e) => setName(e.target.value)}
-                id="facultyName"
-                type="text"
               />
             </div>
-            <div className="w-full h-[7vh] flex bottom-0 fixed border-white z-50 text-center justify-center items-center">
+
+            <div className="w-full h-[7vh] flex justify-center items-center gap-[1vw]">
               <button
-                className="border-[0.1vh] bg-UNA-Red text-white text-[0.9vw] rounded-[0.3vw] h-[60%] border-black w-[50%] ml-[1vw] mr-[0.1vw]"
+                className="bg-UNA-Red text-white text-[0.9vw] rounded-[0.3vw] h-[60%] border-black w-[40%]"
                 onClick={() => handleAdd(name)}
               >
                 Agregar
               </button>
               <button
-                className="border-[0.1vh] bg-UNA-Blue-Dark text-[0.9vw] text-white rounded-[0.3vw] h-[60%] border-black w-[50%] mr-[1vw] ml-[0.1vw]
-              "
+                className="bg-UNA-Blue-Dark text-white text-[0.9vw] rounded-[0.3vw] h-[60%] border-black w-[40%]"
                 onClick={() => {
                   setIsOpen(false);
                   setName("");
@@ -211,11 +189,11 @@ const FacultyAdd = ({ totalItems, currentPage, loadData, textToAdd }) => {
               </button>
             </div>
           </div>
-        )}
-      </div>
+        </>
+      )}
       {loading && <Loading />}
     </div>
   );
 };
 
-export default FacultyAdd;
+export default CareerAdd;
