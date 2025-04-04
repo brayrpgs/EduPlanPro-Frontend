@@ -13,11 +13,12 @@ import { useNavigate } from "react-router-dom";
 const CareerTable = () => {
   const [careers, setCareers] = useState([]);
   const [filteredCareers, setFilteredCareers] = useState([]);
-  const [searchTerm, setSearchTerm] = useState("");
+  const [searchTerms, setSearchTerms] = useState({ career: "", school: "" });
   const [currentPage, setCurrentPage] = useState(1);
   const [totalItems, setTotalItems] = useState(0);
   const [mainFilter, setMainFilter] = useState("");
-  const [filter, setFilter] = useState("");
+  const [careerFilter, setCareerFilter] = useState("");
+  const [schoolFilter, setSchoolFilter] = useState("");
   const [loading, setLoading] = useState(false);
 
   const navigate = useNavigate();
@@ -25,8 +26,7 @@ const CareerTable = () => {
   const loadCareerData = useCallback(
     async (page) => {
       setCurrentPage(page);
-
-      const url = `http://localhost:3001/searchcarreer?name=search-page&numPage=${page}&data=${searchTerm}&data2=&data3=&data4=`;
+      const url = `http://localhost:3001/searchcarreer?name=search-page&numPage=${page}&data=${searchTerms.career}&data2=${searchTerms.school}&data3=&data4=`;
 
       const options = {
         method: "GET",
@@ -36,13 +36,8 @@ const CareerTable = () => {
       try {
         setLoading(true);
         const response = await FetchValidate(url, options, navigate);
+        if (!response) return;
 
-        if (!response) {
-          console.error("Error en la solicitud");
-          return;
-        }
-
-        console.log(" Datos recibidos desde el backend:", response.data.rows);
         setFilteredCareers(response.data.rows || []);
         setTotalItems(response.data.totalMatches || 0);
       } catch (error) {
@@ -51,30 +46,36 @@ const CareerTable = () => {
         setLoading(false);
       }
     },
-    [searchTerm, navigate]
+    [searchTerms, navigate]
   );
 
   useEffect(() => {
     loadCareerData(currentPage);
   }, [currentPage, loadCareerData]);
 
-  const handlePageChange = (page) => {
-    setCurrentPage(page);
-  };
+  const handlePageChange = (page) => setCurrentPage(page);
 
   const handleSearch = (value, type = "main") => {
-    if (type === "main" && filter.trim() !== "") setFilter("");
-    if (type === "filter" && mainFilter.trim() !== "") setMainFilter("");
+    if (type === "main") {
+      setMainFilter(value);
+      setSearchTerms((prev) => ({ ...prev, career: value }));
+    } else if (type === "career") {
+      setCareerFilter(value);
+      setSearchTerms((prev) => ({ ...prev, career: value }));
+    } else if (type === "school") {
+      setSchoolFilter(value);
+      setSearchTerms((prev) => ({ ...prev, school: value }));
+    }
 
-    setSearchTerm(value);
     setCurrentPage(1);
   };
 
   const handleClearFilters = () => {
-    setSearchTerm("");
-    setCurrentPage(1);
+    setSearchTerms({ career: "", school: "" });
     setMainFilter("");
-    setFilter("");
+    setCareerFilter("");
+    setSchoolFilter("");
+    setCurrentPage(1);
   };
 
   return (
@@ -98,7 +99,7 @@ const CareerTable = () => {
       <div className="flex flex-col justify-center items-center w-full pl-[15vw] pr-[15vw]">
         <div className="flex flex-row w-full items-center justify-end gap-[0.3vw]">
           <MainSearch
-            placeholder={"Ingrese el nombre de una carrera"}
+            placeholder="Ingrese el nombre de una carrera"
             onSearch={(value) => handleSearch(value, "main")}
             mainFilter={mainFilter}
             setMainFilter={setMainFilter}
@@ -118,11 +119,22 @@ const CareerTable = () => {
               <tr>
                 <th className="border-[0.1vh] border-gray-400 px-[1vw] py-[1vh] text-center text-[1vw] text-UNA-Red">
                   Carrera
-                  <div title="Filtrar por carrera.">
+                  <div title="Filtrar por carrera">
                     <SearchInput
-                      onSearch={(value) => handleSearch(value, "filter")}
-                      filter={filter}
-                      setFilter={setFilter}
+                      onSearch={(value) => handleSearch(value, "career")}
+                      filter={careerFilter}
+                      setFilter={setCareerFilter}
+                      className="bg-transparent text-black w-full outline-none border-b-[0.2vh] text-[0.9vw] border-solid border-UNA-Red"
+                    />
+                  </div>
+                </th>
+                <th className="border-[0.1vh] border-gray-400 px-[1vw] py-[1vh] text-center text-[1vw] text-UNA-Red">
+                  Escuela
+                  <div title="Filtrar por escuela">
+                    <SearchInput
+                      onSearch={(value) => handleSearch(value, "school")}
+                      filter={schoolFilter}
+                      setFilter={setSchoolFilter}
                       className="bg-transparent text-black w-full outline-none border-b-[0.2vh] text-[0.9vw] border-solid border-UNA-Red"
                     />
                   </div>
@@ -138,6 +150,9 @@ const CareerTable = () => {
                   <tr key={career.ID_CAREER}>
                     <td className="border-[0.1vh] border-gray-400 px-[1vw] py-[1.5vh] text-[0.9vw] text-center break-words max-w-[15vw]">
                       {career["NOMBRE DE CARRERA"]}
+                    </td>
+                    <td className="border-[0.1vh] border-gray-400 px-[1vw] py-[1.5vh] text-[0.9vw] text-center break-words max-w-[15vw]">
+                      {career["NOMBRE DE LA ESCUELA"]}
                     </td>
                     <td className="border-[0.1vh] border-gray-400 px-[1vw] py-[1vh] text-[0.9vw]">
                       <div className="flex justify-center items-center gap-[0.2vw]">
@@ -170,7 +185,7 @@ const CareerTable = () => {
               ) : (
                 <tr>
                   <td
-                    colSpan={2}
+                    colSpan={3}
                     className="px-[1vw] py-[1vh] text-[0.9vw] text-center pt-[3.5vh]"
                   >
                     No se encontraron carreras registradas.

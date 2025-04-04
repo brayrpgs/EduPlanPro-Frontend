@@ -29,7 +29,7 @@ const CareerUpdate = ({ career, loadData, currentPage }) => {
   };
 
   const validateData = () => {
-    if (editedName.trim() === "" || editedCode.trim() === "" || selectedSchool === "") {
+    if (!editedName.trim() || !editedCode.trim() || !selectedSchool) {
       Swal.fire({
         icon: "error",
         title: "Campos incompletos",
@@ -46,7 +46,13 @@ const CareerUpdate = ({ career, loadData, currentPage }) => {
     const options = { method: "GET", credentials: "include" };
     try {
       const res = await FetchValidate(url, options, navigate);
-      if (res?.data?.rows) setSchools(res.data.rows);
+      if (res?.data?.rows) {
+        setSchools(res.data.rows);
+
+        // Seleccionar automáticamente la escuela relacionada
+        const schoolMatch = res.data.rows.find((s) => s.ID_SCHOOL === career.ID_SCHOOL);
+        if (schoolMatch) setSelectedSchool(schoolMatch.ID_SCHOOL);
+      }
     } catch (error) {
       console.error("Error al cargar escuelas:", error);
     }
@@ -103,10 +109,19 @@ const CareerUpdate = ({ career, loadData, currentPage }) => {
     setCareerToUpdate(career);
     setEditedName(career["NOMBRE DE CARRERA"]);
     setEditedCode(career["CODIGO DE CARRERA"]);
-    setSelectedSchool(career.ID_SCHOOL || "");
     loadSchools();
     setIsOpen(true);
   };
+
+  const closeModal = () => {
+    setIsOpen(false);
+    setCareerToUpdate(null);
+    setEditedName("");
+    setEditedCode("");
+    setSelectedSchool("");
+  };
+
+  
 
   return (
     <div>
@@ -118,48 +133,71 @@ const CareerUpdate = ({ career, loadData, currentPage }) => {
         <UpdateIcon />
       </button>
 
-      {isOpen && (
-        <>
-          <div
-            className="bg-gray-600/50 min-h-screen w-full z-40 fixed top-0 right-0 left-0 backdrop-blur-[0.3vh]"
-            onClick={() => setIsOpen(false)}
-          ></div>
+      {/* Fondo oscuro */}
+      <div
+        className={`${!isOpen && "hidden"} bg-gray-600/50 min-h-screen w-full z-40 fixed top-0 right-0 left-0 backdrop-blur-[0.3vh]`}
+        onClick={closeModal}
+      ></div>
 
-          <div className="w-[30vw] min-h-[30vh] bg-white fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 z-50 flex flex-col items-center rounded-[1vh]">
-            <div className="bg-UNA-Red w-full h-[7vh] flex items-center justify-between px-[1vw] rounded-t-[1vh]">
-              <h1 className="text-[3vh] text-white">Actualizar carrera</h1>
+      {/* Modal animado */}
+      <div
+        className={`${
+          isOpen
+           ? "w-[35vw] min-h-[30vh] overflow-hidden bg-white fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 z-50 flex flex-col items-center justify-start border-[-1vh] border-gray-400 rounded-[1vh] transition-[width] duration-300"
+          : "w-[15%]"
+        }`}
+      >
+        {isOpen && (
+         <div className="w-full flex flex-col justify-center items-center">
+         <div className="bg-UNA-Red w-full h-[7vh] flex top-0 absolute border-white z-50 rounded-t-[1vh] text-start items-center">
+           <h1 className="text-[3vh] ml-[1vw] text-white">Editar una carrera</h1>
+           <div className="w-[5vw] right-0 h-full absolute flex text-center justify-center items-center">
               <button
-                className="w-[2.5vw] h-[2.5vw] bg-UNA-Pink-Light rounded-[0.5vh] flex items-center justify-center"
-                onClick={() => setIsOpen(false)}
+                className="flex w-[60%] h-[60%] bg-UNA-Pink-Light rounded-[0.5vh] items-center justify-center"
+                onClick={closeModal}
               >
-                <div className="w-[75%] h-[75%]">
+                <div className="flex w-[75%] h-[75%]">
                   <CancelActionIcon />
                 </div>
               </button>
+              </div>
             </div>
 
-            <div className="w-full flex flex-col px-[1vw] my-[3vh] gap-[2vh]">
-              <label className="text-[1.2vw] font-semibold">Nombre de la carrera</label>
+            <div className="w-full max-w-full mt-[7vh] mb-[7vh] flex flex-col items-start relative">
+            <label
+                className="text-left text- ml-[1vw] mt-[3vh] font-bold text-[1.3vw]"
+                htmlFor="careerName"
+              >
+                Nombre de la carrera
+              </label>
               <input
                 type="text"
+                autoComplete="off"
+                spellCheck="false"
                 value={editedName}
                 onChange={(e) => setEditedName(e.target.value)}
-                className="w-full h-[5vh] px-[1vw] border rounded-[1vh] text-[0.9vw] outline-none"
+                className="w-[94%] mt-[1.1vh] ml-[1vw] h-[5vh] px-[1vw] focus:border-UNA-Red rounded-[1vh] outline-none text-[0.9vw] border-[0.1vh]"
               />
 
-              <label className="text-[1.2vw] font-semibold">Código</label>
+              <label className="text-left text- ml-[1vw] mt-[3vh] font-bold text-[1.3vw]">Código</label>
               <input
                 type="text"
+                 autoComplete="off"
+                spellCheck="false"
                 value={editedCode}
                 onChange={(e) => setEditedCode(e.target.value)}
-                className="w-full h-[5vh] px-[1vw] border rounded-[1vh] text-[0.9vw] outline-none"
+                className="w-[94%] mt-[1.1vh] ml-[1vw] h-[5vh] px-[1vw] focus:border-UNA-Red rounded-[1vh] outline-none text-[0.9vw] border-[0.1vh]"
               />
 
-              <label className="text-[1.2vw] font-semibold">Escuela</label>
+              <label className="text-left text- ml-[1vw] mt-[3vh] font-bold text-[1.3vw]">Escuela</label>
               <select
                 value={selectedSchool}
+                name="id"
+                id="id"
+                type="number"
+                title="Seleccione la escuela. Asegúrate de elegir una opción válida."
                 onChange={(e) => setSelectedSchool(e.target.value)}
-                className="w-full h-[5vh] px-[1vw] border rounded-[1vh] text-[0.9vw] outline-none"
+                className="mb-[3vh] cursor-pointer appearance-none w-[94%] mt-[1.1vh] text-[0.9vw] ml-[1vw] h-[5vh] px-[1vw] focus:border-UNA-Red rounded-[1vh] outline-none border-[0.1vh]"
               >
                 <option value="">Seleccione una escuela</option>
                 {schools.map((s) => (
@@ -170,23 +208,23 @@ const CareerUpdate = ({ career, loadData, currentPage }) => {
               </select>
             </div>
 
-            <div className="w-full h-[7vh] flex justify-center items-center gap-[1vw]">
+            <div className="w-full h-[7vh] flex bottom-0 fixed border-white z-50 text-center justify-center items-center">
               <button
-                className="bg-UNA-Red text-white text-[0.9vw] rounded-[0.3vw] h-[60%] w-[40%]"
+                className="border-[0.1vh] bg-UNA-Red text-white text-[0.9vw] rounded-[0.3vw] h-[60%] border-black w-[50%] ml-[1vw] mr-[0.1vw]"
                 onClick={handleUpdate}
               >
                 Actualizar
               </button>
               <button
-                className="bg-UNA-Blue-Dark text-white text-[0.9vw] rounded-[0.3vw] h-[60%] w-[40%]"
-                onClick={() => setIsOpen(false)}
+                className="border-[0.1vh] bg-UNA-Blue-Dark text-white text-[0.9vw] rounded-[0.3vw] h-[60%] border-black w-[50%] ml-[0.1vw] mr-[1vw]"
+                onClick={closeModal}
               >
                 Cancelar
               </button>
             </div>
           </div>
-        </>
-      )}
+        )}
+      </div>
 
       {loading && <Loading />}
     </div>

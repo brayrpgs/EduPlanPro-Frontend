@@ -24,7 +24,6 @@ const CareerAdd = ({ totalItems, currentPage, loadData, textToAdd }) => {
       const url = `http://localhost:3001/searchschool?name=search-page&numPage=1&search=&search2=`;
       const options = { method: "GET", credentials: "include" };
       const response = await FetchValidate(url, options, navigate);
-
       if (response && response.code === "200") {
         setSchoolList(response.data.rows);
       }
@@ -63,15 +62,14 @@ const CareerAdd = ({ totalItems, currentPage, loadData, textToAdd }) => {
     if (!validateData()) return;
 
     const url = "http://localhost:3001/carreer";
-
     const user = JSON.parse(sessionStorage.getItem("user"));
     const updatedBy = user?.ID_USER;
-    
+
     const body = {
       DSC_CARRER: name,
       DSC_CODE: code,
       ID_SCHOOL: parseInt(schoolId),
-      UPDATED_BY: updatedBy, 
+      UPDATED_BY: updatedBy,
     };
 
     const options = {
@@ -140,50 +138,74 @@ const CareerAdd = ({ totalItems, currentPage, loadData, textToAdd }) => {
         </button>
       </div>
 
-      {isOpen && (
-        <>
-          <div
-            className="bg-gray-600/50 min-h-screen w-full z-40 fixed top-0 right-0 left-0 backdrop-blur-[0.3vh]"
-            onClick={() => setIsOpen(false)}
-          ></div>
+      {/* Fondo oscuro del modal */}
+      <div
+        className={`${!isOpen && "hidden"
+          } bg-gray-600/50 min-h-screen w-full z-40 fixed top-0 right-0 left-0 backdrop-blur-[0.3vh]`}
+        onClick={() => setIsOpen(false)}
+      ></div>
 
-          <div className="w-[30vw] min-h-[30vh] bg-white fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 z-50 flex flex-col items-center rounded-[1vh]">
-            <div className="bg-UNA-Red w-full h-[7vh] flex items-center justify-between px-[1vw] rounded-t-[1vh]">
-              <h1 className="text-[3vh] text-white">Agregar carrera</h1>
+      {/* Modal con efecto de expansión */}
+      <div
+        className={`${isOpen
+          ? "w-[35vw] min-h-[30vh] overflow-hidden bg-white fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 z-50 flex flex-col items-center justify-start border-[-1vh] border-gray-400 rounded-[1vh] transition-[width] duration-300"
+          : "w-[15%]"
+          }`}
+      >
+        {isOpen && (
+          <div className="w-full flex flex-col justify-center items-center">
+            <div className="bg-UNA-Red w-full h-[7vh] flex top-0 absolute border-white z-50 rounded-t-[1vh] text-start items-center">
+              <h1 className="text-[3vh] ml-[1vw] text-white">Agregar carrera</h1>
+              <div className="w-[5vw] right-0 h-full absolute flex text-center justify-center items-center">
               <button
-                className="w-[2.5vw] h-[2.5vw] bg-UNA-Pink-Light rounded-[0.5vh] flex justify-center items-center"
+                className="flex w-[60%] h-[60%] bg-UNA-Pink-Light rounded-[0.5vh] items-center justify-center"
                 onClick={() => setIsOpen(false)}
               >
-                <div className="w-[75%] h-[75%]">
+                <div className="flex w-[75%] h-[75%]">
                   <CancelActionIcon />
                 </div>
               </button>
+              </div>
             </div>
 
-            <div className="w-full flex flex-col gap-[1.5vh] mt-[7vh] mb-[2vh] px-[1vw]">
-              <label className="text-[1.3vw] font-bold">Nombre de la carrera</label>
+            <div className="w-full max-w-full mt-[7vh] mb-[7vh] flex flex-col items-start relative">
+            <label
+                className="text-left text- ml-[1vw] mt-[3vh] font-bold text-[1.3vw]"
+                htmlFor="careerName"
+              >
+                Nombre de la carrera
+              </label>
               <input
                 type="text"
+                autoComplete="off"
+                spellCheck="false"
                 placeholder="Digite el nombre de la carrera"
                 value={name}
+                id="careerName"
                 onChange={(e) => setName(e.target.value)}
-                className="w-full h-[5vh] px-[1vw] rounded-[1vh] border-[0.1vh] text-[0.9vw]"
+                className="w-[94%] mt-[1.1vh] ml-[1vw] h-[5vh] px-[1vw] focus:border-UNA-Red rounded-[1vh] outline-none text-[0.9vw] border-[0.1vh]"
               />
 
-              <label className="text-[1.3vw] font-bold">Código de la carrera</label>
+              <label className="text-left text- ml-[1vw] mt-[3vh] font-bold text-[1.3vw]">Código de la carrera</label>
               <input
                 type="text"
+                autoComplete="off"
+                spellCheck="false"
                 placeholder="Digite el código de la carrera"
                 value={code}
                 onChange={(e) => setCode(e.target.value)}
-                className="w-full h-[5vh] px-[1vw] rounded-[1vh] border-[0.1vh] text-[0.9vw]"
+                className="w-[94%] mt-[1.1vh] ml-[1vw] h-[5vh] px-[1vw] focus:border-UNA-Red rounded-[1vh] outline-none text-[0.9vw] border-[0.1vh]"
               />
 
-              <label className="text-[1.3vw] font-bold">Escuela</label>
+              <label className="text-left text- ml-[1vw] mt-[3vh] font-bold text-[1.3vw]">Escuela</label>
               <select
                 value={schoolId}
+                name="id"
+                id="id"
+                type="number"
+                 title="Seleccione la escuela. Asegúrate de elegir una opción válida."
                 onChange={(e) => setSchoolId(e.target.value)}
-                className="w-full h-[5vh] px-[1vw] rounded-[1vh] border-[0.1vh] text-[0.9vw]"
+                className="mb-[3vh] cursor-pointer appearance-none w-[94%] mt-[1.1vh] text-[0.9vw] ml-[1vw] h-[5vh] px-[1vw] focus:border-UNA-Red rounded-[1vh] outline-none border-[0.1vh]"
               >
                 <option value="">Seleccione una escuela</option>
                 {schoolList.map((school) => (
@@ -194,23 +216,23 @@ const CareerAdd = ({ totalItems, currentPage, loadData, textToAdd }) => {
               </select>
             </div>
 
-            <div className="w-full h-[7vh] flex justify-center items-center gap-[1vw]">
+            <div className="w-full h-[7vh] flex bottom-0 fixed border-white z-50 text-center justify-center items-center">
               <button
-                className="bg-UNA-Red text-white text-[0.9vw] rounded-[0.3vw] h-[60%] border-black w-[40%]"
+                className="border-[0.1vh] bg-UNA-Red text-white text-[0.9vw] rounded-[0.3vw] h-[60%] border-black w-[50%] ml-[1vw] mr-[0.1vw]"
                 onClick={handleAdd}
               >
                 Agregar
               </button>
               <button
-                className="bg-UNA-Blue-Dark text-white text-[0.9vw] rounded-[0.3vw] h-[60%] border-black w-[40%]"
+                className="border-[0.1vh] bg-UNA-Blue-Dark text-white text-[0.9vw] rounded-[0.3vw] h-[60%] border-black w-[50%] ml-[0.1vw] mr-[1vw]"
                 onClick={() => setIsOpen(false)}
               >
                 Cancelar
               </button>
             </div>
           </div>
-        </>
-      )}
+        )}
+      </div>
 
       {loading && <Loading />}
     </div>
