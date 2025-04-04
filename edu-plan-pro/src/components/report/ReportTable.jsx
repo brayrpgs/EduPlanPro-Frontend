@@ -368,10 +368,13 @@ const ReportTable = () => {
                       <tr key={index}>
                         {/* Primeras 6 columnas visibles */}
                         {visibleColumns.map((column) => (
-                          <td key={`${index}-${column}`} className="border-[0.1vh] border-gray-400 px-[1vw] py-[1.5vh] text-[0.9vw] text-center items-center break-words whitespace-normal max-w-[15vw] bg-white">
-                            {column === "AÑO" ? formatDate(report[column]) : report[column]}
-                          </td>
-                        ))}
+                      <td 
+                        key={`${index}-${column}`} 
+                        className="border-[0.1vh] border-gray-400 px-[1vw] py-[1.5vh] text-[0.9vw] text-center items-center break-words whitespace-normal max-w-[15vw]"
+                      >
+                        {column === "AÑO" ? formatDate(report[column]) : report[column]}
+                      </td>
+                    ))}
 
                         {/* Columnas ocultas que aparecerán al hacer scroll */}
                         {hiddenColumns.map((column) => (
@@ -381,11 +384,12 @@ const ReportTable = () => {
                         ))}
 
                         {/* Columna de acciones fija */}
-                        <td className="border-[0.1vh] border-gray-400 px-[1vw] py-[1vh] text-[0.9vw]  right-0 bg-white z-10 shadow-md">
-                          <div className="flex items-center flex-row justify-center w-full h-full gap-[0.5vw]">
-                            <ShowPDF title={"PDF asociado al plan de estudio"}
-                              pdfUrl={report["PDF_URL"]}
-                            />
+                        <td className="border-[0.1vh] border-gray-400 px-[1vw] py-[1vh] text-[0.9vw]">
+                      <div className="flex items-center flex-row justify-center w-full h-full gap-[0.5vw]">
+                        <ShowPDF 
+                          title={"PDF asociado al plan de estudio"}
+                          pdfUrl={report["PDF_URL"]}
+                        />
 
 
                             {/* Checkbox para seleccionar reporte */}

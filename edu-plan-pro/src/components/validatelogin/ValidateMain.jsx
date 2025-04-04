@@ -2,6 +2,19 @@ import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { FetchValidate } from "../../utilities/FetchValidate.js";
 import Loading from "../componentsgeneric/Loading.jsx";
+import { atom } from 'jotai'
+import Footer from "../footer/Footer.jsx";
+
+
+export const preference = atom([
+  {
+    font: 'Times New Roman',
+    size_font: 'Big',
+    headear_footer_color: 'Red',
+    icon_size: 'Big',
+    theme: 'dark',
+  }])
+
 
 const ValidateLogin = ({ Login }) => {
   const [flag, setFlag] = useState(false);
@@ -19,7 +32,7 @@ const ValidateLogin = ({ Login }) => {
 
       try {
         const response = await FetchValidate(url, options, navigate);
-
+        
         if (response.code === "200") {
           setFlag(false);
           navigate("/dashboard");

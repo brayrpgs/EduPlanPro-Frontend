@@ -14,10 +14,11 @@ import Pagination from "./pagination/Pagination.jsx";
 import ServerError from "./validatelogin/ServerError.jsx";
 import PageNotFound from "./componentsgeneric/PageNotFound.jsx";
 import CoursesProgram from "./coursesprogram/CoursesProgram.jsx";
-
+import { useThemePreferences } from './preference/useThemePreferences.jsx';
 
 
 function App() {
+  useThemePreferences();
   return (
     
     <BrowserRouter>
