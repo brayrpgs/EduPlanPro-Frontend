@@ -2,18 +2,6 @@ import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { FetchValidate } from "../../utilities/FetchValidate.js";
 import Loading from "../componentsgeneric/Loading.jsx";
-import { atom } from 'jotai'
-import Footer from "../footer/Footer.jsx";
-
-
-export const preference = atom([
-  {
-    font: 'Times New Roman',
-    size_font: 'Big',
-    headear_footer_color: 'Red',
-    icon_size: 'Big',
-    theme: 'dark',
-  }])
 
 
 const ValidateLogin = ({ Login }) => {
@@ -35,7 +23,7 @@ const ValidateLogin = ({ Login }) => {
         
         if (response.code === "200") {
           setFlag(false);
-          navigate("/dashboard");
+          navigate("/dashboard");          
         } else {
           setFlag(true);
         }
@@ -43,10 +31,9 @@ const ValidateLogin = ({ Login }) => {
         navigate("/serverError"); // Si hay error, redirige a una página específica
 
       } finally {
-        setLoading(false); 
+        setLoading(false);     
       }
     };
-
     validatemain();
   }, [navigate]);
 

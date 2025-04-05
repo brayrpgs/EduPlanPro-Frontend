@@ -11,6 +11,7 @@ import StudyPlans from "./studyplans/StudyPlans.jsx"
 import ValidateLogin from "./validatelogin/ValidateLogin.jsx";
 import ValidateMain from "./validatelogin/ValidateMain.jsx";
 import Pagination from "./pagination/Pagination.jsx";
+import Preference from "./preference/preference.jsx";
 import ServerError from "./validatelogin/ServerError.jsx";
 import PageNotFound from "./componentsgeneric/PageNotFound.jsx";
 import CoursesProgram from "./coursesprogram/CoursesProgram.jsx";
@@ -36,6 +37,7 @@ function App() {
         <Route path="/dashboard" element={<ValidateLogin Component={Dashboard} />} />
         <Route path="/studyPlans" element={<ValidateLogin Component={StudyPlans} />} />
         <Route path="/pagination" element={<ValidateLogin Component={Pagination} />} />
+        <Route path="/preference" element={<ValidateLogin Component={Preference} />} />
         <Route path="/serverError" element={<ServerError/>} />
         <Route path="*" Component={PageNotFound} />
       </Routes>

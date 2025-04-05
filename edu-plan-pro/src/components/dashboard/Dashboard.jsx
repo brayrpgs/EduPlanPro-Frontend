@@ -82,8 +82,8 @@ function Dashboard() {
                 className="border rounded-[0.5vh] p-[1.5vh] bg-white shadow-sm hover:shadow-md transition-shadow cursor-pointer"
                 onClick={() => handleNavigate(module.path)}
               >
-                <div className={`w-[3vw] h-[3vw] rounded-full ${module.iconBg} flex items-center justify-center mb-[1vh]`}>
-                  <module.icon className="w-[1.5vw] h-[1.5vw]" />
+                <div className={`icon rounded-full ${module.iconBg} flex items-center justify-center mb-[1vh]`}>
+                  <module.icon className="icon-inner" />
                 </div>
                 <h2 className="text-[1.2vw] font-semibold mb-[0.5vh]">{module.title}</h2>
                 <p className="text-gray-600 mb-[1vh] text-[0.9vw]">{module.description}</p>

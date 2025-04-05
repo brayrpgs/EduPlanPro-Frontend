@@ -243,5 +243,31 @@
   .font-small p, .font-medium p, .font-large p {
     font-size: calc(0.3vw * var(--font-multiplier)) !important;
   }
-
+  body:not(.icon-size-big):not(.icon-size-small) .icon {
+    width: 2.5vw;
+    height: 2.5vw;
+  }
+  body:not(.icon-size-big):not(.icon-size-small) .icon-inner {
+    width: 1.2vw;
+    height: 1.2vw;
+  }
+  
+  body.icon-size-big .icon {
+    width: 3vw;
+    height: 3vw;
+  }
+  body.icon-size-big .icon-inner {
+    width: 1.5vw;
+    height: 1.5vw;
+  }
+  
+  /* Small */
+  body.icon-size-small .icon {
+    width: 2vw;
+    height: 2vw;
+  }
+  body.icon-size-small .icon-inner {
+    width: 1vw;
+    height: 1vw;
+  }
 }

@@ -2,10 +2,21 @@ import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { FetchValidate } from "../../utilities/FetchValidate";
 import Loading from "../componentsgeneric/Loading.jsx";
+import { atom, useAtom } from 'jotai';
+
+export const preference = atom([
+  {
+    font: 'Playfair Display SC',
+    size_fonzt: 'Medium',
+    headear_footer_color: 'Red',
+    icon_size: 'Medium',
+    theme: 'light',
+  }])
 
 const ValidateLogin = ({ Component }) => {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [loading, setLoading] = useState(true);
+  const [prefs, setPrefs] = useAtom(preference);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -32,9 +43,31 @@ const ValidateLogin = ({ Component }) => {
         setLoading(false); 
       }
     };
+
+    const loadPreferences = async () => {
+      const url = "http://localhost:3001/preferences";
+      const options = {
+        method: "GET",
+        credentials: "include",
+      };
+    
+      try {
+        const response = await FetchValidate(url, options, navigate);
+        
+    
+        if (response && response.data && response.data.length > 0) {
+          setPrefs(response.data);
+        }
+      
+      } catch (error) {
+        console.error("Error loading preferences:", error);
+        
+      }
+    };
     
     validatelogin(); // Llama a validatelogin
-  }, [navigate]);
+    loadPreferences();
+  }, [navigate,setPrefs]);
 
   if (loading) {
     return <Loading />; 
