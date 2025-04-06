@@ -3,17 +3,21 @@ import { useNavigate } from "react-router-dom";
 import { FetchValidate } from "../../utilities/FetchValidate";
 import Loading from "../componentsgeneric/Loading";
 import { useAtomValue } from 'jotai';
-import { preference } from '../validatelogin/ValidateLogin.jsx'; 
+import { preference as preferenceAtom } from '../validatelogin/ValidateLogin.jsx'; 
 
-const Preferences = () => {  // Changed from lowercase to uppercase
+const Preferences = () => {
+  // Valores predeterminados específicos
+  const defaultPreferences = {
+    font: "Playfair Display SC",
+    size_font: "Medium",
+    header_footer_color: "Red",
+    icon_size: "Medium",
+    theme: "light"
+  };
+
   // State Management
-  const [preference, setPreference] = useState({
-    font: 'Playfair Display SC',
-    size_fonzt: 'Medium',
-    headear_footer_color: 'Red',
-    icon_size: 'Medium',
-    theme: 'light',
-  });
+  const [preference, setPreference] = useState(defaultPreferences);
+  const preferenceValue = useAtomValue(preferenceAtom);
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState("");
   const [hasExistingPreference, setHasExistingPreference] = useState(false);
@@ -26,7 +30,15 @@ const Preferences = () => {  // Changed from lowercase to uppercase
   const iconSizeOptions = ["Big", "Medium", "Small"];
   const themeOptions = ["dark", "light"];
 
-  // Load existing preferences on component mount
+
+  
+  // Sync with atom value when it changes
+  useEffect(() => {
+    if (preferenceValue) {
+      setPreference(preferenceValue);
+    }
+  }, [preferenceValue]);
+
   useEffect(() => {
     const loadPreferences = async () => {
       const url = "http://localhost:3001/preferences";
@@ -34,19 +46,24 @@ const Preferences = () => {  // Changed from lowercase to uppercase
         method: "GET",
         credentials: "include",
       };
-
+  
       try {
         setLoading(true);
         const response = await FetchValidate(url, options, navigate);
-
+  
         if (!response) {
           console.error("Error fetching preferences");
           return;
         }
-
+  
         if (response.data && response.data.length > 0) {
-          setPreference(response.data[0]);
+          // Extract the preferences from the PREFERENCIAS object
+          const userPreferences = response.data[0].PREFERENCIAS;
+          setPreference(userPreferences);
           setHasExistingPreference(true);
+        } else {
+          // Si no hay preferencias existentes, establecer las predeterminadas
+          setPreference(defaultPreferences);
         }
       } catch (error) {
         console.error("Error loading preferences:", error);
@@ -58,7 +75,6 @@ const Preferences = () => {  // Changed from lowercase to uppercase
     loadPreferences();
   }, [navigate]);
 
-
   const handleChange = (e) => {
     const { name, value } = e.target;
     setPreference((prev) => ({
@@ -67,40 +83,105 @@ const Preferences = () => {  // Changed from lowercase to uppercase
     }));
   };
 
+  const formatPreferences = () => {
+    return {
+      "PREFERENCES": {
+        "font": preference.font || defaultPreferences.font,
+        "size_font": preference.size_font || defaultPreferences.size_font,
+        "header_footer_color": preference.header_footer_color || defaultPreferences.header_footer_color,
+        "icon_size": preference.icon_size || defaultPreferences.icon_size,
+        "theme": preference.theme || defaultPreferences.theme
+      }
+    };
+  };
 
-  const savePreferences = async () => {
+  // Create new preferences with POST
+  const createPreferences = async () => {
+    // Forzar el uso de los valores predeterminados si es necesario
+    if (!preference.font && !preference.size_font && !preference.header_footer_color && 
+        !preference.icon_size && !preference.theme) {
+      setPreference(defaultPreferences);
+    }
+    
+    const formattedData = formatPreferences();
+    console.log("Creating new preferences:", formattedData);
     const url = "http://localhost:3001/preferences";
-    const method = hasExistingPreference ? "PATCH" : "POST";
     
     const options = {
-      method,
+      method: "POST",
       credentials: "include",
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify(preference),
+      body: JSON.stringify(formattedData),
     };
-
+  
     try {
       setLoading(true);
+      console.log("POST request options:", options);
       const response = await FetchValidate(url, options, navigate);
-
+      console.log("POST response:", response);
+  
       if (!response) {
-        console.error("Error saving preferences");
-        setMessage("Error al guardar las preferencias");
+        console.error("Error creating preferences");
+        setMessage("Error al crear las preferencias");
         return;
       }
-
-      setMessage("Preferencias guardadas correctamente");
+  
+      setMessage("Preferencias creadas correctamente");
       setHasExistingPreference(true);
     } catch (error) {
-      console.error("Error saving preferences:", error);
-      setMessage("Error al guardar las preferencias");
+      console.error("Error creating preferences:", error);
+      setMessage("Error al crear las preferencias");
     } finally {
       setLoading(false);
     }
   };
 
+  // Update existing preferences with PATCH
+  const updatePreferences = async () => {
+    const formattedData = formatPreferences();
+    console.log("Updating existing preferences:", formattedData);
+    const url = "http://localhost:3001/preferences";
+    
+    const options = {
+      method: "PATCH",
+      credentials: "include",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(formattedData),
+    };
+  
+    try {
+      setLoading(true);
+      console.log("PATCH request options:", options);
+      const response = await FetchValidate(url, options, navigate);
+      console.log("PATCH response:", response);
+  
+      if (!response) {
+        console.error("Error updating preferences");
+        setMessage("Error al actualizar las preferencias");
+        return;
+      }
+  
+      setMessage("Preferencias actualizadas correctamente");
+    } catch (error) {
+      console.error("Error updating preferences:", error);
+      setMessage("Error al actualizar las preferencias");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  // Decide whether to create or update preferences
+  const savePreferences = () => {
+    if (hasExistingPreference) {
+      updatePreferences();
+    } else {
+      createPreferences();
+    }
+  };
 
   const deletePreferences = async () => {
     const url = "http://localhost:3001/preferences";
@@ -121,13 +202,7 @@ const Preferences = () => {  // Changed from lowercase to uppercase
 
       setMessage("Preferencias eliminadas correctamente");
       setHasExistingPreference(false);
-      setPreference({
-        font: 'Playfair Display SC',
-        size_font: 'Medium',
-        headear_footer_color: 'Red',
-        icon_size: 'Medium',
-        theme: 'light',
-      });
+      setPreference(defaultPreferences);
     } catch (error) {
       console.error("Error deleting preferences:", error);
       setMessage("Error al eliminar las preferencias");
@@ -135,6 +210,7 @@ const Preferences = () => {  // Changed from lowercase to uppercase
       setLoading(false);
     }
   };
+
 
   return (
     <main>
@@ -163,7 +239,7 @@ const Preferences = () => {  // Changed from lowercase to uppercase
                 <td className="border-[0.1vh] border-gray-400 px-[1vw] py-[1vh]">
                   <select
                     name="font"
-                    value={preference.font}
+                    value={preference.font || defaultPreferences.font}
                     onChange={handleChange}
                     className="w-full p-[0.5vh] text-[0.9vw]"
                   >
@@ -180,7 +256,7 @@ const Preferences = () => {  // Changed from lowercase to uppercase
                 <td className="border-[0.1vh] border-gray-400 px-[1vw] py-[1vh]">
                   <select
                     name="size_font"
-                    value={preference.size_font}
+                    value={preference.size_font || defaultPreferences.size_font}
                     onChange={handleChange}
                     className="w-full p-[0.5vh] text-[0.9vw]"
                   >
@@ -196,8 +272,8 @@ const Preferences = () => {  // Changed from lowercase to uppercase
                 </td>
                 <td className="border-[0.1vh] border-gray-400 px-[1vw] py-[1vh]">
                   <select
-                    name="headear_footer_color"
-                    value={preference.headear_footer_color}
+                    name="header_footer_color"
+                    value={preference.header_footer_color || defaultPreferences.header_footer_color}
                     onChange={handleChange}
                     className="w-full p-[0.5vh] text-[0.9vw]"
                   >
@@ -214,7 +290,7 @@ const Preferences = () => {  // Changed from lowercase to uppercase
                 <td className="border-[0.1vh] border-gray-400 px-[1vw] py-[1vh]">
                   <select
                     name="icon_size"
-                    value={preference.icon_size}
+                    value={preference.icon_size || defaultPreferences.icon_size}
                     onChange={handleChange}
                     className="w-full p-[0.5vh] text-[0.9vw]"
                   >
@@ -231,12 +307,12 @@ const Preferences = () => {  // Changed from lowercase to uppercase
                 <td className="border-[0.1vh] border-gray-400 px-[1vw] py-[1vh]">
                   <select
                     name="theme"
-                    value={preference.theme}
+                    value={preference.theme || defaultPreferences.theme}
                     onChange={handleChange}
                     className="w-full p-[0.5vh] text-[0.9vw]"
                   >
                     {themeOptions.map(option => (
-                      <option key={option} value={option}>{option === 'dark' ? 'dark' : 'light'}</option>
+                      <option key={option} value={option}>{option}</option>
                     ))}
                   </select>
                 </td>
@@ -266,4 +342,4 @@ const Preferences = () => {  // Changed from lowercase to uppercase
   );
 };
 
-export default Preferences; 
+export default Preferences;
