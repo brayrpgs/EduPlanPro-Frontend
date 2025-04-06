@@ -13,12 +13,13 @@ import { useNavigate } from "react-router-dom";
 const CareerTable = () => {
   const [careers, setCareers] = useState([]);
   const [filteredCareers, setFilteredCareers] = useState([]);
-  const [searchTerms, setSearchTerms] = useState({ career: "", school: "" });
+  const [searchTerms, setSearchTerms] = useState({ data: "", data2: "", data3: "", data4: "" });
   const [currentPage, setCurrentPage] = useState(1);
   const [totalItems, setTotalItems] = useState(0);
   const [mainFilter, setMainFilter] = useState("");
   const [careerFilter, setCareerFilter] = useState("");
-  const [schoolFilter, setSchoolFilter] = useState("");
+  const [data2Filter, setData2Filter] = useState("");
+  const [data3Filter, setData3Filter] = useState("");
   const [loading, setLoading] = useState(false);
 
   const navigate = useNavigate();
@@ -26,8 +27,13 @@ const CareerTable = () => {
   const loadCareerData = useCallback(
     async (page) => {
       setCurrentPage(page);
-      const url = `http://localhost:3001/searchcarreer?name=search-page&numPage=${page}&data=${searchTerms.career}&data2=${searchTerms.school}&data3=&data4=`;
 
+      const searchQuery = searchTerms
+      ? `&data=${searchTerms["data"]}&data2=${searchTerms["data2"]}&data3=${searchTerms["data3"]}&data4=${searchTerms["data4"]}`
+      : "&data=&data2=&data3=&data4=";
+
+      const url = `http://localhost:3001/searchcarreer?name=search-page&numPage=${page}${searchQuery}`;
+      console.log("URL:", url); // Debugging line
       const options = {
         method: "GET",
         credentials: "include",
@@ -37,7 +43,7 @@ const CareerTable = () => {
         setLoading(true);
         const response = await FetchValidate(url, options, navigate);
         if (!response) return;
-
+        console.log("Response:", response);
         setFilteredCareers(response.data.rows || []);
         setTotalItems(response.data.totalMatches || 0);
       } catch (error) {
@@ -57,24 +63,37 @@ const CareerTable = () => {
 
   const handleSearch = (value, type = "main") => {
     if (type === "main") {
-      setMainFilter(value);
-      setSearchTerms((prev) => ({ ...prev, career: value }));
-    } else if (type === "career") {
-      setCareerFilter(value);
-      setSearchTerms((prev) => ({ ...prev, career: value }));
-    } else if (type === "school") {
-      setSchoolFilter(value);
-      setSearchTerms((prev) => ({ ...prev, school: value }));
+      if (careerFilter.trim() !== "") {
+        setCareerFilter("");
+      }
+      setSearchTerms((prevState) => ({
+        ...prevState,
+        data: value,
+      }));
+    } else if (type === "data") {
+      if (mainFilter.trim() !== "") {
+        setMainFilter("");
+      }
+      setSearchTerms((prevState) => ({
+        ...prevState,
+        data: value, 
+      }));
+    } else if (["data2" , "data3"].includes(type)) {
+      setSearchTerms((prevState) => ({
+        ...prevState,
+        [type]: value,
+      }));
     }
 
     setCurrentPage(1);
   };
 
   const handleClearFilters = () => {
-    setSearchTerms({ career: "", school: "" });
+    setSearchTerms({ data: "", data2: "", data3: "", data4: "" });
     setMainFilter("");
     setCareerFilter("");
-    setSchoolFilter("");
+    setData2Filter("");
+    setData3Filter("");
     setCurrentPage(1);
   };
 
@@ -121,9 +140,20 @@ const CareerTable = () => {
                   Carrera
                   <div title="Filtrar por carrera">
                     <SearchInput
-                      onSearch={(value) => handleSearch(value, "career")}
+                      onSearch={(value) => handleSearch(value, "data")}
                       filter={careerFilter}
                       setFilter={setCareerFilter}
+                      className="bg-transparent text-black w-full outline-none border-b-[0.2vh] text-[0.9vw] border-solid border-UNA-Red"
+                    />
+                  </div>
+                </th>
+                <th className="border-[0.1vh] border-gray-400 px-[1vw] py-[1vh] text-center text-[1vw] text-UNA-Red">
+                  Código
+                  <div title="Filtrar por código">
+                    <SearchInput
+                      onSearch={(value) => handleSearch(value, "data2")}
+                      filter={data2Filter}
+                      setFilter={setData2Filter}
                       className="bg-transparent text-black w-full outline-none border-b-[0.2vh] text-[0.9vw] border-solid border-UNA-Red"
                     />
                   </div>
@@ -132,9 +162,9 @@ const CareerTable = () => {
                   Escuela
                   <div title="Filtrar por escuela">
                     <SearchInput
-                      onSearch={(value) => handleSearch(value, "school")}
-                      filter={schoolFilter}
-                      setFilter={setSchoolFilter}
+                      onSearch={(value) => handleSearch(value, "data3")}
+                      filter={data3Filter}
+                      setFilter={setData3Filter}
                       className="bg-transparent text-black w-full outline-none border-b-[0.2vh] text-[0.9vw] border-solid border-UNA-Red"
                     />
                   </div>
@@ -150,6 +180,9 @@ const CareerTable = () => {
                   <tr key={career.ID_CAREER}>
                     <td className="border-[0.1vh] border-gray-400 px-[1vw] py-[1.5vh] text-[0.9vw] text-center break-words max-w-[15vw]">
                       {career["NOMBRE DE CARRERA"]}
+                    </td>
+                    <td className="border-[0.1vh] border-gray-400 px-[1vw] py-[1.5vh] text-[0.9vw] text-center break-words max-w-[10vw]">
+                      {career["CODIGO DE CARRERA"]}
                     </td>
                     <td className="border-[0.1vh] border-gray-400 px-[1vw] py-[1.5vh] text-[0.9vw] text-center break-words max-w-[15vw]">
                       {career["NOMBRE DE LA ESCUELA"]}
@@ -184,10 +217,7 @@ const CareerTable = () => {
                 ))
               ) : (
                 <tr>
-                  <td
-                    colSpan={3}
-                    className="px-[1vw] py-[1vh] text-[0.9vw] text-center pt-[3.5vh]"
-                  >
+                  <td colSpan={4} className="px-[1vw] py-[1vh] text-[0.9vw] text-center pt-[3.5vh]">
                     No se encontraron carreras registradas.
                   </td>
                 </tr>
