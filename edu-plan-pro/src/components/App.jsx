@@ -3,6 +3,7 @@ import { BrowserRouter, Route, Routes, Navigate } from "react-router-dom";
 import { Login } from "./login/Login.jsx"
 import School from "./school/School.jsx";
 import Faculty from "./faculty/Faculty.jsx";
+import Career from "./career/Career.jsx";
 import Teacher from "./teacher/Teachear.jsx"
 import User from "./user/User.jsx"
 import Report from "./report/Report.jsx";
@@ -29,6 +30,7 @@ function App() {
         <Route path="/coursesProgram" element={<ValidateLogin Component={CoursesProgram} />} />
         <Route path="/school" element={<ValidateLogin Component={School} />} />
         <Route path="/faculty" element={<ValidateLogin Component={Faculty} />} />
+        <Route path="/career" element={<ValidateLogin Component={Career} />} />
         <Route path="/teacher" element={<ValidateLogin Component={Teacher} />} />
         <Route path="/user" element={<ValidateLogin Component={User} />} />
         <Route path="/report" element={<ValidateLogin Component={Report} />} />
