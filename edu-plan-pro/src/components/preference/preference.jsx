@@ -2,9 +2,9 @@ import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { FetchValidate } from "../../utilities/FetchValidate";
 import Loading from "../componentsgeneric/Loading";
-import { useAtomValue } from 'jotai';
-import { preference as preferenceAtom } from '../validatelogin/ValidateLogin.jsx'; 
+import { useAtom } from 'jotai';
 import Header from "../header/Header.jsx";
+import { preference } from "../validatelogin/ValidateLogin.jsx";
 
 const Preferences = () => {
   // Valores predeterminados específicos
@@ -15,12 +15,13 @@ const Preferences = () => {
     icon_size: "Medium",
     theme: "light"
   };
-
-  const preferenceValue = useAtomValue(preferenceAtom);
+  const [prefs] = useAtom(preference);
+ 
+ 
   // State Management
-  const [preference, setPreference] = useState(() => {
+  const [preference2, setPreference] = useState(() => {
     
-    return preferenceValue || defaultPreferences;
+    return prefs || defaultPreferences;
   });
   
   const [loading, setLoading] = useState(false);
@@ -37,11 +38,11 @@ const Preferences = () => {
   
   // Sync with atom value when it changes
   useEffect(() => {
-    if (preferenceValue) {
-      setPreference(preferenceValue);
+    if (prefs) {
+      setPreference(prefs);
       setHasExistingPreference(true);
     }
-  }, [preferenceValue]);
+  }, [prefs]);
 
   useEffect(() => {
     const loadPreferences = async () => {
@@ -68,6 +69,8 @@ const Preferences = () => {
         } else {
           // Si no hay preferencias existentes, establecer las predeterminadas
           setPreference(defaultPreferences);
+          setHasExistingPreference(false);
+          console.log("No existing preferences found, using defaults.");
         }
       } catch (error) {
         console.error("Error loading preferences:", error);
@@ -91,11 +94,11 @@ const Preferences = () => {
     
     return {
       "PREFERENCES": {
-        "font": preference.font || defaultPreferences.font,
-        "size_font": preference.size_font || defaultPreferences.size_font,
-        "header_footer_color": preference.header_footer_color || defaultPreferences.header_footer_color,
-        "icon_size": preference.icon_size || defaultPreferences.icon_size,
-        "theme": preference.theme || defaultPreferences.theme
+        "font": preference2.font || defaultPreferences.font,
+        "size_font": preference2.size_font || defaultPreferences.size_font,
+        "header_footer_color": preference2.header_footer_color || defaultPreferences.header_footer_color,
+        "icon_size": preference2.icon_size || defaultPreferences.icon_size,
+        "theme": preference2.theme || defaultPreferences.theme
       }
     };
   };
@@ -103,8 +106,8 @@ const Preferences = () => {
   // Create new preferences with POST
   const createPreferences = async () => {
     // Forzar el uso de los valores predeterminados si es necesario
-    if (!preference.font && !preference.size_font && !preference.header_footer_color && 
-        !preference.icon_size && !preference.theme) {
+    if (!preference2.font && !preference2.size_font && !preference2.header_footer_color && 
+        !preference2.icon_size && !preference2.theme) {
       setPreference(defaultPreferences);
     }
     
@@ -175,6 +178,7 @@ const Preferences = () => {
 
   // Decide whether to create or update preferences
   const savePreferences = async () => {
+    console.log(prefs);
     if (hasExistingPreference) {
       await updatePreferences();
       window.location.reload(); 
@@ -243,7 +247,7 @@ const Preferences = () => {
                 <td className="border-[0.1vh] border-gray-400 px-[1vw] py-[1vh]">
                   <select
                     name="font"
-                    value={preference.font || defaultPreferences.font}
+                    value={preference2.font || defaultPreferences.font}
                     onChange={handleChange}
                     className="w-full p-[0.5vh] text-[0.9vw]"
                   >
@@ -260,7 +264,7 @@ const Preferences = () => {
                 <td className="border-[0.1vh] border-gray-400 px-[1vw] py-[1vh]">
                   <select
                     name="size_font"
-                    value={preference.size_font || defaultPreferences.size_font}
+                    value={preference2.size_font || defaultPreferences.size_font}
                     onChange={handleChange}
                     className="w-full p-[0.5vh] text-[0.9vw]"
                   >
@@ -277,7 +281,7 @@ const Preferences = () => {
                 <td className="border-[0.1vh] border-gray-400 px-[1vw] py-[1vh]">
                   <select
                     name="header_footer_color"
-                    value={preference.header_footer_color || defaultPreferences.header_footer_color}
+                    value={preference2.header_footer_color || defaultPreferences.header_footer_color}
                     onChange={handleChange}
                     className="w-full p-[0.5vh] text-[0.9vw]"
                   >
@@ -294,7 +298,7 @@ const Preferences = () => {
                 <td className="border-[0.1vh] border-gray-400 px-[1vw] py-[1vh]">
                   <select
                     name="icon_size"
-                    value={preference.icon_size || defaultPreferences.icon_size}
+                    value={preference2.icon_size || defaultPreferences.icon_size}
                     onChange={handleChange}
                     className="w-full p-[0.5vh] text-[0.9vw]"
                   >
@@ -311,7 +315,7 @@ const Preferences = () => {
                 <td className="border-[0.1vh] border-gray-400 px-[1vw] py-[1vh]">
                   <select
                     name="theme"
-                    value={preference.theme || defaultPreferences.theme}
+                    value={preference2.theme || defaultPreferences.theme}
                     onChange={handleChange}
                     className="w-full p-[0.5vh] text-[0.9vw]"
                   >
