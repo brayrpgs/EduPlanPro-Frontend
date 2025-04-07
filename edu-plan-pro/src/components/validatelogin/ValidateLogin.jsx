@@ -55,12 +55,35 @@ const ValidateLogin = ({ Component }) => {
         const response = await FetchValidate(url, options, navigate);
         
         if (response && response.data && response.data.length > 0) {
-          // Asignar preferencias a prefs
-          setPrefs(response.data[0]);
+          // Extract the PREFERENCIAS object from the response
+          setPrefs(response.data[0].PREFERENCIAS || {
+            font: 'Playfair Display SC',
+            size_font: 'Medium',
+            header_footer_color: 'Red',
+            icon_size: 'Medium',
+            theme: 'light',
+          });
+        } else {
+          // Set default preferences if none exist
+          setPrefs({
+            font: 'Playfair Display SC',
+            size_font: 'Medium',
+            header_footer_color: 'Red',
+            icon_size: 'Medium',
+            theme: 'light',
+          });
         }
         
       } catch (error) {
         console.error("Error loading preferences:", error);
+        // Set default preferences on error
+        setPrefs({
+          font: 'Playfair Display SC',
+          size_font: 'Medium',
+          header_footer_color: 'Red',
+          icon_size: 'Medium',
+          theme: 'light',
+        });
       }
     };
     

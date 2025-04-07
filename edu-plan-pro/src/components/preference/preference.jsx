@@ -16,7 +16,9 @@ const Preferences = () => {
   };
 
   // State Management
-  const [preference, setPreference] = useState(defaultPreferences);
+  const [preference, setPreference] = useState(() => {
+    return preferenceValue || defaultPreferences;
+  });
   const preferenceValue = useAtomValue(preferenceAtom);
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState("");
@@ -36,6 +38,7 @@ const Preferences = () => {
   useEffect(() => {
     if (preferenceValue) {
       setPreference(preferenceValue);
+      setHasExistingPreference(true);
     }
   }, [preferenceValue]);
 
@@ -315,6 +318,7 @@ const Preferences = () => {
                       <option key={option} value={option}>{option}</option>
                     ))}
                   </select>
+                  
                 </td>
               </tr>
             </tbody>
