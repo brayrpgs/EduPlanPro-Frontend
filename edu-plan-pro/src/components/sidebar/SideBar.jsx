@@ -52,7 +52,7 @@ const SideBar = () => {
         cancelButton: "swal-button-largeV1",
       },
     });
-    
+
     //llama a la funcion del backend y cierra
     if (result.isConfirmed) {
       try {
@@ -112,7 +112,9 @@ const SideBar = () => {
 
       <div
         className={`${
-          isOpen ? "w-[17vw] border-[0.3vh] transition-[width] duration-300 border-UNA-Blue-Light/80 " : "w-[0%] transition-[width] duration-300"
+          isOpen
+            ? "w-[17vw] border-[0.3vh] transition-[width] duration-300 border-UNA-Blue-Light/80 "
+            : "w-[0%] transition-[width] duration-300"
         } bg-white min-h-screen top-0 right-0 fixed select-none transition-[width] duration-300`}
       >
         <div className={`${!isOpen && "hidden"}`}>
@@ -146,11 +148,14 @@ const SideBar = () => {
           <div className="transition-none text-center text-[1vw] cursor-pointer py-[1vh] mt-[1vh] hover:bg-UNA-Red hover:text-white">
             Cambiar clave
           </div>
-          <div className="transition-none text-center text-[1vw] cursor-pointer py-[1vh] mt-[1vh] hover:bg-UNA-Red hover:text-white">
+          <div
+            className="transition-none text-center text-[1vw] cursor-pointer py-[1vh] mt-[1vh] hover:bg-UNA-Red hover:text-white"
+            onClick={() => navigate("/preference")}
+          >
             Preferencias
           </div>
-         
-          <div 
+
+          <div
             className="transition-none text-center text-[1vw] cursor-pointer py-[1vh] mt-[1vh] hover:bg-UNA-Red hover:text-white"
             onClick={() => navigate("/dashboard")}
           >

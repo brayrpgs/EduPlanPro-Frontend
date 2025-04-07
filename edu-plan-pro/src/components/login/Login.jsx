@@ -192,7 +192,7 @@ export const Login = () => {
 
             <div className="relative mt-[2vh] flex justify-center">
               <a
-                href="/login"
+                href="/forgotPassword"
                 title="Olvidé mi contraseña"
                 className="w-[65%] h-[5vh] bg-UNA-Gray rounded-[1vh] text-white text-[2vh] cursor-pointer hover:bg-UNA-Gray-Dark"
               >
