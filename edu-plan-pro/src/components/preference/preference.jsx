@@ -4,6 +4,7 @@ import { FetchValidate } from "../../utilities/FetchValidate";
 import Loading from "../componentsgeneric/Loading";
 import { useAtomValue } from 'jotai';
 import { preference as preferenceAtom } from '../validatelogin/ValidateLogin.jsx'; 
+import Header from "../header/Header.jsx";
 
 const Preferences = () => {
   // Valores predeterminados específicos
@@ -15,11 +16,13 @@ const Preferences = () => {
     theme: "light"
   };
 
+  const preferenceValue = useAtomValue(preferenceAtom);
   // State Management
   const [preference, setPreference] = useState(() => {
+    
     return preferenceValue || defaultPreferences;
   });
-  const preferenceValue = useAtomValue(preferenceAtom);
+  
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState("");
   const [hasExistingPreference, setHasExistingPreference] = useState(false);
@@ -31,8 +34,6 @@ const Preferences = () => {
   const headerFooterColorOptions = ["Red", "Green", "Yellow", "Dark Blue", "Blue"];
   const iconSizeOptions = ["Big", "Medium", "Small"];
   const themeOptions = ["dark", "light"];
-
-
   
   // Sync with atom value when it changes
   useEffect(() => {
@@ -87,6 +88,7 @@ const Preferences = () => {
   };
 
   const formatPreferences = () => {
+    
     return {
       "PREFERENCES": {
         "font": preference.font || defaultPreferences.font,
@@ -107,7 +109,6 @@ const Preferences = () => {
     }
     
     const formattedData = formatPreferences();
-    console.log("Creating new preferences:", formattedData);
     const url = "http://localhost:3001/preferences";
     
     const options = {
@@ -121,9 +122,7 @@ const Preferences = () => {
   
     try {
       setLoading(true);
-      console.log("POST request options:", options);
       const response = await FetchValidate(url, options, navigate);
-      console.log("POST response:", response);
   
       if (!response) {
         console.error("Error creating preferences");
@@ -144,7 +143,6 @@ const Preferences = () => {
   // Update existing preferences with PATCH
   const updatePreferences = async () => {
     const formattedData = formatPreferences();
-    console.log("Updating existing preferences:", formattedData);
     const url = "http://localhost:3001/preferences";
     
     const options = {
@@ -158,9 +156,7 @@ const Preferences = () => {
   
     try {
       setLoading(true);
-      console.log("PATCH request options:", options);
       const response = await FetchValidate(url, options, navigate);
-      console.log("PATCH response:", response);
   
       if (!response) {
         console.error("Error updating preferences");
@@ -178,12 +174,15 @@ const Preferences = () => {
   };
 
   // Decide whether to create or update preferences
-  const savePreferences = () => {
+  const savePreferences = async () => {
     if (hasExistingPreference) {
-      updatePreferences();
+      await updatePreferences();
+      window.location.reload(); 
     } else {
-      createPreferences();
+      await createPreferences();
+      window.location.reload(); 
     }
+    
   };
 
   const deletePreferences = async () => {
@@ -212,11 +211,13 @@ const Preferences = () => {
     } finally {
       setLoading(false);
     }
+    window.location.reload(); 
   };
 
 
   return (
     <main>
+      <Header/>
       <div className="mt-[3vh] justify-start flex pr-[15vw] pl-[15vw]">
         <div className="bg-UNA-Blue-Dark w-full max-w-screens flex rounded-[0.5vh] items-center">
           <h1 className="ml-[1vw] my-[0.5vh] text-[2vw] text-white">

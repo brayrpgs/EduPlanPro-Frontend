@@ -6,7 +6,7 @@ import Loading from "../componentsgeneric/Loading";
 import CancelActionIcon from "../icons/MainIcons/CancelActionIcon";
 
 const ForgotPassword = () => {
-  const [isOpen, setIsOpen] = useState(false);
+  const [isOpen, setIsOpen] = useState(true);
   const [isPasswordChangeOpen, setIsPasswordChangeOpen] = useState(false);
   const [userId, setUserId] = useState(null);
   const [loading, setLoading] = useState(false);
@@ -31,6 +31,7 @@ const ForgotPassword = () => {
       question2: "",
       question3: ""
     });
+    navigate("/login");
   }
 
   const handleQuestionChange = (e) => {
@@ -172,6 +173,7 @@ const ForgotPassword = () => {
             confirmButtonColor: "#A31E32",
           }).then(() => {
             setIsPasswordChangeOpen(false);
+            closeActions();
             setPasswordData({
               newPassword: "",
               newPasswordConfirmation: "",
@@ -186,6 +188,8 @@ const ForgotPassword = () => {
             text: "No se pudo actualizar la contraseña. Por favor inténtalo de nuevo.",
             confirmButtonText: "Aceptar",
             confirmButtonColor: "#A31E32",
+          }).then(() => {
+            closeActions();
           });
         }
       } catch (error) {
@@ -195,6 +199,8 @@ const ForgotPassword = () => {
           title: "Error al actualizar",
           text: "Intenta de nuevo más tarde.",
           confirmButtonColor: "#A31E32",
+        }).then(() => {
+          closeActions();
         });
         console.error(error);
       } finally {
@@ -205,13 +211,7 @@ const ForgotPassword = () => {
 
   return (
     <div>
-      <button
-        className="text-UNA-Red hover:underline"
-        onClick={() => setIsOpen(true)}
-      >
-        ¿Olvidaste tu contraseña?
-      </button>
-
+      
       {/* First Modal - Security Questions */}
       <div
         className={`${!isOpen && "hidden"

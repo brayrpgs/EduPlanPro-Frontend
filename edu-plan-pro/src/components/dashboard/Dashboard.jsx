@@ -2,6 +2,13 @@ import { useNavigate } from "react-router-dom"
 import Footer from "../footer/Footer.jsx"
 import Header from "../header/Header.jsx"
 import AccountCircleAdmin from "../icons/AsideIcons/AccountCircleAdmin.jsx"
+import SchoolIcon from "../icons/DashboardIcons/SchoolIcon.jsx"
+import FacultyIcon from "../icons/DashboardIcons/FacultyIcon.jsx"
+import TeacherIcon from "../icons/DashboardIcons/TeacherIcon.jsx"
+import UserIcon from "../icons/DashboardIcons/UserIcon.jsx"
+import ReportIcon from "../icons/DashboardIcons/ReportIcon.jsx"
+import StudyPlanIcon from "../icons/DashboardIcons/StudyPlanIcon.jsx"
+import CourseProgramIcon from "../icons/DashboardIcons/CourseProgramIcon.jsx"
 
 function Dashboard() {
   const navigate = useNavigate()
@@ -9,42 +16,42 @@ function Dashboard() {
   const modules = [
     {
       title: "Escuela",
-      icon: AccountCircleAdmin,
+      icon: SchoolIcon,
       description: "Gestionar información de las escuelas",
       path: "/school",
       iconBg: "bg-blue-100",
     },
     {
       title: "Facultad",
-      icon: AccountCircleAdmin,
+      icon: FacultyIcon,
       description: "Gestionar información de las facultades",
       path: "/faculty",
       iconBg: "bg-green-100",
     },
     {
       title: "Docentes",
-      icon: AccountCircleAdmin,
+      icon: TeacherIcon,
       description: "Gestionar información de los docentes",
       path: "/teacher",
       iconBg: "bg-yellow-100",
     },
     {
       title: "Usuarios",
-      icon: AccountCircleAdmin,
+      icon: UserIcon,
       description: "Gestionar información de las usuarios",
       path: "/user",
       iconBg: "bg-purple-100",
     },
     {
       title: "Reportes",
-      icon: AccountCircleAdmin,
+      icon: ReportIcon,
       description: "Gestionar información de los reportes",
       path: "/report",
       iconBg: "bg-purple-100",
     },
     {
       title: "Planes de estudio",
-      icon: AccountCircleAdmin,
+      icon: StudyPlanIcon,
       description: "Gestionar información de los planes de estudio",
       path: "/studyplans",
       iconBg: "bg-purple-100",
@@ -52,7 +59,7 @@ function Dashboard() {
     
     {
       title: "Programas del Curso",
-      icon: AccountCircleAdmin,
+      icon: CourseProgramIcon,
       description: "Gestionar información de los programas del curso",
       path: "/coursesprogram",
       iconBg: "bg-purple-100",
@@ -83,7 +90,7 @@ function Dashboard() {
                 onClick={() => handleNavigate(module.path)}
               >
                 <div className={`icon rounded-full ${module.iconBg} flex items-center justify-center mb-[1vh]`}>
-                  <module.icon className="icon-inner" />
+                  <module.icon/>
                 </div>
                 <h2 className="text-[1.2vw] font-semibold mb-[0.5vh]">{module.title}</h2>
                 <p className="text-gray-600 mb-[1vh] text-[0.9vw]">{module.description}</p>
