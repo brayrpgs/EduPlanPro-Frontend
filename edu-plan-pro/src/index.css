@@ -1,19 +1,57 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+@import url('https://fonts.googleapis.com/css2?family=Cedarville+Cursive&display=swap');
 
-* {
-  font-family: "Playfair Display SC", Georgia, "Times New Roman", serif;
-}
+
+
 
 .swal2-title,
 .swal2-html-container {
-  font-family: "Playfair Display SC", Georgia, "Times New Roman", serif;
+  font-family: "Playfair Display SC", Georgia, "Times New Roman", serif,"Cedarville Cursive", cursive; 
 }
 
 @layer utilities {
   .bg-gradient-mainNavbar {
     background: linear-gradient(to right, rgb(252, 252, 252) 3%, #a31e32 15%);
+  }
+  .header-UNA-Red .bg-gradient-mainNavbar {
+    background: linear-gradient(to right, rgb(252, 252, 252) 3%, #a31e32 15%);
+  }
+
+  .header-UNA-Blue-Light .bg-gradient-mainNavbar {
+    background: linear-gradient(to right, rgb(252, 252, 252) 3%, #0C71C3 15%);
+  }
+
+  .header-UNA-Blue-Dark .bg-gradient-mainNavbar {
+    background: linear-gradient(to right, rgb(252, 252, 252) 3%, #2b3843 15%);
+  }
+
+  .header-UNA-Green-Light .bg-gradient-mainNavbar {
+    background: linear-gradient(to right, rgb(252, 252, 252) 3%, #7cda24 15%);
+  }
+
+  .header-UNA-Yellow .bg-gradient-mainNavbar {
+    background: linear-gradient(to right, rgb(252, 252, 252) 3%, #FCBC6D 15%);
+  }
+  .header-UNA-Red footer.bg-UNA-Red {
+    background-color: #a31e32 !important;
+  }
+
+  .header-UNA-Blue-Light footer.bg-UNA-Red {
+    background-color: #0C71C3 !important;
+  }
+
+  .header-UNA-Blue-Dark footer.bg-UNA-Red {
+    background-color: #2b3843 !important;
+  }
+
+  .header-UNA-Green-Light footer.bg-UNA-Red {
+    background-color: #7cda24 !important;
+  }
+
+  .header-UNA-Yellow footer.bg-UNA-Red {
+    background-color: #FCBC6D !important; 
   }
 
   .scrollbar-hidden::-webkit-scrollbar {
@@ -23,5 +61,213 @@
 
   .scrollbar-hidden {
     overflow: auto;
+  }
+
+
+  .light-theme {
+    background-color: white;
+    color: black;
+    font-family: "Playfair Display SC", Georgia, "Times New Roman", serif,"Cedarville Cursive", cursive; 
+  }
+
+
+  .dark-theme {
+    background-color: #1a1a1a;
+    color: #f8f8f8;
+    font-family: "Playfair Display SC", Georgia, "Times New Roman", serif,"Cedarville Cursive", cursive; 
+  }
+
+
+  .dark-theme main.bg-gray-50 {
+    background-color: #121212 !important;
+  }
+
+  .dark-theme .border {
+    border-color: #333 !important;
+  }
+
+  .dark-theme div.bg-white {
+    background-color: #2d2d2d !important;
+    color: #f8f8f8 !important;
+  }
+
+  .dark-theme h1, 
+  .dark-theme h2 {
+    color: #f8f8f8 !important;
+  }
+
+  .dark-theme p.text-gray-600 {
+    color: #aaa !important;
+  }
+
+  .dark-theme .shadow-sm, 
+  .dark-theme .shadow-md {
+    box-shadow: 0 1px 3px rgba(0,0,0,0.5) !important;
+  }
+
+  .dark-theme .hover\:shadow-md:hover {
+    box-shadow: 0 4px 6px rgba(0,0,0,0.6) !important;
+  }
+
+  .dark-theme .bg-blue-100 {
+    background-color: rgba(30, 64, 175, 0.3) !important;
+  }
+
+  .dark-theme .bg-green-100 {
+    background-color: rgba(22, 101, 52, 0.3) !important;
+  }
+
+  .dark-theme .bg-yellow-100 {
+    background-color: rgba(161, 98, 7, 0.3) !important;
+  }
+
+  .dark-theme .bg-purple-100 {
+    background-color: rgba(88, 28, 135, 0.3) !important;
+  }
+
+
+  .dark-theme .swal2-title,
+  .dark-theme .swal2-html-container {
+    font-family: "Playfair Display SC", Georgia, "Times New Roman", serif,"Cedarville Cursive", cursive; 
+    color: rgb(0, 0, 0);
+  }
+
+  .dark-theme .swal2-popup {
+    background-color: #2d2d2d !important;
+    color: white !important;
+    border: 1px solid #444;
+  }
+
+  .dark-theme .swal2-title,
+  .dark-theme .swal2-html-container {
+    color: white !important;
+  }
+
+  .dark-theme .swal2-confirm {
+    background-color: #a31e32 !important;
+    color: white !important;
+    border: none;
+  }
+
+  .dark-theme .swal2-cancel {
+    background-color: #444 !important;
+    color: white !important;
+    border: none;
+  }
+
+  .dark-theme .swal2-input {
+    background-color: #1a1a1a !important;
+    color: white !important;
+    border: 1px solid #555;
+  }
+
+  .dark-theme .swal2-success-ring {
+    border-color: #4caf50 !important;
+  }
+
+  .dark-theme .swal2-error-ring {
+    border-color: #d32f2f !important;
+  }
+
+  .dark-theme input:not(.bg-transparent):not(.bg-UNA-Red),
+  .dark-theme select {
+    background-color: #2d2d2d !important;
+    color: white !important;
+    border: 1px solid #555 !important;
+  }
+
+
+  .dark-theme input:not(.bg-transparent):not(.bg-UNA-Red)::placeholder,
+  .dark-theme select::placeholder {
+    color: #bbb !important;
+    opacity: 1;
+  }
+
+  .dark-theme select option {
+    background-color: #2d2d2d !important;
+    color: white !important;
+  }
+
+
+  .dark-theme input:not(.bg-transparent):not(.bg-UNA-Red):focus,
+  .dark-theme select:focus {
+    border-color: #a31e32 !important;
+    outline: none;
+  }
+
+ 
+  .dark-theme select option {
+    background-color: #2d2d2d !important;
+    color: white !important;
+  }
+
+  .dark-theme th {
+    background-color: #2d2d2d !important; 
+    color: #f8f8f8 !important;
+  }
+
+  .dark-theme td {
+    background-color: #2d2d2d !important; 
+    color: #f8f8f8 !important;
+  }
+
+  .dark-theme input[type="text"].bg-transparent {
+    color: #f8f8f8 !important; 
+  }
+  
+  .dark-theme .svg-icon {
+    fill: #ffffff !important;
+  }
+
+   .font-small {
+    --font-multiplier: 0.5;
+  }
+  
+  .font-medium {
+    --font-multiplier: 1;
+  }
+  
+  .font-large {
+    --font-multiplier: 1.2;
+  }
+  
+
+  .font-small h1, .font-medium h1, .font-large h1 {
+    font-size: calc(1vw * var(--font-multiplier)) !important;
+  }
+  
+  .font-small h2, .font-medium h2, .font-large h2 {
+    font-size: calc(0.5vw * var(--font-multiplier)) !important;
+  }
+  
+  .font-small p, .font-medium p, .font-large p {
+    font-size: calc(0.3vw * var(--font-multiplier)) !important;
+  }
+  body:not(.icon-size-big):not(.icon-size-small) .icon {
+    width: 2.5vw;
+    height: 2.5vw;
+  }
+  body:not(.icon-size-big):not(.icon-size-small) .icon-inner {
+    width: 1.2vw;
+    height: 1.2vw;
+  }
+  
+  body.icon-size-big .icon {
+    width: 3vw;
+    height: 3vw;
+  }
+  body.icon-size-big .icon-inner {
+    width: 1.5vw;
+    height: 1.5vw;
+  }
+  
+  /* Small */
+  body.icon-size-small .icon {
+    width: 2vw;
+    height: 2vw;
+  }
+  body.icon-size-small .icon-inner {
+    width: 1vw;
+    height: 1vw;
   }
 }

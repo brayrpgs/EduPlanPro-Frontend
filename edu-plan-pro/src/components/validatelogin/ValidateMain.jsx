@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { FetchValidate } from "../../utilities/FetchValidate.js";
 import Loading from "../componentsgeneric/Loading.jsx";
 
+
 const ValidateLogin = ({ Login }) => {
   const [flag, setFlag] = useState(false);
   const [loading, setLoading] = useState(true);
@@ -19,10 +20,10 @@ const ValidateLogin = ({ Login }) => {
 
       try {
         const response = await FetchValidate(url, options, navigate);
-
+        
         if (response.code === "200") {
           setFlag(false);
-          navigate("/dashboard");
+          navigate("/dashboard");          
         } else {
           setFlag(true);
         }
@@ -30,10 +31,9 @@ const ValidateLogin = ({ Login }) => {
         navigate("/serverError"); // Si hay error, redirige a una página específica
 
       } finally {
-        setLoading(false); 
+        setLoading(false);     
       }
     };
-
     validatemain();
   }, [navigate]);
 
