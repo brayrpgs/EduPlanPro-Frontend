@@ -15,6 +15,7 @@ import { AttachmentTeachers } from "./AttachmentTeachers";
 const CoursesProgramTable = () => {
   const [coursesProgram, setCoursesProgram] = useState([]);
   const [studyPlans, setStudyPlans] = useState([]);
+  const [selectedPDFs, setSelectedPDFs] = useState([]);
 
   // To formate the dates of the data received
   const formatDate = (date) => {
@@ -56,7 +57,7 @@ const CoursesProgramTable = () => {
       setCurrentPage(page);
       let flag = false;
 
-      if(page == 0){
+      if (page == 0) {
         setCurrentPage(1);
         flag = true;
       }
@@ -65,7 +66,7 @@ const CoursesProgramTable = () => {
         ? `&data=${searchTerms["data"]}&data2=${searchTerms["data2"]}&data3=${searchTerms["data3"]}&data4=${searchTerms["data4"]}&data5=${searchTerms["data5"]}&data6=${searchTerms["data6"]}`
         : "&data=&data2=&data3=&data4=&data5=&data6=";
 
-      const newPage = flag? page + 1 : page;
+      const newPage = flag ? page + 1 : page;
       const url = `http://localhost:3001/searchcourseprogram?name=search-page${searchQuery}&numPage=${newPage}`;
       const options = {
         method: "GET",
@@ -116,6 +117,8 @@ const CoursesProgramTable = () => {
   const handlePageChange = (page) => {
     setCurrentPage(page);
   };
+
+  const handleSelectedPDFs = (e) => {};
 
   function normalizeString(str) {
     return str.normalize("NFD").replace(/[\u0300-\u036f]/g, "");
@@ -386,12 +389,17 @@ const CoursesProgramTable = () => {
                             { field: "FECHA", value: "DAT_YEAR" },
                             { field: "ID_STUDY_PLAN", value: "ID_STUDY_PLAN" },
                             {
-                              field: "NRC", value: "NRC" },
+                              field: "NRC",
+                              value: "NRC",
+                            },
                             {
-                              field: "CICLO", value: "CICLE"},
+                              field: "CICLO",
+                              value: "CICLE",
+                            },
                             {
                               field: "CREDITOS",
-                              value: "NUM_CREDITS" },
+                              value: "NUM_CREDITS",
+                            },
                             {
                               field: "FIRMA",
                               value: "SIGNATURE",
@@ -414,7 +422,38 @@ const CoursesProgramTable = () => {
                           pdfUrl={courseProgram["PDF"]}
                         />
 
-                        <AttachmentTeachers idCourseProgram={courseProgram["ID_COURSE_PROGRAM"]}/>
+                        <AttachmentTeachers
+                          idCourseProgram={courseProgram["ID_COURSE_PROGRAM"]}
+                        />
+
+                        <input
+                          type="checkbox"
+                          className="outline-none w-[2vw] h-[2.5vh] cursor-pointer"
+                          checked={selectedPDFs.some(
+                            (pdfObj) =>
+                              pdfObj.id === courseProgram.ID_COURSE_PROGRAM
+                          )}
+                          onChange={(e) => {
+                            if (e.target.checked) {
+                              setSelectedPDFs((prev) => [
+                                ...prev,
+                                {
+                                  id: courseProgram.ID_COURSE_PROGRAM,
+                                  pdf: courseProgram["PDF"],
+                                },
+                              ]);
+                            } else {
+                              setSelectedPDFs((prev) =>
+                                prev.filter(
+                                  (pdfObj) =>
+                                    pdfObj.id !==
+                                    courseProgram.ID_COURSE_PROGRAM
+                                )
+                              );
+                            }
+                            console.log(selectedPDFs);
+                          }}
+                        />
                       </div>
                     </td>
                   </tr>
