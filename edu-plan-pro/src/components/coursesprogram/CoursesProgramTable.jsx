@@ -8,9 +8,12 @@ import { ShowPDF } from "../componentsgeneric/ShowPDF";
 import CoursesProgramAdd from "./CoursesProgramAdd";
 import MainSearch from "../search/MainSearch";
 import FilterOffIcon from "../icons/MainIcons/FilterOffIcon";
+import DownloadIcon from "../icons/MainIcons/DownloadIcon";
 import SearchInput from "../search/SearchInput";
 import CoursesProgramUpdate from "./CoursesProgramUpdate";
 import { AttachmentTeachers } from "./AttachmentTeachers";
+import JSZip from "jszip";
+import Swal from "sweetalert2";
 
 const CoursesProgramTable = () => {
   const [coursesProgram, setCoursesProgram] = useState([]);
@@ -117,8 +120,6 @@ const CoursesProgramTable = () => {
   const handlePageChange = (page) => {
     setCurrentPage(page);
   };
-
-  const handleSelectedPDFs = (e) => {};
 
   function normalizeString(str) {
     return str.normalize("NFD").replace(/[\u0300-\u036f]/g, "");
@@ -230,6 +231,45 @@ const CoursesProgramTable = () => {
     setData6Filter("");
   };
 
+  const handleDownloadProgramCourses = async () => {
+    if (selectedPDFs.length === 0) {
+      Swal.fire({
+        icon: "error",
+        iconColor: "#a31e32",
+        title: "No se pudo descargar los programas de curso.",
+        text: "No se pudo descargar los programas de curso, seleccione al menos un programa de curso para continuar.",
+        confirmButtonText: "Aceptar",
+        confirmButtonColor: "#A31E32",
+      });
+    } else {
+      const zip = new JSZip();
+
+      selectedPDFs.forEach(({ name, pdf }) => {
+        const base64Clear = pdf.includes(",") ? pdf.split(",")[1] : pdf;
+
+        const binaryData = atob(base64Clear);
+        const arrayBuffer = new Uint8Array(binaryData.length);
+        for (let i = 0; i < binaryData.length; i++) {
+          arrayBuffer[i] = binaryData.charCodeAt(i);
+        }
+
+        const fileName = name.endsWith(".pdf") ? name : `${name}.pdf`;
+        zip.file(fileName, arrayBuffer, { binary: true });
+      });
+
+      const zipContent = await zip.generateAsync({ type: "blob" });
+      const url = URL.createObjectURL(zipContent);
+
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = "programas_de_curso.zip";
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      URL.revokeObjectURL(url);
+    }
+  };
+
   return (
     <main>
       <div className="mt-[3vh] justify-start flex pr-[15vw] pl-[15vw]">
@@ -237,6 +277,16 @@ const CoursesProgramTable = () => {
           <h1 className="ml-[1vw] my-[0.5vh] text-[2vw] text-white">
             Administrar programas de curso
           </h1>
+          <div
+            title="Descargar PDF de los programas de curso seleccionados."
+            onClick={handleDownloadProgramCourses}
+            className="flex ml-[26.5vw] bg-UNA-Green-Light/70 w-[4.5vw] h-[4vh] items-center cursor-pointer rounded-[0.5vw] hover:scale-110"
+          >
+            <DownloadIcon />
+            <span className="text-white items-center justify-center text-[1.3vw] w-[4vw]">
+              ({selectedPDFs.length})
+            </span>
+          </div>
           <div className="flex ml-auto justify-end mr-[1vw]">
             <CoursesProgramAdd
               totalItems={totalItems}
@@ -439,6 +489,10 @@ const CoursesProgramTable = () => {
                                 ...prev,
                                 {
                                   id: courseProgram.ID_COURSE_PROGRAM,
+                                  name:
+                                    courseProgram["NOMBRE DEL PROGRAMA"] +
+                                    "_" +
+                                    formatDate(courseProgram["FECHA"]),
                                   pdf: courseProgram["PDF"],
                                 },
                               ]);
@@ -451,7 +505,6 @@ const CoursesProgramTable = () => {
                                 )
                               );
                             }
-                            console.log(selectedPDFs);
                           }}
                         />
                       </div>
