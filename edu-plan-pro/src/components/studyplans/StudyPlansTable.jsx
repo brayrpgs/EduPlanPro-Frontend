@@ -36,6 +36,8 @@ const StudyPlansTable = () => {
   const [data4Filter, setData4Filter] = useState("");
   const [carrers, setCarreers] = React.useState([]);
   const [loading, setLoading] = useState(false);
+  
+  const [selectedReports, setSelectedReports] = useState([]); 
 
   const navigate = useNavigate();
 
