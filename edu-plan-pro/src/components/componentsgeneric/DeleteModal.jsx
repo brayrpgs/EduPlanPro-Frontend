@@ -5,8 +5,8 @@ import Swal from "sweetalert2";
 import { FetchValidate } from "../../utilities/FetchValidate";
 import { useNavigate } from "react-router-dom";
 import Loading from "./Loading";
-import { useAtomValue } from 'jotai';
-import { preference } from '../validatelogin/ValidateLogin.jsx';
+import { useAtomValue } from "jotai";
+import { preference } from "../validatelogin/ValidateLogin.jsx";
 
 const DeleteModal = ({
   deleteMethod,
@@ -41,36 +41,34 @@ const DeleteModal = ({
     setIsOpen(false);
     setItemToDelete(null);
   }
-  const preferences = useAtomValue(preference)[0]; 
+  const preferences = useAtomValue(preference)[0];
   function setWidthModal() {
-    
-    
-    if((isOpen) && (preferences.size_font === 'Big')){
-      return "w-[50vw] h-[50vh] bg-white fixed top-0 left-0 right-0 bottom-0 m-auto z-50 flex items-center justify-center border-[0.1vh] border-gray-400 rounded-[1vh] transition-[width] duration-300"
-    }else{
+    if (isOpen && preferences.size_font === "Big") {
+      return "w-[50vw] h-[50vh] bg-white fixed top-0 left-0 right-0 bottom-0 m-auto z-50 flex items-center justify-center border-[0.1vh] border-gray-400 rounded-[1vh] transition-[width] duration-300";
+    } else {
       return isOpen
-      ? "w-[30vw] h-[30vh] bg-white fixed top-0 left-0 right-0 bottom-0 m-auto z-50 flex items-center justify-center border-[0.1vh] border-gray-400 rounded-[1vh] transition-[width] duration-300"
-      : "w-[10%]"
+        ? "w-[30vw] h-[30vh] bg-white fixed top-0 left-0 right-0 bottom-0 m-auto z-50 flex items-center justify-center border-[0.1vh] border-gray-400 rounded-[1vh] transition-[width] duration-300"
+        : "w-[10%]";
     }
-   
   }
 
-  function verifyState(){
+  function verifyState() {
     return fields.some(({ field }) => field === "STATE");
   }
 
   const handleDelete = async () => {
-    let dataToSend = {}
-    if (!verifyState()){
+    let dataToSend = {};
+    if (!verifyState()) {
       dataToSend = { stat: "0" };
     } else {
       dataToSend = { STATE: "0" };
     }
-    
+
     fields.forEach(({ field, value, defaultValue }) => {
-      dataToSend[value] = item[field] !== undefined ? item[field] : defaultValue;
+      dataToSend[value] =
+        item[field] !== undefined ? item[field] : defaultValue;
     });
-    
+
     const url = `http://localhost:3001/${destination}`;
 
     const options = {
@@ -147,10 +145,7 @@ const DeleteModal = ({
         }}
       ></div>
 
-      <div
-      
-        className={setWidthModal()}
-      >
+      <div className={setWidthModal()}>
         {isOpen && (
           <div className="w-full flex flex-col justify-center items-center">
             <div className="bg-UNA-Red w-full h-[7vh] flex top-0 absolute border-white z-50 rounded-t-[1vh] text-start items-center">
@@ -171,7 +166,7 @@ const DeleteModal = ({
                 </button>
               </div>
             </div>
-            
+
             <h1 className="text-[1.1vw] flex items-center text-center ">
               ¿Estás seguro que deseas eliminar {componentPrefix} siguiente{" "}
               {componentName}?

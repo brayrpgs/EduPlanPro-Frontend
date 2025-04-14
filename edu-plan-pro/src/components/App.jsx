@@ -16,7 +16,6 @@ import Preference from "./preference/preference.jsx";
 import ServerError from "./validatelogin/ServerError.jsx";
 import PageNotFound from "./componentsgeneric/PageNotFound.jsx";
 import CoursesProgram from "./coursesprogram/CoursesProgram.jsx";
-import ForgotPassword from './password/forgotPassword.jsx';
 import { useThemePreferences } from './preference/useThemePreferences.jsx';
 
 
@@ -41,7 +40,6 @@ function App() {
         <Route path="/studyPlans" element={<ValidateLogin Component={StudyPlans} />} />
         <Route path="/pagination" element={<ValidateLogin Component={Pagination} />} />
         <Route path="/preference" element={<ValidateLogin Component={Preference} />} />
-        <Route path="/forgotPassword" element={<ForgotPassword/>} />
         <Route path="/serverError" element={<ServerError/>} />
         <Route path="*" Component={PageNotFound} />
       </Routes>
