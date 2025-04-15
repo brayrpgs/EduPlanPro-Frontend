@@ -5,7 +5,7 @@ import Swal from "sweetalert2";
 import { FetchValidate } from "../../utilities/FetchValidate";
 import { useNavigate } from "react-router-dom";
 import Loading from "./Loading";
-import { useAtomValue } from "jotai";
+import { useAtom } from "jotai";
 import { preference } from "../validatelogin/ValidateLogin.jsx";
 
 const DeleteModal = ({
@@ -25,6 +25,7 @@ const DeleteModal = ({
   const [isOpen, setIsOpen] = useState(false);
   const [itemToDelete, setItemToDelete] = useState(null);
   const [loading, setLoading] = useState(false);
+  const [prefs] = useAtom(preference);
   const navigate = useNavigate();
 
   function finallyActions() {
@@ -41,9 +42,9 @@ const DeleteModal = ({
     setIsOpen(false);
     setItemToDelete(null);
   }
-  const preferences = useAtomValue(preference)[0];
+  
   function setWidthModal() {
-    if (isOpen && preferences.size_font === "Big") {
+    if (isOpen && prefs.size_font === "Big") {
       return "w-[50vw] h-[50vh] bg-white fixed top-0 left-0 right-0 bottom-0 m-auto z-50 flex items-center justify-center border-[0.1vh] border-gray-400 rounded-[1vh] transition-[width] duration-300";
     } else {
       return isOpen

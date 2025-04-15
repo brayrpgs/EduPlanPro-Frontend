@@ -2,9 +2,10 @@ import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { FetchValidate } from "../../utilities/FetchValidate";
 import Loading from "../componentsgeneric/Loading";
-import { useAtom } from 'jotai';
+import { useAtom } from "jotai";
 import Header from "../header/Header.jsx";
 import { preference } from "../validatelogin/ValidateLogin.jsx";
+import Footer from "../footer/Footer.jsx";
 
 const Preferences = () => {
   // Valores predeterminados específicos
@@ -13,29 +14,37 @@ const Preferences = () => {
     size_font: "Medium",
     header_footer_color: "Red",
     icon_size: "Medium",
-    theme: "light"
+    theme: "light",
   };
   const [prefs] = useAtom(preference);
- 
- 
+
   // State Management
   const [preference2, setPreference] = useState(() => {
-    
     return prefs || defaultPreferences;
   });
-  
+
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState("");
   const [hasExistingPreference, setHasExistingPreference] = useState(false);
   const navigate = useNavigate();
 
   // Options for each preference
-  const fontOptions = ["Times New Roman", "Playfair Display SC", "Cedarville Cursive"];
+  const fontOptions = [
+    "Times New Roman",
+    "Playfair Display SC",
+    "Cedarville Cursive",
+  ];
   const sizeFontOptions = ["Big", "Medium", "Small"];
-  const headerFooterColorOptions = ["Red", "Green", "Yellow", "Dark Blue", "Blue"];
+  const headerFooterColorOptions = [
+    "Red",
+    "Green",
+    "Yellow",
+    "Dark Blue",
+    "Blue",
+  ];
   const iconSizeOptions = ["Big", "Medium", "Small"];
   const themeOptions = ["dark", "light"];
-  
+
   // Sync with atom value when it changes
   useEffect(() => {
     if (prefs) {
@@ -51,16 +60,16 @@ const Preferences = () => {
         method: "GET",
         credentials: "include",
       };
-  
+
       try {
         setLoading(true);
         const response = await FetchValidate(url, options, navigate);
-  
+
         if (!response) {
           console.error("Error fetching preferences");
           return;
         }
-  
+
         if (response.data && response.data.length > 0) {
           // Extract the preferences from the PREFERENCIAS object
           const userPreferences = response.data[0].PREFERENCIAS;
@@ -91,29 +100,35 @@ const Preferences = () => {
   };
 
   const formatPreferences = () => {
-    
     return {
-      "PREFERENCES": {
-        "font": preference2.font || defaultPreferences.font,
-        "size_font": preference2.size_font || defaultPreferences.size_font,
-        "header_footer_color": preference2.header_footer_color || defaultPreferences.header_footer_color,
-        "icon_size": preference2.icon_size || defaultPreferences.icon_size,
-        "theme": preference2.theme || defaultPreferences.theme
-      }
+      PREFERENCES: {
+        font: preference2.font || defaultPreferences.font,
+        size_font: preference2.size_font || defaultPreferences.size_font,
+        header_footer_color:
+          preference2.header_footer_color ||
+          defaultPreferences.header_footer_color,
+        icon_size: preference2.icon_size || defaultPreferences.icon_size,
+        theme: preference2.theme || defaultPreferences.theme,
+      },
     };
   };
 
   // Create new preferences with POST
   const createPreferences = async () => {
     // Forzar el uso de los valores predeterminados si es necesario
-    if (!preference2.font && !preference2.size_font && !preference2.header_footer_color && 
-        !preference2.icon_size && !preference2.theme) {
+    if (
+      !preference2.font &&
+      !preference2.size_font &&
+      !preference2.header_footer_color &&
+      !preference2.icon_size &&
+      !preference2.theme
+    ) {
       setPreference(defaultPreferences);
     }
-    
+
     const formattedData = formatPreferences();
     const url = "http://localhost:3001/preferences";
-    
+
     const options = {
       method: "POST",
       credentials: "include",
@@ -122,17 +137,17 @@ const Preferences = () => {
       },
       body: JSON.stringify(formattedData),
     };
-  
+
     try {
       setLoading(true);
       const response = await FetchValidate(url, options, navigate);
-  
+
       if (!response) {
         console.error("Error creating preferences");
         setMessage("Error al crear las preferencias");
         return;
       }
-  
+
       setMessage("Preferencias creadas correctamente");
       setHasExistingPreference(true);
     } catch (error) {
@@ -147,7 +162,7 @@ const Preferences = () => {
   const updatePreferences = async () => {
     const formattedData = formatPreferences();
     const url = "http://localhost:3001/preferences";
-    
+
     const options = {
       method: "PATCH",
       credentials: "include",
@@ -156,17 +171,17 @@ const Preferences = () => {
       },
       body: JSON.stringify(formattedData),
     };
-  
+
     try {
       setLoading(true);
       const response = await FetchValidate(url, options, navigate);
-  
+
       if (!response) {
         console.error("Error updating preferences");
         setMessage("Error al actualizar las preferencias");
         return;
       }
-  
+
       setMessage("Preferencias actualizadas correctamente");
     } catch (error) {
       console.error("Error updating preferences:", error);
@@ -181,12 +196,11 @@ const Preferences = () => {
     console.log(prefs);
     if (hasExistingPreference) {
       await updatePreferences();
-      window.location.reload(); 
+      window.location.reload();
     } else {
       await createPreferences();
-      window.location.reload(); 
+      window.location.reload();
     }
-    
   };
 
   const deletePreferences = async () => {
@@ -215,139 +229,159 @@ const Preferences = () => {
     } finally {
       setLoading(false);
     }
-    window.location.reload(); 
+    window.location.reload();
   };
 
-
   return (
-    <main>
-      <Header/>
-      <div className="mt-[3vh] justify-start flex pr-[15vw] pl-[15vw]">
-        <div className="bg-UNA-Blue-Dark w-full max-w-screens flex rounded-[0.5vh] items-center">
-          <h1 className="ml-[1vw] my-[0.5vh] text-[2vw] text-white">
-            Preferencias
-          </h1>
-        </div>
-      </div>
-
-      <div className="flex flex-col justify-center items-center w-full pl-[15vw] pr-[15vw] mt-[2vh]">
-        <div className="w-full bg-white shadow-md rounded-[0.5vh] p-[2vh]">
-          {message && (
-            <div className="mb-[2vh] p-[1vh] bg-blue-100 text-blue-800 rounded-[0.3vh]">
-              {message}
-            </div>
-          )}
-
-          <table className="w-full table-auto">
-            <tbody>
-              <tr>
-                <td className="border-[0.1vh] border-gray-400 px-[1vw] py-[1vh] text-[1vw] text-UNA-Red w-[20%]">
-                  Tipo de Fuente
-                </td>
-                <td className="border-[0.1vh] border-gray-400 px-[1vw] py-[1vh]">
-                  <select
-                    name="font"
-                    value={preference2.font || defaultPreferences.font}
-                    onChange={handleChange}
-                    className="w-full p-[0.5vh] text-[0.9vw]"
-                  >
-                    {fontOptions.map(option => (
-                      <option key={option} value={option}>{option}</option>
-                    ))}
-                  </select>
-                </td>
-              </tr>
-              <tr>
-                <td className="border-[0.1vh] border-gray-400 px-[1vw] py-[1vh] text-[1vw] text-UNA-Red">
-                  Tamaño de Fuente
-                </td>
-                <td className="border-[0.1vh] border-gray-400 px-[1vw] py-[1vh]">
-                  <select
-                    name="size_font"
-                    value={preference2.size_font || defaultPreferences.size_font}
-                    onChange={handleChange}
-                    className="w-full p-[0.5vh] text-[0.9vw]"
-                  >
-                    {sizeFontOptions.map(option => (
-                      <option key={option} value={option}>{option}</option>
-                    ))}
-                  </select>
-                </td>
-              </tr>
-              <tr>
-                <td className="border-[0.1vh] border-gray-400 px-[1vw] py-[1vh] text-[1vw] text-UNA-Red">
-                  Color de Encabezado/Pie
-                </td>
-                <td className="border-[0.1vh] border-gray-400 px-[1vw] py-[1vh]">
-                  <select
-                    name="header_footer_color"
-                    value={preference2.header_footer_color || defaultPreferences.header_footer_color}
-                    onChange={handleChange}
-                    className="w-full p-[0.5vh] text-[0.9vw]"
-                  >
-                    {headerFooterColorOptions.map(option => (
-                      <option key={option} value={option}>{option}</option>
-                    ))}
-                  </select>
-                </td>
-              </tr>
-              <tr>
-                <td className="border-[0.1vh] border-gray-400 px-[1vw] py-[1vh] text-[1vw] text-UNA-Red">
-                  Tamaño de Íconos
-                </td>
-                <td className="border-[0.1vh] border-gray-400 px-[1vw] py-[1vh]">
-                  <select
-                    name="icon_size"
-                    value={preference2.icon_size || defaultPreferences.icon_size}
-                    onChange={handleChange}
-                    className="w-full p-[0.5vh] text-[0.9vw]"
-                  >
-                    {iconSizeOptions.map(option => (
-                      <option key={option} value={option}>{option}</option>
-                    ))}
-                  </select>
-                </td>
-              </tr>
-              <tr>
-                <td className="border-[0.1vh] border-gray-400 px-[1vw] py-[1vh] text-[1vw] text-UNA-Red">
-                  Tema
-                </td>
-                <td className="border-[0.1vh] border-gray-400 px-[1vw] py-[1vh]">
-                  <select
-                    name="theme"
-                    value={preference2.theme || defaultPreferences.theme}
-                    onChange={handleChange}
-                    className="w-full p-[0.5vh] text-[0.9vw]"
-                  >
-                    {themeOptions.map(option => (
-                      <option key={option} value={option}>{option}</option>
-                    ))}
-                  </select>
-                  
-                </td>
-              </tr>
-            </tbody>
-          </table>
-
-          <div className="flex justify-end mt-[2vh] gap-[1vw]">
-            <button
-              onClick={deletePreferences}
-              className={`px-[1vw] py-[0.5vh] bg-red-600 text-white rounded-[0.3vh] hover:bg-red-700 text-[0.9vw] ${!hasExistingPreference ? 'opacity-50 cursor-not-allowed' : ''}`}
-              disabled={!hasExistingPreference}
-            >
-              Eliminar
-            </button>
-            <button
-              onClick={savePreferences}
-              className="px-[1vw] py-[0.5vh] bg-UNA-Blue-Dark text-white rounded-[0.3vh] hover:bg-blue-900 text-[0.9vw]"
-            >
-              {hasExistingPreference ? 'Actualizar' : 'Guardar'}
-            </button>
+    <div className="grid grid-rows-[auto_1fr_auto] min-h-screen h-screen">
+      <Header />
+      <main>
+        <div className="mt-[3vh] justify-start flex pr-[15vw] pl-[15vw]">
+          <div className="bg-UNA-Blue-Dark w-full max-w-screens flex rounded-[0.5vh] items-center">
+            <h1 className="ml-[1vw] my-[0.5vh] text-[2vw] text-white">
+              Preferencias
+            </h1>
           </div>
         </div>
-      </div>
-      {loading && <Loading />}
-    </main>
+
+        <div className="flex flex-col justify-center items-center w-full pl-[15vw] pr-[15vw] mt-[2vh]">
+          <div className="w-full bg-white shadow-md rounded-[0.5vh] p-[2vh]">
+            {message && (
+              <div className="mb-[2vh] p-[1vh] bg-blue-100 text-blue-800 rounded-[0.3vh]">
+                {message}
+              </div>
+            )}
+
+            <table className="w-full table-auto">
+              <tbody>
+                <tr>
+                  <td className="border-[0.1vh] border-gray-400 px-[1vw] py-[1vh] text-[1vw] text-UNA-Red w-[20%]">
+                    Tipo de Fuente
+                  </td>
+                  <td className="border-[0.1vh] border-gray-400 px-[1vw] py-[1vh]">
+                    <select
+                      name="font"
+                      value={preference2.font || defaultPreferences.font}
+                      onChange={handleChange}
+                      className="w-full p-[0.5vh] text-[0.9vw]"
+                    >
+                      {fontOptions.map((option) => (
+                        <option key={option} value={option}>
+                          {option}
+                        </option>
+                      ))}
+                    </select>
+                  </td>
+                </tr>
+                <tr>
+                  <td className="border-[0.1vh] border-gray-400 px-[1vw] py-[1vh] text-[1vw] text-UNA-Red">
+                    Tamaño de Fuente
+                  </td>
+                  <td className="border-[0.1vh] border-gray-400 px-[1vw] py-[1vh]">
+                    <select
+                      name="size_font"
+                      value={
+                        preference2.size_font || defaultPreferences.size_font
+                      }
+                      onChange={handleChange}
+                      className="w-full p-[0.5vh] text-[0.9vw]"
+                    >
+                      {sizeFontOptions.map((option) => (
+                        <option key={option} value={option}>
+                          {option}
+                        </option>
+                      ))}
+                    </select>
+                  </td>
+                </tr>
+                <tr>
+                  <td className="border-[0.1vh] border-gray-400 px-[1vw] py-[1vh] text-[1vw] text-UNA-Red">
+                    Color de Encabezado/Pie
+                  </td>
+                  <td className="border-[0.1vh] border-gray-400 px-[1vw] py-[1vh]">
+                    <select
+                      name="header_footer_color"
+                      value={
+                        preference2.header_footer_color ||
+                        defaultPreferences.header_footer_color
+                      }
+                      onChange={handleChange}
+                      className="w-full p-[0.5vh] text-[0.9vw]"
+                    >
+                      {headerFooterColorOptions.map((option) => (
+                        <option key={option} value={option}>
+                          {option}
+                        </option>
+                      ))}
+                    </select>
+                  </td>
+                </tr>
+                <tr>
+                  <td className="border-[0.1vh] border-gray-400 px-[1vw] py-[1vh] text-[1vw] text-UNA-Red">
+                    Tamaño de Íconos
+                  </td>
+                  <td className="border-[0.1vh] border-gray-400 px-[1vw] py-[1vh]">
+                    <select
+                      name="icon_size"
+                      value={
+                        preference2.icon_size || defaultPreferences.icon_size
+                      }
+                      onChange={handleChange}
+                      className="w-full p-[0.5vh] text-[0.9vw]"
+                    >
+                      {iconSizeOptions.map((option) => (
+                        <option key={option} value={option}>
+                          {option}
+                        </option>
+                      ))}
+                    </select>
+                  </td>
+                </tr>
+                <tr>
+                  <td className="border-[0.1vh] border-gray-400 px-[1vw] py-[1vh] text-[1vw] text-UNA-Red">
+                    Tema
+                  </td>
+                  <td className="border-[0.1vh] border-gray-400 px-[1vw] py-[1vh]">
+                    <select
+                      name="theme"
+                      value={preference2.theme || defaultPreferences.theme}
+                      onChange={handleChange}
+                      className="w-full p-[0.5vh] text-[0.9vw]"
+                    >
+                      {themeOptions.map((option) => (
+                        <option key={option} value={option}>
+                          {option}
+                        </option>
+                      ))}
+                    </select>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+
+            <div className="flex justify-end mt-[2vh] gap-[1vw]">
+              <button
+                onClick={deletePreferences}
+                className={`px-[1vw] py-[0.5vh] bg-red-600 text-white rounded-[0.3vh] hover:bg-red-700 text-[0.9vw] ${
+                  !hasExistingPreference ? "opacity-50 cursor-not-allowed" : ""
+                }`}
+                disabled={!hasExistingPreference}
+              >
+                Eliminar
+              </button>
+              <button
+                onClick={savePreferences}
+                className="px-[1vw] py-[0.5vh] bg-UNA-Blue-Dark text-white rounded-[0.3vh] hover:bg-blue-900 text-[0.9vw]"
+              >
+                {hasExistingPreference ? "Actualizar" : "Guardar"}
+              </button>
+            </div>
+          </div>
+        </div>
+        {loading && <Loading />}
+      </main>
+      <Footer />
+    </div>
   );
 };
 
