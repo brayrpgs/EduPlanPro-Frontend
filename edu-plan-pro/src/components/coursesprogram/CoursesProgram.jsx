@@ -1,6 +1,7 @@
 import Footer from '../footer/Footer.jsx';
 import Header from '../header/Header.jsx'; 
 import CoursesProgramTable from './CoursesProgramTable.jsx';
+import Breadcrumbs from '../breadcrumbs/Breadcrumbs.jsx';
 
 
 function CoursesProgram() {

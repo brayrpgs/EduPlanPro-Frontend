@@ -1,7 +1,7 @@
-
 import Footer from '../footer/Footer.jsx';
 import Header from '../header/Header.jsx'; 
 import UserTable from './UserTable';
+import Breadcrumbs from '../breadcrumbs/Breadcrumbs.jsx';
 
 function User() {
   return (
