@@ -12,7 +12,7 @@ import StudyPlans from "./studyplans/StudyPlans.jsx"
 import ValidateLogin from "./validatelogin/ValidateLogin.jsx";
 import ValidateMain from "./validatelogin/ValidateMain.jsx";
 import Pagination from "./pagination/Pagination.jsx";
-import Preference from "./preference/preference.jsx";
+import Preference from "./preference/Preferences.jsx";
 import ServerError from "./validatelogin/ServerError.jsx";
 import PageNotFound from "./componentsgeneric/PageNotFound.jsx";
 import CoursesProgram from "./coursesprogram/CoursesProgram.jsx";

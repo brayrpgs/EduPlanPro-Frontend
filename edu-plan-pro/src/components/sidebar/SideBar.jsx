@@ -74,6 +74,8 @@ const SideBar = () => {
             },
           });
           navigate("/login");
+          window.location.reload();
+         
         } else {
           Swal.fire(
             "Error",
