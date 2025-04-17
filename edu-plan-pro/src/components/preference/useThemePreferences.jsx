@@ -24,29 +24,29 @@ export const useThemePreferences = () => {
       "icon-size-",
     ]);
 
-    const themeClass = prefs.theme === "dark" ? "dark-theme" : "light-theme";
+    const themeClass = prefs.theme === "Oscuro" ? "dark-theme" : "light-theme";
     document.body.classList.add(themeClass);
 
     const fontSizeClass =
-      prefs.size_font === "Big"
+      prefs.size_font === "Grande"
         ? "font-large"
-        : prefs.size_font === "Small"
+        : prefs.size_font === "Pequeño"
         ? "font-small"
         : "font-medium";
 
     document.body.classList.add(fontSizeClass);
 
-    if (prefs.icon_size === "Big") {
+    if (prefs.icon_size === "Grande") {
       document.body.classList.add("icon-size-big");
-    } else if (prefs.icon_size === "Small") {
+    } else if (prefs.icon_size === "Pequeño") {
       document.body.classList.add("icon-size-small");
     }
 
     const headerColorMap = {
-      Blue: "UNA-Blue-Light",
-      "Dark Blue": "UNA-Blue-Dark",
-      Green: "UNA-Green-Light",
-      Yellow: "UNA-Yellow",
+      "Azul claro": "UNA-Blue-Light",
+      "Azul oscuro": "UNA-Blue-Dark",
+      Verde: "UNA-Green-Light",
+      Amarillo: "UNA-Yellow",
       default: "UNA-Red",
     };
 
