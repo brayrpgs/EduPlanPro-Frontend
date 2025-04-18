@@ -8,6 +8,7 @@ const Breadcrumbs = () => {
   //  const commonClass = "text-sm text-blue-600 hover:underline";
 
     return (
+        <nav className="breadcrumbs bg-gray-100 p-2 rounded-md shadow-sm max-w-full max-h-[5vh] overflow-hidden">
             <ul className="flex space-x-2 text-sm text-white-700">
                 <li>
                     <Link to="/" className="text-white-600 hover:underline">
@@ -32,6 +33,7 @@ const Breadcrumbs = () => {
                     );
                 })}
             </ul>
+        </nav>
     );
 };
 
