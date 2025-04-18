@@ -6,6 +6,7 @@ import { useAtom } from "jotai";
 import Header from "../header/Header.jsx";
 import { preference } from "../validatelogin/ValidateLogin.jsx";
 import Footer from "../footer/Footer.jsx";
+import Swal from "sweetalert2";
 
 const Preferences = () => {
   // Default values
@@ -19,13 +20,23 @@ const Preferences = () => {
   const [prefs, setPrefs] = useAtom(preference);
   const [preference2, setPreference] = useState(defaultPreferences);
   const [loading, setLoading] = useState(false);
-  const [message, setMessage] = useState("");
+  const [initialConfiguration, setInitialConfiguration] = useState([]);
   const [hasExistingPreference, setHasExistingPreference] = useState(false);
   const navigate = useNavigate();
 
-  const fontOptions = ["Times New Roman", "Playfair Display SC", "Cedarville Cursive"];
+  const fontOptions = [
+    "Times New Roman",
+    "Playfair Display SC",
+    "Cedarville Cursive",
+  ];
   const sizeFontOptions = ["Grande", "Mediano", "Pequeño"];
-  const headerFooterColorOptions = ["Rojo", "Verde", "Amarillo", "Azul oscuro", "Azul claro"];
+  const headerFooterColorOptions = [
+    "Rojo",
+    "Verde",
+    "Amarillo",
+    "Azul oscuro",
+    "Azul claro",
+  ];
   const iconSizeOptions = ["Grande", "Mediano", "Pequeño"];
   const themeOptions = ["Oscuro", "Claro"];
 
@@ -34,13 +45,18 @@ const Preferences = () => {
     const fetchPreferences = async () => {
       setLoading(true);
       try {
-        const response = await FetchValidate("http://localhost:3001/preferences", {
-          method: "GET",
-          credentials: "include",
-        }, navigate);
+        const response = await FetchValidate(
+          "http://localhost:3001/preferences",
+          {
+            method: "GET",
+            credentials: "include",
+          },
+          navigate
+        );
 
         if (response?.data?.length > 0) {
           const userPrefs = response.data[0].PREFERENCIAS;
+          setInitialConfiguration(userPrefs);
           setPreference(userPrefs);
           setPrefs(userPrefs);
           setHasExistingPreference(true);
@@ -73,48 +89,125 @@ const Preferences = () => {
   const savePreferences = async () => {
     const url = "http://localhost:3001/preferences";
     const method = hasExistingPreference ? "PATCH" : "POST";
+    const newPreferences = formatPreferences();
 
+    if (hasExistingPreference) {
+      const result = await Swal.fire({
+        title: "Actualizar preferencias",
+        html: `
+        <div style="display: flex; justify-content: center; align-items: center; flex-direction: column; text-align: justify; padding: 20px; line-height: 1.8;">
+        <h3>¿Deseas guardar los siguientes cambios?</h3><br>
+        
+        - Tipo: ${initialConfiguration.font} -> ${newPreferences.PREFERENCES.font}<br>
+        - Tamaño de fuente: ${initialConfiguration.size_font} -> ${newPreferences.PREFERENCES.size_font}<br>
+        - Color: ${initialConfiguration.header_footer_color} -> ${newPreferences.PREFERENCES.header_footer_color}<br>
+        - Tamaño de íconos: ${initialConfiguration.icon_size} -> ${newPreferences.PREFERENCES.icon_size}<br>
+        - Tema: ${initialConfiguration.theme} -> ${newPreferences.PREFERENCES.theme}
+        </div>
+      `,
+        icon: "info",
+        iconColor: "#A31E32",
+        showCancelButton: true,
+        confirmButtonText: "Guardar cambios",
+        cancelButtonText: "Cancelar cambios",
+        confirmButtonColor: "#A31E32",
+        cancelButtonColor: "#2b3843",
+      });
+  
+      if (!result.isConfirmed) {
+        return;
+      } 
+    }
+  
     try {
       setLoading(true);
-      const response = await FetchValidate(url, {
-        method,
-        credentials: "include",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(formatPreferences()),
-      }, navigate);
-
-      if (!response) throw new Error("Error en la solicitud");
-
-      setMessage(hasExistingPreference ? "Preferencias actualizadas correctamente" : "Preferencias creadas correctamente");
-      setPrefs(preference2);
-      setHasExistingPreference(true);
-      window.location.reload();
+      const response = await FetchValidate(
+        url,
+        {
+          method,
+          credentials: "include",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(formatPreferences()),
+        },
+        navigate
+      );
+  
+      if (response.code === "200") {
+        if (hasExistingPreference) {
+          console.log(initialConfiguration);
+          console.log(formatPreferences());
+          Swal.fire({
+            icon: "success",
+            title: "Preferencias actualizadas correctamente",
+            confirmButtonText: "Continuar",
+            confirmButtonColor: "#A31E32",
+          }).then(() => {
+            window.location.reload();
+          });
+        } else {
+          Swal.fire({
+            icon: "success",
+            title: "Preferencias creadas correctamente",
+            confirmButtonText: "Continuar",
+            confirmButtonColor: "#A31E32",
+          }).then(() => {
+            window.location.reload();
+          });
+        }
+      } else {
+        Swal.fire({
+          icon: "error",
+          iconColor: "#a31e32",
+          title: "No se pudo completar la solicitud",
+          text: "Por favor, intenta nuevamente más tarde.",
+          confirmButtonText: "Aceptar",
+          confirmButtonColor: "#A31E32",
+        });
+      }
     } catch (error) {
       console.error("Error al guardar preferencias:", error);
-      setMessage("Error al guardar las preferencias");
     } finally {
       setLoading(false);
     }
   };
 
   const deletePreferences = async () => {
+
+    const result = await Swal.fire({
+      title: "Eliminar preferencias",
+      text: "¿Está seguro de que desea eliminar sus preferencias?",
+      icon: "info",
+      iconColor: "#A31E32",
+      showCancelButton: true,
+      confirmButtonText: "Eliminar",
+      cancelButtonText: "Cancelar",
+      confirmButtonColor: "#A31E32",
+      cancelButtonColor: "#2b3843",
+    });
+
+    if (!result.isConfirmed) {
+      return;
+    }
+
     try {
       setLoading(true);
-      const response = await FetchValidate("http://localhost:3001/preferences", {
-        method: "DELETE",
-        credentials: "include",
-      }, navigate);
+      const response = await FetchValidate(
+        "http://localhost:3001/preferences",
+        {
+          method: "DELETE",
+          credentials: "include",
+        },
+        navigate
+      );
 
       if (!response) throw new Error("Error al eliminar");
 
-      setMessage("Preferencias eliminadas correctamente");
       setHasExistingPreference(false);
       setPreference(defaultPreferences);
       setPrefs(defaultPreferences);
       window.location.reload();
     } catch (error) {
       console.error("Error al eliminar preferencias:", error);
-      setMessage("Error al eliminar las preferencias");
     } finally {
       setLoading(false);
     }
@@ -131,15 +224,9 @@ const Preferences = () => {
             </h1>
           </div>
         </div>
-  
+
         <div className="flex flex-col justify-center items-center w-full pl-[15vw] pr-[15vw] mt-[2vh]">
           <div className="w-full bg-white shadow-md rounded-[0.5vh] p-[2vh]">
-            {message && (
-              <div className="mb-[2vh] p-[1vh] bg-blue-100 text-blue-800 rounded-[0.3vh]">
-                {message}
-              </div>
-            )}
-  
             <table className="w-full table-auto">
               <tbody>
                 <tr>
@@ -168,7 +255,9 @@ const Preferences = () => {
                   <td className="border-[0.1vh] border-gray-400 px-[1vw] py-[1vh]">
                     <select
                       name="size_font"
-                      value={preference2.size_font || defaultPreferences.size_font}
+                      value={
+                        preference2.size_font || defaultPreferences.size_font
+                      }
                       onChange={handleChange}
                       className="w-full p-[0.5vh] text-[0.9vw]"
                     >
@@ -209,7 +298,9 @@ const Preferences = () => {
                   <td className="border-[0.1vh] border-gray-400 px-[1vw] py-[1vh]">
                     <select
                       name="icon_size"
-                      value={preference2.icon_size || defaultPreferences.icon_size}
+                      value={
+                        preference2.icon_size || defaultPreferences.icon_size
+                      }
                       onChange={handleChange}
                       className="w-full p-[0.5vh] text-[0.9vw]"
                     >
@@ -242,7 +333,7 @@ const Preferences = () => {
                 </tr>
               </tbody>
             </table>
-  
+
             <div className="flex justify-end mt-[2vh] gap-[1vw]">
               <button
                 onClick={deletePreferences}
@@ -267,7 +358,6 @@ const Preferences = () => {
       <Footer />
     </div>
   );
-  
 };
 
 export default Preferences;
