@@ -231,7 +231,7 @@ const Preferences = () => {
               <tbody>
                 <tr>
                   <td className="border-[0.1vh] border-gray-400 px-[1vw] py-[1vh] text-[1vw] text-UNA-Red w-[20%]">
-                    Tipo de Fuente
+                    Tipo de fuente
                   </td>
                   <td className="border-[0.1vh] border-gray-400 px-[1vw] py-[1vh]">
                     <select
@@ -250,7 +250,7 @@ const Preferences = () => {
                 </tr>
                 <tr>
                   <td className="border-[0.1vh] border-gray-400 px-[1vw] py-[1vh] text-[1vw] text-UNA-Red">
-                    Tamaño de Fuente
+                    Tamaño de fuente
                   </td>
                   <td className="border-[0.1vh] border-gray-400 px-[1vw] py-[1vh]">
                     <select
@@ -271,7 +271,7 @@ const Preferences = () => {
                 </tr>
                 <tr>
                   <td className="border-[0.1vh] border-gray-400 px-[1vw] py-[1vh] text-[1vw] text-UNA-Red">
-                    Color de Encabezado/Pie
+                    Color de encabezado/pie
                   </td>
                   <td className="border-[0.1vh] border-gray-400 px-[1vw] py-[1vh]">
                     <select
@@ -293,7 +293,7 @@ const Preferences = () => {
                 </tr>
                 <tr>
                   <td className="border-[0.1vh] border-gray-400 px-[1vw] py-[1vh] text-[1vw] text-UNA-Red">
-                    Tamaño de Íconos
+                    Tamaño de íconos
                   </td>
                   <td className="border-[0.1vh] border-gray-400 px-[1vw] py-[1vh]">
                     <select
@@ -337,7 +337,7 @@ const Preferences = () => {
             <div className="flex justify-end mt-[2vh] gap-[1vw]">
               <button
                 onClick={deletePreferences}
-                className={`px-[1vw] py-[0.5vh] bg-red-600 text-white rounded-[0.3vh] hover:bg-red-700 text-[0.9vw] ${
+                className={`px-[1vw] py-[0.5vh] bg-UNA-Red text-white rounded-[0.3vh] hover:bg-red-700 text-[0.9vw] ${
                   !hasExistingPreference ? "opacity-50 cursor-not-allowed" : ""
                 }`}
                 disabled={!hasExistingPreference}

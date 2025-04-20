@@ -274,28 +274,32 @@ const CoursesProgramTable = () => {
     <main>
       <div className="mt-[3vh] justify-start flex pr-[15vw] pl-[15vw]">
         <div className="bg-UNA-Blue-Dark w-full max-w-screens flex rounded-[0.5vh] items-center">
-          <h1 className="ml-[1vw] my-[0.5vh] text-[2vw] text-white">
-            Administrar programas de curso
-          </h1>
-          <div
-            title="Descargar PDF de los programas de curso seleccionados."
-            onClick={handleDownloadProgramCourses}
-            className="flex ml-[26.5vw] bg-UNA-Green-Light/70 w-[4.5vw] h-[4vh] items-center cursor-pointer rounded-[0.5vw] hover:scale-110"
-          >
-            <DownloadIcon />
-            <span className="text-white items-center justify-center text-[1.3vw] w-[4vw]">
-              ({selectedPDFs.length})
-            </span>
+          <div className="flex w-full">
+            <h1 className="ml-[1vw] my-[0.5vh] text-[2vw] text-white">
+              Administrar programas de curso
+            </h1>
           </div>
-          <div className="flex ml-auto justify-end mr-[1vw]">
-            <CoursesProgramAdd
-              totalItems={totalItems}
-              currentPage={currentPage}
-              loadData={loadCoursesProgramData}
-              textToAdd={"Agregar programa de curso"}
-              studyPlans={studyPlans}
-              formatDate={formatDate}
-            />
+          <div className="flex">
+            <div
+              title="Descargar PDF de los programas de curso seleccionados."
+              onClick={handleDownloadProgramCourses}
+              className="flex -mr-[1vw] bg-UNA-Green-Light/70 w-[4.5vw] h-[4vh] items-center cursor-pointer rounded-[0.5vw] hover:scale-110"
+            >
+              <DownloadIcon />
+              <span className="text-white items-center justify-center text-[1.3vw] w-[4vw]">
+                ({selectedPDFs.length})
+              </span>
+            </div>
+            <div className="flex justify-end mr-[1vw] w-[15vw]">
+              <CoursesProgramAdd
+                totalItems={totalItems}
+                currentPage={currentPage}
+                loadData={loadCoursesProgramData}
+                textToAdd={"Agregar programa de curso"}
+                studyPlans={studyPlans}
+                formatDate={formatDate}
+              />
+            </div>
           </div>
         </div>
       </div>

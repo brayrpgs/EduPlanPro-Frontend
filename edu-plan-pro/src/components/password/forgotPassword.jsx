@@ -251,7 +251,7 @@ const ForgotPassword = ({ isOpen, setIsOpen }) => {
         className={`${
           !isOpenBlur && "hidden"
         } bg-gray-600/50 min-h-screen w-full z-40 flex fixed top-0 right-0 left-0 backdrop-blur-[0.3vh]`}
-        onClick={() => validateClose()}
+        onClick={() => closeActions()}
       ></div>
 
       <div
