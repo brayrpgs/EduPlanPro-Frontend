@@ -23,8 +23,8 @@ const Header = () => {
       <div className="flex items-center w-full h-full justify-end">
         <div className="absolute left-[1%] h-[11.5vh] w-[15vh]">
           <div onClick={handleLogoClick} className="w-full h-full cursor-pointer flex items-center">
-          <HomeIcon/>
-          <LogoTransparent/>
+            {window.location.pathname !== "/dashboard" && <HomeIcon />}
+            <LogoTransparent />
           </div>
         </div>
         <SideBar />

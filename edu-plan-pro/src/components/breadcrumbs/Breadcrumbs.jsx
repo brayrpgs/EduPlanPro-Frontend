@@ -11,10 +11,13 @@ const Breadcrumbs = () => {
         <nav className="breadcrumbs bg-gray-100 p-2 rounded-md shadow-sm max-w-full max-h-[5vh] overflow-hidden">
             <ul className="flex space-x-2 text-sm text-white-700">
                 <li>
-                    <Link to="/" className="text-white-600 hover:underline">
-                        <HomeIcon className="w-1 h-1 inline-block mr-1" />
-                    </Link>
+                    <div className="absolute left-[1%] h-[10.5vh] w-[15vh]"> 
+                        <Link to="/" className="text-white-600 hover:underline">
+                        <HomeIcon/>
+                        </Link>
+                    </div>
                 </li>
+   
                 {pathnames.map((value, index) => {
                     const to = `/${pathnames.slice(0, index + 1).join('/')}`;
                     const isLast = index === pathnames.length - 1;
