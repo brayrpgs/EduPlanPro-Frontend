@@ -51,13 +51,6 @@ function Dashboard() {
       iconBg: "bg-purple-100",
     },
     {
-      title: "Reportes",
-      icon: ReportIcon,
-      description: "Gestionar información de los reportes",
-      path: "/report",
-      iconBg: "bg-purple-100",
-    },
-    {
       title: "Planes de estudio",
       icon: StudyPlanIcon,
       description: "Gestionar información de los planes de estudio",
@@ -70,6 +63,13 @@ function Dashboard() {
       icon: CourseProgramIcon,
       description: "Gestionar información de los programas del curso",
       path: "/coursesprogram",
+      iconBg: "bg-purple-100",
+    },
+    {
+      title: "Reportes",
+      icon: ReportIcon,
+      description: "Gestionar información de los reportes",
+      path: "/report",
       iconBg: "bg-purple-100",
     },
  
