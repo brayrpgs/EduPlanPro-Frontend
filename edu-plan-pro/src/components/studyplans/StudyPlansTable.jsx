@@ -10,6 +10,9 @@ import { useNavigate } from "react-router-dom";
 import StudyPlansAdd from "./StudyPlansAdd";
 import StudyPlansUpdate from "./StudyPlansUpdate";
 import { ShowPDF } from "../componentsgeneric/ShowPDF";
+import JSZip from "jszip";
+import Swal from "sweetalert2";
+import DownloadIcon from "../icons/MainIcons/DownloadIcon";
 
 const StudyPlansTable = () => {
   const [studyPlans, setStudyPlans] = useState([]);
@@ -36,6 +39,7 @@ const StudyPlansTable = () => {
   const [data4Filter, setData4Filter] = useState("");
   const [carrers, setCarreers] = React.useState([]);
   const [loading, setLoading] = useState(false);
+  const [selectedPDFs, setselectedPDFs] = useState([]);
 
   const navigate = useNavigate();
 
@@ -133,14 +137,65 @@ const StudyPlansTable = () => {
     setData4Filter("");
   };
 
+  const handleDownloadStudyPlans = async () => {
+    if (selectedPDFs.length === 0) {
+      Swal.fire({
+        icon: "error",
+        iconColor: "#a31e32",
+        title: "No se pudo descargar los planes de estudio.",
+        text: "Seleccione al menos un plan de estudio para continuar.",
+        confirmButtonText: "Aceptar",
+        confirmButtonColor: "#A31E32",
+      });
+    } else {
+      const zip = new JSZip();
+
+      selectedPDFs.forEach(({ name, pdf }) => {
+        const base64Clear = pdf.includes(",") ? pdf.split(",")[1] : pdf;
+
+        const binaryData = atob(base64Clear);
+        const arrayBuffer = new Uint8Array(binaryData.length);
+        for (let i = 0; i < binaryData.length; i++) {
+          arrayBuffer[i] = binaryData.charCodeAt(i);
+        }
+
+        const fileName = name.endsWith(".pdf") ? name : `${name}.pdf`;
+        zip.file(fileName, arrayBuffer, { binary: true });
+      });
+
+      const zipContent = await zip.generateAsync({ type: "blob" });
+      const url = URL.createObjectURL(zipContent);
+
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = "planes_de_estudio.zip";
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      URL.revokeObjectURL(url);
+    }
+  };
+
   return (
     <main>
       <div className="mt-[3vh] justify-start flex pr-[15vw] pl-[15vw]">
         <div className="bg-UNA-Blue-Dark w-full max-w-screens flex rounded-[0.5vh] items-center">
-          <h1 className="ml-[1vw] my-[0.5vh] text-[2vw] text-white">
-            Administrar planes de estudio
-          </h1>
-          <div className="flex ml-auto justify-end mr-[1vw]">
+          <div className="flex w-full">
+            <h1 className="ml-[1vw] my-[0.5vh] text-[2vw] text-white">
+              Administrar planes de estudio
+            </h1>
+          </div>
+          <div
+              title="Descargar PDF de los programas de curso seleccionados."
+              onClick={handleDownloadStudyPlans}
+              className="flex bg-UNA-Green-Light/70 w-[4.5vw] h-[4vh] items-center cursor-pointer rounded-[0.5vw] hover:scale-110"
+          >
+              <DownloadIcon />
+              <span className="text-white items-center justify-center text-[1.3vw] w-[4vw]">
+                ({selectedPDFs.length})
+              </span>
+          </div>
+          <div className="flex justify-end mr-[1vw] w-[16vw] items-center">
             <StudyPlansAdd
               totalItems={totalItems}
               currentPage={currentPage}
@@ -166,6 +221,8 @@ const StudyPlansTable = () => {
           >
             <FilterOffIcon />
           </div>
+          
+
         </div>
         <div className="flex justify-center items-center mt-0 w-full overflow-x-auto">
           <table className="w-full table-auto">
@@ -227,7 +284,6 @@ const StudyPlansTable = () => {
                     />
                   </div>
                 </th>
-            
                 <th className="border-[0.1vh] border-gray-400 px-[1vw] py-[1vh] w-[10vw] text-[1vw] text-UNA-Red">
                   Acciones
                 </th>
@@ -259,7 +315,6 @@ const StudyPlansTable = () => {
                     <td className="border-[0.1vh] border-gray-400 px-[1vw] py-[1.5vh] text-[0.9vw] text-center items-center break-words whitespace-normal max-w-[15vw]">
                       {studyPlan["CARRERA"]}
                     </td>
-                    
                     <td className="border-[0.1vh]  border-gray-400 px-[1vw] py-[1vh] text-[0.9vw]">
                       <div className="flex items-center flex-row justify-center w-full h-full gap-[0.2vw]">
                         <StudyPlansUpdate
@@ -305,8 +360,34 @@ const StudyPlansTable = () => {
                         <ShowPDF title={"PDF asociado al plan de estudio"} 
                           pdfUrl= {studyPlan["PDF"]}
                         />
+
+<input
+                        type="checkbox"
+                        className="outline-none w-[2vw] h-[2.5vh] cursor-pointer"
+                        checked={selectedPDFs.some((pdfObj) => pdfObj.id === studyPlan.ID_STUDY_PLAN)}
+                        onChange={(e) => {
+                          if (e.target.checked) {
+                            setselectedPDFs((prev) => [
+                              ...prev,
+                              {
+                                id: studyPlan.ID_STUDY_PLAN,
+                                name: studyPlan["NOMBRE DEL PLAN DE ESTUDIO"],
+                                pdf: studyPlan["PDF"],
+                              },
+                            ]);
+                          } else {
+                            setselectedPDFs((prev) =>
+                              prev.filter((pdfObj) => pdfObj.id !== studyPlan.ID_STUDY_PLAN)
+                            );
+                          }
+                        }}
+                      />
                       </div>
                     </td>
+                    {/*                    
+                    <td className="border-[0.1vh] border-gray-400 px-[1vw] py-[1.5vh] text-center">
+                    </td>
+                     */}
                   </tr>
                 ))
               ) : (
