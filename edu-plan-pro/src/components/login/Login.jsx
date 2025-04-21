@@ -8,17 +8,18 @@ import Swal from "sweetalert2";
 import LoginHeader from "./LoginHeader.jsx";
 import Footer from "../footer/Footer.jsx";
 import Loading from "../componentsgeneric/Loading.jsx";
+import ForgotPassword from "../password/forgotPassword.jsx";
 
 export const Login = () => {
   const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
+  const [isOpen, setIsOpen] = useState(false);
 
   const [form, setForm] = useState({
     username: "",
     password: "",
   });
 
-  
   const handleChange = (e) => {
     const { name, value } = e.target;
 
@@ -88,18 +89,15 @@ export const Login = () => {
             iconColor: "#7CDA24",
             confirmButtonText: "Aceptar",
             confirmButtonColor: "#A31E32",
-            allowOutsideClick: true, 
+            allowOutsideClick: true,
             willClose: () => {
-              
               navigate("/dashboard");
             },
           }).then((result) => {
-           
             if (result.isConfirmed) {
               navigate("/dashboard");
             }
           });
-
         } else {
           Swal.fire({
             title: "Acceso inválido.",
@@ -190,9 +188,11 @@ export const Login = () => {
               </button>
             </div>
 
-            <div className="relative mt-[2vh] flex justify-center">
+            <div
+              className="relative mt-[2vh] flex justify-center"
+              onClick={() => setIsOpen(true)}
+            >
               <a
-                href="/forgotPassword"
                 title="Olvidé mi contraseña"
                 className="w-[65%] h-[5vh] bg-UNA-Gray rounded-[1vh] text-white text-[2vh] cursor-pointer hover:bg-UNA-Gray-Dark"
               >
@@ -207,6 +207,7 @@ export const Login = () => {
           </div>
         </div>
 
+        {isOpen && <ForgotPassword isOpen={isOpen} setIsOpen={setIsOpen} />}
         {loading && <Loading />}
       </main>
 

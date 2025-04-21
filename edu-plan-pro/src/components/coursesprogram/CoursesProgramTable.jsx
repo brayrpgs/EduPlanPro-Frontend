@@ -8,13 +8,17 @@ import { ShowPDF } from "../componentsgeneric/ShowPDF";
 import CoursesProgramAdd from "./CoursesProgramAdd";
 import MainSearch from "../search/MainSearch";
 import FilterOffIcon from "../icons/MainIcons/FilterOffIcon";
+import DownloadIcon from "../icons/MainIcons/DownloadIcon";
 import SearchInput from "../search/SearchInput";
 import CoursesProgramUpdate from "./CoursesProgramUpdate";
 import { AttachmentTeachers } from "./AttachmentTeachers";
+import JSZip from "jszip";
+import Swal from "sweetalert2";
 
 const CoursesProgramTable = () => {
   const [coursesProgram, setCoursesProgram] = useState([]);
   const [studyPlans, setStudyPlans] = useState([]);
+  const [selectedPDFs, setSelectedPDFs] = useState([]);
 
   // To formate the dates of the data received
   const formatDate = (date) => {
@@ -56,7 +60,7 @@ const CoursesProgramTable = () => {
       setCurrentPage(page);
       let flag = false;
 
-      if(page == 0){
+      if (page == 0) {
         setCurrentPage(1);
         flag = true;
       }
@@ -65,7 +69,7 @@ const CoursesProgramTable = () => {
         ? `&data=${searchTerms["data"]}&data2=${searchTerms["data2"]}&data3=${searchTerms["data3"]}&data4=${searchTerms["data4"]}&data5=${searchTerms["data5"]}&data6=${searchTerms["data6"]}`
         : "&data=&data2=&data3=&data4=&data5=&data6=";
 
-      const newPage = flag? page + 1 : page;
+      const newPage = flag ? page + 1 : page;
       const url = `http://localhost:3001/searchcourseprogram?name=search-page${searchQuery}&numPage=${newPage}`;
       const options = {
         method: "GET",
@@ -227,22 +231,75 @@ const CoursesProgramTable = () => {
     setData6Filter("");
   };
 
+  const handleDownloadProgramCourses = async () => {
+    if (selectedPDFs.length === 0) {
+      Swal.fire({
+        icon: "error",
+        iconColor: "#a31e32",
+        title: "No se pudo descargar los programas de curso.",
+        text: "No se pudo descargar los programas de curso, seleccione al menos un programa de curso para continuar.",
+        confirmButtonText: "Aceptar",
+        confirmButtonColor: "#A31E32",
+      });
+    } else {
+      const zip = new JSZip();
+
+      selectedPDFs.forEach(({ name, pdf }) => {
+        const base64Clear = pdf.includes(",") ? pdf.split(",")[1] : pdf;
+
+        const binaryData = atob(base64Clear);
+        const arrayBuffer = new Uint8Array(binaryData.length);
+        for (let i = 0; i < binaryData.length; i++) {
+          arrayBuffer[i] = binaryData.charCodeAt(i);
+        }
+
+        const fileName = name.endsWith(".pdf") ? name : `${name}.pdf`;
+        zip.file(fileName, arrayBuffer, { binary: true });
+      });
+
+      const zipContent = await zip.generateAsync({ type: "blob" });
+      const url = URL.createObjectURL(zipContent);
+
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = "programas_de_curso.zip";
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      URL.revokeObjectURL(url);
+    }
+  };
+
   return (
     <main>
       <div className="mt-[3vh] justify-start flex pr-[15vw] pl-[15vw]">
         <div className="bg-UNA-Blue-Dark w-full max-w-screens flex rounded-[0.5vh] items-center">
-          <h1 className="ml-[1vw] my-[0.5vh] text-[2vw] text-white">
-            Administrar programas de curso
-          </h1>
-          <div className="flex ml-auto justify-end mr-[1vw]">
-            <CoursesProgramAdd
-              totalItems={totalItems}
-              currentPage={currentPage}
-              loadData={loadCoursesProgramData}
-              textToAdd={"Agregar programa de curso"}
-              studyPlans={studyPlans}
-              formatDate={formatDate}
-            />
+          <div className="flex w-full">
+            <h1 className="ml-[1vw] my-[0.5vh] text-[2vw] text-white">
+              Administrar programas de curso
+            </h1>
+          </div>
+          <div className="flex">
+            <div
+              title="Descargar PDF de los programas de curso seleccionados."
+              onClick={handleDownloadProgramCourses}
+              className="flex -mr-[1vw] bg-UNA-Green-Light/70 w-[4.5vw] h-[4vh] items-center cursor-pointer rounded-[0.5vw] hover:scale-110"
+            >
+              <DownloadIcon />
+              <span className="text-white items-center justify-center text-[1.3vw] w-[4vw]">
+                ({selectedPDFs.length})
+              </span>
+            </div>
+            <div className="flex justify-end mr-[1vw] w-[15vw]">
+              <CoursesProgramAdd
+                totalItems={totalItems}
+                currentPage={currentPage}
+                loadData={loadCoursesProgramData}
+                textToAdd={"Agregar programa de curso"}
+                studyPlans={studyPlans}
+                formatDate={formatDate}
+              />
+            </div>
           </div>
         </div>
       </div>
@@ -386,12 +443,17 @@ const CoursesProgramTable = () => {
                             { field: "FECHA", value: "DAT_YEAR" },
                             { field: "ID_STUDY_PLAN", value: "ID_STUDY_PLAN" },
                             {
-                              field: "NRC", value: "NRC" },
+                              field: "NRC",
+                              value: "NRC",
+                            },
                             {
-                              field: "CICLO", value: "CICLE"},
+                              field: "CICLO",
+                              value: "CICLE",
+                            },
                             {
                               field: "CREDITOS",
-                              value: "NUM_CREDITS" },
+                              value: "NUM_CREDITS",
+                            },
                             {
                               field: "FIRMA",
                               value: "SIGNATURE",
@@ -414,7 +476,41 @@ const CoursesProgramTable = () => {
                           pdfUrl={courseProgram["PDF"]}
                         />
 
-                        <AttachmentTeachers idCourseProgram={courseProgram["ID_COURSE_PROGRAM"]}/>
+                        <AttachmentTeachers
+                          idCourseProgram={courseProgram["ID_COURSE_PROGRAM"]}
+                        />
+
+                        <input
+                          type="checkbox"
+                          className="outline-none w-[2vw] h-[2.5vh] cursor-pointer"
+                          checked={selectedPDFs.some(
+                            (pdfObj) =>
+                              pdfObj.id === courseProgram.ID_COURSE_PROGRAM
+                          )}
+                          onChange={(e) => {
+                            if (e.target.checked) {
+                              setSelectedPDFs((prev) => [
+                                ...prev,
+                                {
+                                  id: courseProgram.ID_COURSE_PROGRAM,
+                                  name:
+                                    courseProgram["NOMBRE DEL PROGRAMA"] +
+                                    "_" +
+                                    formatDate(courseProgram["FECHA"]),
+                                  pdf: courseProgram["PDF"],
+                                },
+                              ]);
+                            } else {
+                              setSelectedPDFs((prev) =>
+                                prev.filter(
+                                  (pdfObj) =>
+                                    pdfObj.id !==
+                                    courseProgram.ID_COURSE_PROGRAM
+                                )
+                              );
+                            }
+                          }}
+                        />
                       </div>
                     </td>
                   </tr>

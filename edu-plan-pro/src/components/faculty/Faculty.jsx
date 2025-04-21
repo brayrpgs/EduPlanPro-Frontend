@@ -1,6 +1,7 @@
 import Footer from '../footer/Footer.jsx';
 import Header from '../header/Header.jsx'; 
 import FacultyTable from './FacultyTable';
+import Breadcrumbs from '../breadcrumbs/Breadcrumbs.jsx';
 
 function Faculty() {
   

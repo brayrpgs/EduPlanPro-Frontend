@@ -2,6 +2,9 @@ import React from "react";
 import { useNavigate } from "react-router-dom";
 import LogoTransparent from "../icons/HeaderIcons/LogoTransparent";
 import SideBar from "../sidebar/SideBar";
+import Breadcrumbs from '../breadcrumbs/Breadcrumbs.jsx';
+import HomeIcon from "../icons/MainIcons/HomeIcon";
+
 
 const Header = () => {
   const navigate = useNavigate();
@@ -19,9 +22,9 @@ const Header = () => {
     <header className="w-full h-[8vh] bg-gradient-mainNavbar px-[2vh] py-[0.5vh]">
       <div className="flex items-center w-full h-full justify-end">
         <div className="absolute left-[1%] h-[11.5vh] w-[15vh]">
-
-          <div onClick={handleLogoClick} className="w-full h-full cursor-pointer">
-          <LogoTransparent/>
+          <div onClick={handleLogoClick} className="w-full h-full cursor-pointer flex items-center">
+            {window.location.pathname !== "/dashboard" && <HomeIcon />}
+            <LogoTransparent />
           </div>
         </div>
         <SideBar />

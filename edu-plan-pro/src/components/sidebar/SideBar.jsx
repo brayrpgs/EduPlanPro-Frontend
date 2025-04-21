@@ -74,6 +74,8 @@ const SideBar = () => {
             },
           });
           navigate("/login");
+          window.location.reload();
+         
         } else {
           Swal.fire(
             "Error",
@@ -144,9 +146,6 @@ const SideBar = () => {
 
           <div className="transition-none text-center text-[1vw] cursor-pointer py-[1vh] mt-[2vh] hover:bg-UNA-Red hover:text-white">
             Mi perfil
-          </div>
-          <div className="transition-none text-center text-[1vw] cursor-pointer py-[1vh] mt-[1vh] hover:bg-UNA-Red hover:text-white">
-            Cambiar clave
           </div>
           <div
             className="transition-none text-center text-[1vw] cursor-pointer py-[1vh] mt-[1vh] hover:bg-UNA-Red hover:text-white"

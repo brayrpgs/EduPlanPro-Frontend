@@ -1,7 +1,7 @@
-
 import Footer from '../footer/Footer.jsx';
 import Header from '../header/Header.jsx'; 
 import TeacherTable from './TeacherTable.jsx';
+import Breadcrumbs from '../breadcrumbs/Breadcrumbs.jsx';
 
 function Teachear() {
   return (

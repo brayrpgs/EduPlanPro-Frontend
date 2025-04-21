@@ -1,6 +1,7 @@
 import Footer from '../footer/Footer.jsx';
 import Header from '../header/Header.jsx'; 
 import CareerTable from './CareerTable.jsx';
+import Breadcrumbs from '../breadcrumbs/Breadcrumbs.jsx';
 
 function Career() {
   
