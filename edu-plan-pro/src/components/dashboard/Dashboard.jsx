@@ -9,10 +9,13 @@ import UserIcon from "../icons/DashboardIcons/UserIcon.jsx"
 import ReportIcon from "../icons/DashboardIcons/ReportIcon.jsx"
 import StudyPlanIcon from "../icons/DashboardIcons/StudyPlanIcon.jsx"
 import CourseProgramIcon from "../icons/DashboardIcons/CourseProgramIcon.jsx"
+import Backup from "../backup/Backup.jsx"
+import { useState } from "react"
+
 
 function Dashboard() {
   const navigate = useNavigate()
-
+  const [showBackup, setShowBackup] = useState(false);
   const modules = [
     {
       title: "Escuela",
@@ -57,7 +60,7 @@ function Dashboard() {
       path: "/studyplans",
       iconBg: "bg-purple-100",
     },
-    
+
     {
       title: "Programas del Curso",
       icon: CourseProgramIcon,
@@ -72,7 +75,14 @@ function Dashboard() {
       path: "/report",
       iconBg: "bg-purple-100",
     },
- 
+    {
+      title: "Respaldos",
+      icon: ReportIcon,
+      description: "Gestionar los respaldos del sistema",
+      path: [Backup, "backup"],
+      iconBg: "bg-purple-100",
+    }
+
   ]
 
   const handleNavigate = (path) => {
@@ -87,7 +97,7 @@ function Dashboard() {
         <div className="max-w-[70vw] mx-auto">
           <div className="mb-[1.5vh]">
             <h1 className="text-[2vw] font-bold">Inicio</h1>
-           
+
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-[1.5vw]">
@@ -95,10 +105,10 @@ function Dashboard() {
               <div
                 key={module.path}
                 className="border rounded-[0.5vh] p-[1.5vh] bg-white shadow-sm hover:shadow-md transition-shadow cursor-pointer"
-                onClick={() => handleNavigate(module.path)}
+                onClick={() => module.path.includes("backup") ? setShowBackup(true) : handleNavigate(module.path)}
               >
                 <div className={`icon rounded-full ${module.iconBg} flex items-center justify-center mb-[1vh]`}>
-                  <module.icon/>
+                  <module.icon />
                 </div>
                 <h2 className="text-[1.2vw] font-semibold mb-[0.5vh]">{module.title}</h2>
                 <p className="text-gray-600 mb-[1vh] text-[0.9vw]">{module.description}</p>
@@ -118,6 +128,7 @@ function Dashboard() {
             ))}
           </div>
         </div>
+        {showBackup && <Backup isOpen={true}  />}
       </main>
 
       <Footer />
