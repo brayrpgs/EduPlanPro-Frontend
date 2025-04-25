@@ -195,7 +195,7 @@ const StudyPlansTable = () => {
                 ({selectedPDFs.length})
               </span>
           </div>
-          <div className="flex justify-end mr-[1vw] w-[16vw] items-center">
+          <div className="flex justify-end mr-[1vw] w-[20vw] items-center">
             <StudyPlansAdd
               totalItems={totalItems}
               currentPage={currentPage}
