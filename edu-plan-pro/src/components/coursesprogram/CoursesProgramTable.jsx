@@ -290,7 +290,7 @@ const CoursesProgramTable = () => {
                 ({selectedPDFs.length})
               </span>
             </div>
-            <div className="flex justify-end mr-[1vw] w-[15vw]">
+            <div className="flex justify-end mr-[1vw] w-[17vw]">
               <CoursesProgramAdd
                 totalItems={totalItems}
                 currentPage={currentPage}
