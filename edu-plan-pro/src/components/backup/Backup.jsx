@@ -12,11 +12,18 @@ export default function Backup({ isOpen, setOpen }) {
      */
     return (
         <>
+            {/**
+            * este es el blur de la ventana
+            */}
             <div
                 className={`${!isOpen && "hidden"
                     } bg-gray-600/50 min-h-screen w-full z-40 flex fixed top-0 right-0 left-0 backdrop-blur-[0.3vh]`}
                 onClick={() => { setOpen(false) }}
             ></div>
+
+            {/**
+             * este es el contenedor de la ventana popUP
+             */}
             <div
                 className={`${isOpen
                     ? "w-[35vw] min-h-[30vh] overflow-hidden bg-white fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 z-50 flex flex-col items-center justify-start border-[-1vh] border-gray-400 rounded-[1vh] transition-[width] duration-300"
@@ -25,6 +32,9 @@ export default function Backup({ isOpen, setOpen }) {
             >
                 {isOpen && (
                     <div className="w-full flex flex-col justify-center items-center ">
+                        {/**
+                         * este es el encabezado de la ventana popUp
+                         */}
                         <div className="bg-UNA-Red w-full h-[7vh] flex top-0 fixed border-white z-50 rounded-t-[1vh] text-start items-center">
                             <h1 className="text-[3vh] ml-[1vw] text-white">Gestionar los respaldos del sistema</h1>
                             <div className="w-[5vw] right-0 h-full absolute flex text-center justify-center items-center">
@@ -38,6 +48,13 @@ export default function Backup({ isOpen, setOpen }) {
                                 </button>
                             </div>
                         </div>
+                        {/**
+                         * este el el fin de el encabezado de la ventana popUp
+                         */}
+
+                        {/**
+                         * este es el contenido de la ventana popUp
+                         */}
                         <div className="w-full max-w-full mt-[7vh] mb-[7vh] flex flex-col items-start relative">
                             <label className="text-left ml-[1vw] mt-[3vh] font-bold text-[1.2vw]" htmlFor="name">
                                 Nombre de la escuela
@@ -59,6 +76,14 @@ export default function Backup({ isOpen, setOpen }) {
                                 Facultad
                             </label>
                         </div>
+                        {/**
+                         * este el el fin de el contenido de la ventana popUP
+                         */}
+
+
+                        {/**
+                         * este es el footer de la ventana popUp
+                         */}
                         <div className="w-full h-[7vh] flex bottom-0 fixed border-white z-50 text-center justify-center items-center">
                             <button
                                 className="border-[0.1vh] bg-UNA-Red text-white text-[0.9vw] rounded-[0.3vw] h-[60%] border-black w-[50%] ml-[1vw] mr-[0.1vw]"
@@ -73,9 +98,16 @@ export default function Backup({ isOpen, setOpen }) {
                                 Cancelar
                             </button>
                         </div>
+                        {/**
+                         * este el el fin de el footer
+                         */}
+
                     </div>
                 )}
             </div>
+            {/**
+             * este es el fin de el contenedor de la ventana popUP
+             */}
         </>
     );
 }
