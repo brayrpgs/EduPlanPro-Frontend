@@ -11,6 +11,7 @@ import StudyPlanIcon from "../icons/DashboardIcons/StudyPlanIcon.jsx"
 import CourseProgramIcon from "../icons/DashboardIcons/CourseProgramIcon.jsx"
 import Backup from "../backup/Backup.jsx"
 import { useState } from "react"
+import BackupIcon from "../icons/DashboardIcons/BackupIcon.jsx"
 
 
 function Dashboard() {
@@ -77,9 +78,9 @@ function Dashboard() {
     },
     {
       title: "Respaldos",
-      icon: ReportIcon,
+      icon: BackupIcon,
       description: "Gestionar los respaldos del sistema",
-      path: [Backup, "backup"],
+      path: "backup",
       iconBg: "bg-purple-100",
     }
 
