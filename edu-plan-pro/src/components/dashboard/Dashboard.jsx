@@ -1,7 +1,6 @@
 import { useNavigate } from "react-router-dom"
 import Footer from "../footer/Footer.jsx"
 import Header from "../header/Header.jsx"
-import AccountCircleAdmin from "../icons/AsideIcons/AccountCircleAdmin.jsx"
 import SchoolIcon from "../icons/DashboardIcons/SchoolIcon.jsx"
 import FacultyIcon from "../icons/DashboardIcons/FacultyIcon.jsx"
 import TeacherIcon from "../icons/DashboardIcons/TeacherIcon.jsx"
@@ -12,6 +11,7 @@ import CourseProgramIcon from "../icons/DashboardIcons/CourseProgramIcon.jsx"
 import Backup from "../backup/Backup.jsx"
 import { useState } from "react"
 import BackupIcon from "../icons/DashboardIcons/BackupIcon.jsx"
+import CarrearIcon from "../icons/DashboardIcons/CarrearIcon.jsx"
 
 
 function Dashboard() {
@@ -35,7 +35,7 @@ function Dashboard() {
     //echo por david para probar
     {
       title: "Carreras",
-      icon: AccountCircleAdmin,
+      icon: CarrearIcon,
       description: "Gestionar información de las Carreras",
       path: "/career", //cambiar a carrera
       iconBg: "bg-green-100",
@@ -59,7 +59,7 @@ function Dashboard() {
       icon: StudyPlanIcon,
       description: "Gestionar información de los planes de estudio",
       path: "/studyplans",
-      iconBg: "bg-purple-100",
+      iconBg: "bg-red-100",
     },
 
     {
@@ -67,21 +67,21 @@ function Dashboard() {
       icon: CourseProgramIcon,
       description: "Gestionar información de los programas del curso",
       path: "/coursesprogram",
-      iconBg: "bg-purple-100",
+      iconBg: "bg-cyan-100",
     },
     {
       title: "Reportes",
       icon: ReportIcon,
       description: "Gestionar información de los reportes",
       path: "/report",
-      iconBg: "bg-purple-100",
+      iconBg: "bg-orange-100",
     },
     {
       title: "Respaldos",
       icon: BackupIcon,
       description: "Gestionar los respaldos del sistema",
       path: "backup",
-      iconBg: "bg-purple-100",
+      iconBg: "bg-pink-100",
     }
 
   ]
