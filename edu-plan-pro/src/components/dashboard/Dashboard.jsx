@@ -129,7 +129,7 @@ function Dashboard() {
             ))}
           </div>
         </div>
-        {showBackup && <Backup isOpen={true}  />}
+        {showBackup && <Backup isOpen={showBackup} setOpen={setShowBackup} />}
       </main>
 
       <Footer />
