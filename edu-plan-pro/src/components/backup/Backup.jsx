@@ -1,15 +1,17 @@
+import ExportIcon from "../icons/BackupIcons/ExportIcon";
+import ImportIcon from "../icons/BackupIcons/ImportIcon";
 import CancelActionIcon from "../icons/MainIcons/CancelActionIcon";
 
 /**
- * @description This is the component for the backup.
+ * @description este componente tiene la responsabilidad
+ *  de manejar las peticiones de respaldos automaticos y 
+ *  manuales
  * @author Brayan rosales perez
  * 2024-04-23
- * @returns 
+ * @returns this component
  */
 export default function Backup({ isOpen, setOpen }) {
-    /**
-     * 
-     */
+
     return (
         <>
             {/**
@@ -55,26 +57,33 @@ export default function Backup({ isOpen, setOpen }) {
                         {/**
                          * este es el contenido de la ventana popUp
                          */}
-                        <div className="w-full max-w-full mt-[7vh] mb-[7vh] flex flex-col items-start relative">
-                            <label className="text-left ml-[1vw] mt-[3vh] font-bold text-[1.2vw]" htmlFor="name">
-                                Nombre de la escuela
-                            </label>
+                        <div className="w-full max-w-full mt-[10vh] mb-[2vh] flex justify-around relative">
 
-                            <input
-                                className="w-[94%] mt-[1.1vh] text-[0.9vw] ml-[1vw] h-[5vh] px-[1vw] focus:border-UNA-Red rounded-[1vh] outline-none  border-[0.1vh]"
-                                autoComplete="off"
-                                spellCheck="false"
-                                title="Ingrese un nombre. Asegurate que no incluya números ni carácteres especiales."
-                                placeholder="Ingrese el nombre de la escuela"
-                                value={1}
-                                onChange={() => { }}
-                                name="desc"
-                                id="desc"
-                                type="text"
-                            />
-                            <label className="text-left ml-[1vw] mt-[2vh] font-bold text-[1.2vw]" htmlFor="facultad">
-                                Facultad
-                            </label>
+                            {/**
+                             * icono con acion de Exportar
+                             */}
+                            <div className="flex flex-col justify-center">
+                                <label className="text-left font-bold text-[1.2vw] m-auto" htmlFor="export">
+                                    Exportar Respaldo
+                                </label>
+                                <a className="m-auto " href="http://localhost:3001/backup" download id="export">
+
+                                    <ExportIcon size={"3vw"}/>
+                                </a>
+                            </div>
+
+                            {/**
+                             * icono con acion de Importar
+                             */}
+                            <div className="flex flex-col justify-center">
+                                <label className="text-left font-bold text-[1.2vw] m-auto" htmlFor="import">
+                                    Importar Respaldo
+                                </label>
+                                <a className="m-auto" href="http://" download id="import">
+                                    <ImportIcon size={"3vw"} />
+                                </a>
+                            </div>
+
                         </div>
                         {/**
                          * este el el fin de el contenido de la ventana popUP
@@ -87,13 +96,13 @@ export default function Backup({ isOpen, setOpen }) {
                         <div className="w-full h-[7vh] flex bottom-0 fixed border-white z-50 text-center justify-center items-center">
                             <button
                                 className="border-[0.1vh] bg-UNA-Red text-white text-[0.9vw] rounded-[0.3vw] h-[60%] border-black w-[50%] ml-[1vw] mr-[0.1vw]"
-                                onClick={(f) => { console.log(f) }}
+                                onClick={() => { setOpen(false) }}
                             >
-                                Agregar
+                                Aceptar
                             </button>
                             <button
                                 className="border-[0.1vh] bg-UNA-Blue-Dark text-white text-[0.9vw] rounded-[0.3vw] h-[60%] border-black w-[50%] ml-[0.1vw] mr-[1vw]"
-                                onClick={(f) => { console.log(f) }}
+                                onClick={() => { setOpen(false) }}
                             >
                                 Cancelar
                             </button>
