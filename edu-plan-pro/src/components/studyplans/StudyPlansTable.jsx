@@ -84,7 +84,7 @@ const StudyPlansTable = () => {
         setFilteredStudyPlans(response.data.rows || []);
         setTotalItems(response.data.totalMatches || 0);
       } catch (error) {
-        setLoading(false);
+        console.error(error);
       } finally {
         setLoading(false);
       }
