@@ -12,6 +12,28 @@ import CancelActionIcon from "../icons/MainIcons/CancelActionIcon";
  */
 export default function Backup({ isOpen, setOpen }) {
 
+    async function restoreDB() {
+
+        const FILE = {
+            "fileName": "backup.sql"
+        }
+
+        const input = new Request("http://localhost:3001/restore")
+        const headers = new Headers();
+        headers.append('Content-Type', 'application/json');
+
+        const init = {
+            method: 'POST',
+            headers: headers,
+            credentials: "include",
+            body: JSON.stringify(FILE)
+        };
+
+        const respond = await fetch(input, init);
+        const result = await respond.json();
+        console.log(result);
+    }
+
     return (
         <>
             {/**
@@ -68,7 +90,7 @@ export default function Backup({ isOpen, setOpen }) {
                                 </label>
                                 <a className="m-auto " href="http://localhost:3001/backup" download id="export">
 
-                                    <ExportIcon size={"3vw"}/>
+                                    <ExportIcon size={"3vw"} />
                                 </a>
                             </div>
 
@@ -79,9 +101,9 @@ export default function Backup({ isOpen, setOpen }) {
                                 <label className="text-left font-bold text-[1.2vw] m-auto" htmlFor="import">
                                     Importar Respaldo
                                 </label>
-                                <a className="m-auto" href="http://" download id="import">
+                                <div className="m-auto cursor-pointer" id="import" onClick={() => { restoreDB() }}>
                                     <ImportIcon size={"3vw"} />
-                                </a>
+                                </div>
                             </div>
 
                         </div>
