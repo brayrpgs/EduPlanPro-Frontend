@@ -1,6 +1,8 @@
+import Swal from "sweetalert2";
 import ExportIcon from "../icons/BackupIcons/ExportIcon";
 import ImportIcon from "../icons/BackupIcons/ImportIcon";
 import CancelActionIcon from "../icons/MainIcons/CancelActionIcon";
+import InfoIcon from "../icons/BackupIcons/InfoIcon";
 
 /**
  * @description este componente tiene la responsabilidad
@@ -12,6 +14,7 @@ import CancelActionIcon from "../icons/MainIcons/CancelActionIcon";
  */
 export default function Backup({ isOpen, setOpen }) {
 
+    //restaura la base de datos 
     async function restoreDB() {
 
         const FILE = {
@@ -30,9 +33,71 @@ export default function Backup({ isOpen, setOpen }) {
         };
 
         const respond = await fetch(input, init);
-        const result = await respond.json();
-        console.log(result);
+        if (!respond) return;
+        if (respond.status === 200) {
+            Swal.fire({
+                icon: "success",
+                iconColor: "#7cda24",
+                title: "Restauracion completada",
+                text: "El respaldo interno fue cargado correctamente",
+                confirmButtonText: "Aceptar",
+                confirmButtonColor: "#A31E32"
+            });
+        } else if (respond.status !== 200) {
+            Swal.fire({
+                icon: "error",
+                iconColor: "#a31e32",
+                title: "Restauracion incompletada",
+                text: "No se encontró el archivo de respaldo. Por favor, verifique que exista un archivo de respaldo en la carpeta [C:/respaldosBD/].",
+                confirmButtonText: "Aceptar",
+                confirmButtonColor: "#A31E32"
+            });
+
+        }
     }
+
+
+    //funcion manejadora de la informacion de las restauraciones!
+    function showInfo() {
+        const info = document.getElementById("info");
+
+        info.style.opacity = "0";
+        info.style.transform = "translateY(0%)";
+        info.hidden = false;
+        info.style.transition = "all 0.5s ease";
+        info.style.textAlign = "center";
+        info.style.position = "fixed";
+        info.style.zIndex = "51";
+        info.style.backgroundColor = "rgba(255, 255, 255, 0.9)";
+        info.style.padding = "2ch";
+        info.style.width = "30ch";
+        info.style.top = "50%";
+        info.style.left = "70%";
+        info.style.borderStyle = "solid";
+        info.style.borderWidth = "1px";
+        info.style.borderColor = "white";
+        info.style.borderRadius = "10px";
+        info.style.backdropFilter = "blur(30px)";
+        info.style.webkitBackdropFilter = "blur(30px)";
+
+        setTimeout(() => {
+            info.style.opacity = "1";
+            info.style.transform = "translateY(-50%)";
+        }, 10);
+    }
+
+    function closeInfo() {
+        const info = document.getElementById("info");
+
+        info.style.transition = "all 0.5s ease";
+        info.style.opacity = "0";
+        info.style.transform = "translateY(-100%)";
+
+        setTimeout(() => {
+            info.hidden = true;
+        }, 500);
+    }
+
 
     return (
         <>
@@ -44,6 +109,8 @@ export default function Backup({ isOpen, setOpen }) {
                     } bg-gray-600/50 min-h-screen w-full z-40 flex fixed top-0 right-0 left-0 backdrop-blur-[0.3vh]`}
                 onClick={() => { setOpen(false) }}
             ></div>
+
+            <div id="info" hidden> Los respaldos se generan automáticamente cada lunes a las 10: 00 a.m. Sin embargo, si lo desea, puede cargar el respaldo más reciente presionando el ícono 'Restaurar Respaldo'.</div>
 
             {/**
              * este es el contenedor de la ventana popUP
@@ -89,7 +156,6 @@ export default function Backup({ isOpen, setOpen }) {
                                     Exportar Respaldo
                                 </label>
                                 <a className="m-auto " href="http://localhost:3001/backup" download id="export">
-
                                     <ExportIcon size={"3vw"} />
                                 </a>
                             </div>
@@ -99,10 +165,20 @@ export default function Backup({ isOpen, setOpen }) {
                              */}
                             <div className="flex flex-col justify-center">
                                 <label className="text-left font-bold text-[1.2vw] m-auto" htmlFor="import">
-                                    Importar Respaldo
+                                    Restaurar Respaldo
                                 </label>
-                                <div className="m-auto cursor-pointer" id="import" onClick={() => { restoreDB() }}>
-                                    <ImportIcon size={"3vw"} />
+                                <div className="m-auto cursor-pointer flex" id="import">
+                                    <div onClick={() => { restoreDB() }}>
+                                        <ImportIcon size={"3vw"} />
+                                    </div>
+                                    <div
+                                        className="h-min"
+                                        onMouseOver={() => { showInfo() }}
+                                        onMouseLeave={() => { closeInfo() }}
+                                    >
+                                        <InfoIcon size={"1vw"} />
+                                    </div>
+
                                 </div>
                             </div>
 
@@ -135,7 +211,7 @@ export default function Backup({ isOpen, setOpen }) {
 
                     </div>
                 )}
-            </div>
+            </div >
             {/**
              * este es el fin de el contenedor de la ventana popUP
              */}
