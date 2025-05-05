@@ -84,7 +84,7 @@ const StudyPlansTable = () => {
         setFilteredStudyPlans(response.data.rows || []);
         setTotalItems(response.data.totalMatches || 0);
       } catch (error) {
-        setLoading(false);
+        console.error(error);
       } finally {
         setLoading(false);
       }
@@ -195,7 +195,7 @@ const StudyPlansTable = () => {
                 ({selectedPDFs.length})
               </span>
           </div>
-          <div className="flex justify-end mr-[1vw] w-[16vw] items-center">
+          <div className="flex justify-end mr-[1vw] w-[20vw] items-center">
             <StudyPlansAdd
               totalItems={totalItems}
               currentPage={currentPage}
