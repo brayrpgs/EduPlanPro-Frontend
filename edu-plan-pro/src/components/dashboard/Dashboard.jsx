@@ -1,7 +1,6 @@
 import { useNavigate } from "react-router-dom"
 import Footer from "../footer/Footer.jsx"
 import Header from "../header/Header.jsx"
-import AccountCircleAdmin from "../icons/AsideIcons/AccountCircleAdmin.jsx"
 import SchoolIcon from "../icons/DashboardIcons/SchoolIcon.jsx"
 import FacultyIcon from "../icons/DashboardIcons/FacultyIcon.jsx"
 import TeacherIcon from "../icons/DashboardIcons/TeacherIcon.jsx"
@@ -9,10 +8,15 @@ import UserIcon from "../icons/DashboardIcons/UserIcon.jsx"
 import ReportIcon from "../icons/DashboardIcons/ReportIcon.jsx"
 import StudyPlanIcon from "../icons/DashboardIcons/StudyPlanIcon.jsx"
 import CourseProgramIcon from "../icons/DashboardIcons/CourseProgramIcon.jsx"
+import Backup from "../backup/Backup.jsx"
+import { useState } from "react"
+import BackupIcon from "../icons/DashboardIcons/BackupIcon.jsx"
+import CarrearIcon from "../icons/DashboardIcons/CarrearIcon.jsx"
+
 
 function Dashboard() {
   const navigate = useNavigate()
-
+  const [showBackup, setShowBackup] = useState(false);
   const modules = [
     {
       title: "Escuela",
@@ -31,7 +35,7 @@ function Dashboard() {
     //echo por david para probar
     {
       title: "Carreras",
-      icon: AccountCircleAdmin,
+      icon: CarrearIcon,
       description: "Gestionar información de las Carreras",
       path: "/career", //cambiar a carrera
       iconBg: "bg-green-100",
@@ -55,24 +59,31 @@ function Dashboard() {
       icon: StudyPlanIcon,
       description: "Gestionar información de los planes de estudio",
       path: "/studyplans",
-      iconBg: "bg-purple-100",
+      iconBg: "bg-red-100",
     },
-    
+
     {
       title: "Programas del Curso",
       icon: CourseProgramIcon,
       description: "Gestionar información de los programas del curso",
       path: "/coursesprogram",
-      iconBg: "bg-purple-100",
+      iconBg: "bg-cyan-100",
     },
     {
       title: "Reportes",
       icon: ReportIcon,
       description: "Gestionar información de los reportes",
       path: "/report",
-      iconBg: "bg-purple-100",
+      iconBg: "bg-orange-100",
     },
- 
+    {
+      title: "Respaldos",
+      icon: BackupIcon,
+      description: "Gestionar los respaldos del sistema",
+      path: "backup",
+      iconBg: "bg-pink-100",
+    }
+
   ]
 
   const handleNavigate = (path) => {
@@ -87,7 +98,7 @@ function Dashboard() {
         <div className="max-w-[70vw] mx-auto">
           <div className="mb-[1.5vh]">
             <h1 className="text-[2vw] font-bold">Inicio</h1>
-           
+
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-[1.5vw]">
@@ -95,10 +106,10 @@ function Dashboard() {
               <div
                 key={module.path}
                 className="border rounded-[0.5vh] p-[1.5vh] bg-white shadow-sm hover:shadow-md transition-shadow cursor-pointer"
-                onClick={() => handleNavigate(module.path)}
+                onClick={() => module.path.includes("backup") ? setShowBackup(true) : handleNavigate(module.path)}
               >
                 <div className={`icon rounded-full ${module.iconBg} flex items-center justify-center mb-[1vh]`}>
-                  <module.icon/>
+                  <module.icon />
                 </div>
                 <h2 className="text-[1.2vw] font-semibold mb-[0.5vh]">{module.title}</h2>
                 <p className="text-gray-600 mb-[1vh] text-[0.9vw]">{module.description}</p>
@@ -118,6 +129,7 @@ function Dashboard() {
             ))}
           </div>
         </div>
+        {showBackup && <Backup isOpen={showBackup} setOpen={setShowBackup} />}
       </main>
 
       <Footer />
