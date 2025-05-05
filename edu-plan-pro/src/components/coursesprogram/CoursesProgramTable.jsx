@@ -248,11 +248,7 @@ const CoursesProgramTable = () => {
         const base64Clear = pdf.includes(",") ? pdf.split(",")[1] : pdf;
 
         const binaryData = atob(base64Clear);
-        const arrayBuffer = new Uint8Array(binaryData.length);
-        for (let i = 0; i < binaryData.length; i++) {
-          arrayBuffer[i] = binaryData.charCodeAt(i);
-        }
-
+        const arrayBuffer = Uint8Array.from(binaryData, (char) => char.charCodeAt(0)); 
         const fileName = name.endsWith(".pdf") ? name : `${name}.pdf`;
         zip.file(fileName, arrayBuffer, { binary: true });
       });
