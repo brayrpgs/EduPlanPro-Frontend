@@ -144,9 +144,13 @@ const SideBar = () => {
             </div>
           </div>
 
-          <div className="transition-none text-center text-[1vw] cursor-pointer py-[1vh] mt-[2vh] hover:bg-UNA-Red hover:text-white">
-            Mi perfil
-          </div>
+          <div
+  className="transition-none text-center text-[1vw] cursor-pointer py-[1vh] mt-[2vh] hover:bg-UNA-Red hover:text-white"
+  onClick={() => navigate("/profile")}
+>
+  Mi perfil
+</div>
+
           <div
             className="transition-none text-center text-[1vw] cursor-pointer py-[1vh] mt-[1vh] hover:bg-UNA-Red hover:text-white"
             onClick={() => navigate("/preference")}
