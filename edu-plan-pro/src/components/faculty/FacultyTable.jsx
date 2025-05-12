@@ -9,6 +9,8 @@ import FacultyUpdate from "./FacultyUpdate";
 import Loading from "../componentsgeneric/Loading";
 import { FetchValidate } from "../../utilities/FetchValidate";
 import { useNavigate } from "react-router-dom";
+import { useAtom } from "jotai";
+import { userAtom } from "../validatelogin/ValidateLogin.jsx";
 
 const FacultyTable = () => {
   const [faculties, setFaculties] = useState([]);
@@ -21,6 +23,8 @@ const FacultyTable = () => {
   const [loading, setLoading] = useState(false);
 
   const navigate = useNavigate();
+  const [user] = useAtom(userAtom);
+  const hasPermission = user?.ROLE_NAME?.toLowerCase() === "admin" || user?.ROLE_NAME?.toLowerCase() === "root";
 
   const loadFacultyData = useCallback(
     async (page) => {
@@ -91,14 +95,16 @@ const FacultyTable = () => {
           <h1 className="ml-[1vw] my-[0.5vh] text-[2vw] text-white">
             Administrar facultades
           </h1>
-          <div className="flex ml-auto justify-end mr-[1vw]">
-            <FacultyAdd
-              totalItems={totalItems}
-              currentPage={currentPage}
-              loadData={loadFacultyData}
-              textToAdd={"Agregar facultad"}
-            />
-          </div>
+          {hasPermission && (
+            <div className="flex ml-auto justify-end mr-[1vw]">
+              <FacultyAdd
+                totalItems={totalItems}
+                currentPage={currentPage}
+                loadData={loadFacultyData}
+                textToAdd={"Agregar facultad"}
+              />
+            </div>
+          )}
         </div>
       </div>
 
@@ -126,7 +132,7 @@ const FacultyTable = () => {
                 <th className="border-[0.1vh] border-gray-400 px-[1vw] py-[1vh] text-center text-[1vw] text-UNA-Red">
                   Facultad
                   <div
-                    className="w-full flex flex-col "
+                    className="w-full flex flex-col"
                     title="Filtrar por facultad."
                   >
                     <SearchInput
@@ -137,52 +143,55 @@ const FacultyTable = () => {
                     />
                   </div>
                 </th>
-                <th className="border-[0.1vh] border-gray-400 px-[1vw] py-[1vh] w-[10vw] text-[1vw] text-UNA-Red">
-                  Acciones
-                </th>
+                {hasPermission && (
+                  <th className="border-[0.1vh] border-gray-400 px-[1vw] py-[1vh] w-[10vw] text-[1vw] text-UNA-Red">
+                    Acciones
+                  </th>
+                )}
               </tr>
             </thead>
             <tbody>
               {filteredFaculty.length > 0 ? (
                 filteredFaculty.map((faculty) => (
                   <tr key={faculty.ID_FACULTY}>
-                    <td className="border-[0.1vh] border-gray-400 px-[1vw] py-[1.5vh] text-[0.9vw] text-center items-center break-words whitespace-normal max-w-[15vw]">
+                    <td className="border-[0.1vh] border-gray-400 px-[1vw] py-[1.5vh] text-[0.9vw] text-center break-words whitespace-normal max-w-[15vw]">
                       {faculty["NOMBRE FACULTAD"]}
                     </td>
-                    <td className="border-[0.1vh] border-gray-400 px-[1vw] py-[1vh] text-[0.9vw]">
-                      <div className="flex items-center flex-row justify-center w-full h-full gap-[0.2vw]">
-                        <FacultyUpdate
-                          faculty={faculty}
-                          currentPage={currentPage}
-                          loadData={loadFacultyData}
-                        />
-
-                        <DeleteModal
-                          deleteMethod={"PATCH"}
-                          item={faculty}
-                          itemName={"NOMBRE FACULTAD"}
-                          fields={[
-                            { field: "NOMBRE FACULTAD", value: "desc" },
-                            { field: "ID_FACULTY", value: "id" },
-                          ]}
-                          items={faculties}
-                          setItems={setFaculties}
-                          totalItems={totalItems}
-                          currentPage={currentPage}
-                          loadData={loadFacultyData}
-                          destination={"faculty"}
-                          componentName={"facultad"}
-                          componentPrefix={"la"}
-                        />
-                      </div>
-                    </td>
+                    {hasPermission && (
+                      <td className="border-[0.1vh] border-gray-400 px-[1vw] py-[1vh] text-[0.9vw]">
+                        <div className="flex items-center flex-row justify-center w-full h-full gap-[0.2vw]">
+                          <FacultyUpdate
+                            faculty={faculty}
+                            currentPage={currentPage}
+                            loadData={loadFacultyData}
+                          />
+                          <DeleteModal
+                            deleteMethod={"PATCH"}
+                            item={faculty}
+                            itemName={"NOMBRE FACULTAD"}
+                            fields={[
+                              { field: "NOMBRE FACULTAD", value: "desc" },
+                              { field: "ID_FACULTY", value: "id" },
+                            ]}
+                            items={faculties}
+                            setItems={setFaculties}
+                            totalItems={totalItems}
+                            currentPage={currentPage}
+                            loadData={loadFacultyData}
+                            destination={"faculty"}
+                            componentName={"facultad"}
+                            componentPrefix={"la"}
+                          />
+                        </div>
+                      </td>
+                    )}
                   </tr>
                 ))
               ) : (
                 <tr>
                   <td
-                    colSpan={2}
-                    className="px-[1vw] py-[1vh] text-[0.9vw] text-center items-center pt-[3.5vh]"
+                    colSpan={hasPermission ? 2 : 1}
+                    className="px-[1vw] py-[1vh] text-[0.9vw] text-center pt-[3.5vh]"
                   >
                     No se encontraron facultades registradas.
                   </td>

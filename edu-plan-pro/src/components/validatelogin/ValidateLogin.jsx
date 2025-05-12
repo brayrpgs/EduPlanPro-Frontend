@@ -27,30 +27,36 @@ const ValidateLogin = ({ Component }) => {
   useEffect(() => {
     const validatelogin = async () => {
       const url = "http://localhost:3001/session";
-
+    
       const options = {
         method: "GET",
         credentials: "include",
       };
-
+    
       try {
         const response = await FetchValidate(url, options, navigate);
-
+    
         console.log(" Respuesta de sesión:", response);
-
+    
         if (response.code === "200") {
+          const roleFromMessage = response.message.split(",")[1]?.trim().toLowerCase(); // extrae "root" o "admin"
+    
+          setUser({
+            ID_USER: response.data.ID_USER,//guarda el id de uusuario
+            ROLE_NAME: roleFromMessage, //  guarda el rol también
+          });
+    
           setIsLoggedIn(true); // Sesión válida
-          setUser({ ID_USER: response.data.ID_USER }); // Guardar ID del usuario logueado
         } else {
-          navigate("/login"); // Sin sesión, redirige al login
+          navigate("/login");
         }
       } catch (error) {
-        navigate("/serverError"); // Redirige si hay error de conexión
+        navigate("/serverError");
       } finally {
         setLoading(false);
       }
     };
-
+    
     const loadPreferences = async () => {
       const url = "http://localhost:3001/preferences";
       const options = {
