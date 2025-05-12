@@ -12,9 +12,7 @@ export const RecyclingBin = () => {
             <div className='pr-[15vw] pl-[15vw]'>
                 <RecyclingBinHead />
                 <RecyclingBinSearch />
-                <div className=' h-[70vh] overflow-y-auto'>
-                    <RecyclingBinTable />
-                </div>
+                <RecyclingBinTable />
             </div>
             <Footer />
         </div>

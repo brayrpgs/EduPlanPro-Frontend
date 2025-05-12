@@ -1,6 +1,7 @@
 import React from 'react'
 import FilterOffIcon from '../icons/MainIcons/FilterOffIcon'
 import MainSearch from '../search/MainSearch'
+import DeleteForever from '../icons/recyclingBinIcons/DeleteForever'
 
 export const RecyclingBinSearch = () => {
     return (
@@ -17,6 +18,9 @@ export const RecyclingBinSearch = () => {
                 onClick={() => { }}
             >
                 <FilterOffIcon />
+            </div>
+            <div>
+                <DeleteForever />
             </div>
         </div>
     )
