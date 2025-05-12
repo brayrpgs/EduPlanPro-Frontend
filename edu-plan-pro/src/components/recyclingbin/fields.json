@@ -1,11 +1,11 @@
 [
     {
-        "id": "Escuela",
-        "name": "school"
+        "id": "school",
+        "name": "Escuela"
     },
     {
-        "id": "Facultad",
-        "name": "faculty"
+        "id": "faculty",
+        "name": "Facultad"
     },
     {
         "id": "carrer",
