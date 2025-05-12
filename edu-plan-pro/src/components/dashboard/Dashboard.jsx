@@ -88,7 +88,7 @@ function Dashboard() {
       title: "Papelera",
       icon: RecycleIcon,
       description: "Recupera la informacion antes de ser eliminada definitivamente",
-      path: "backup",
+      path: "/recyclingbin",
       iconBg: "bg-emerald-100",
     }
 
