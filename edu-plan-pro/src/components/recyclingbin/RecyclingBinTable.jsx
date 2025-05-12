@@ -2,7 +2,7 @@ import React from 'react'
 
 export const RecyclingBinTable = () => {
     return (
-        <div className="flex justify-center items-center mt-0 w-full overflow-x-auto">
+        <div className="flex justify-center items-center mt-0 w-full overflow-x-auto ">
             <table className="w-full table-auto">
                 <thead>
                     <tr>
