@@ -19,8 +19,8 @@ export const RecyclingBinSearch = () => {
             >
                 <FilterOffIcon />
             </div>
-            <div>
-                <DeleteForever />
+            <div title='Destruir todos los elementos'>
+                <DeleteForever color={"#A31E32"}/>
             </div>
         </div>
     )
