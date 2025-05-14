@@ -1,37 +1,30 @@
 [
     {
         "id": "school",
-        "name": "Escuela",
-        "url": "http://localhost:3001/searchschool?name=filter-state&stat=0"
+        "name": "Escuela"
     },
     {
         "id": "faculty",
-        "name": "Facultad",
-        "url": "http://localhost:3001/searchfaculty?name=filter-state&stat=0"
+        "name": "Facultad"
     },
     {
         "id": "carrer",
-        "name": "Carrera",
-        "url": "http://localhost:3001/searchcarreer?name=filter-state&stat=0"
+        "name": "Carrera"
     },
     {
         "id": "profesor",
-        "name": "Docente",
-        "url": "http://localhost:3001/searchcarreer?name=filter-state&stat=0"
+        "name": "Docente"
     },
     {
         "id": "user",
-        "name": "Usuario",
-        "url": "http://localhost:3001/searchcarreer?name=filter-state&stat=0"
+        "name": "Usuario"
     },
     {
         "id": "study-plan",
-        "name": "Plan de estudio",
-        "url": "http://localhost:3001/searchcarreer?name=filter-state&stat=0"
+        "name": "Plan de estudio"
     },
     {
         "id": "course-program",
-        "name": "Programa de cursos",
-        "url": "http://localhost:3001/searchcarreer?name=filter-state&stat=0"
+        "name": "Programa de cursos"
     }
 ]

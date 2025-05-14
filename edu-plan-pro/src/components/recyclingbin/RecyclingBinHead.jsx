@@ -8,17 +8,13 @@ export const RecyclingBinHead = ({ setData, datas }) => {
      */
     const fields = data
 
-    const [school, setSchool] = useState([])
-    const [faculty, setFaculty] = useState([])
-    const [carrer, setCarrer] = useState([])
-    const [profesor, setProfesor] = useState([])
-    const [user, setUser] = useState([])
-    const [studyPlan, setStudyPlan] = useState([])
-    const [courseProgram, setCourseProgram] = useState([])
-
-    useEffect(() => {
-        setData(school.concat(faculty))
-    }, [school, faculty, carrer, profesor, user, studyPlan, courseProgram])
+    const [school, setSchool] = useState(false)
+    const [faculty, setFaculty] = useState(false)
+    const [carrer, setCarrer] = useState(false)
+    const [profesor, setProfesor] = useState(false)
+    const [user, setUser] = useState(false)
+    const [studyPlan, setStudyPlan] = useState(false)
+    const [courseProgram, setCourseProgram] = useState(false)
 
 
     /**
@@ -38,145 +34,67 @@ export const RecyclingBinHead = ({ setData, datas }) => {
         }
     }
 
-    function cleanDataSchool(origin) {
-        const newOrigin = origin.map((value) => (
-            {
-                "data": value["NOMBRE ESCUELA"],
-                "id": value["ID_SCHOOL"],
-                "module": "Escuela"
-            })
-        )
-        return newOrigin
-    }
-
-    function cleanDataFaculty(origin) {
-        const newOrigin = origin.map((value) => (
-            {
-                "data": value["NOMBRE FACULTAD"],
-                "id": value["ID_FACULTY"],
-                "module": "Facultad"
-            })
-        )
-        return newOrigin
-    }
-
-    function cleanDataCarreer(origin) {
-        const newOrigin = origin.map((value) => (
-            {
-                "data": value["NOMBRE DE CARRERA"],
-                "id": value["ID_CAREER"],
-                "module": "Carrera"
-            })
-        )
-        return newOrigin
-    }
-
-
-    async function handleFilterCheckbox(event) {
-
-        console.log(event.target.id);
-        console.log(event.target.checked);
-
-        //para traer y setear los datos de las ecuelas
+    function handleFilterCheckbox(event) {
         if (event.target.id === "school") {
-            if (event.target.checked) {
-                const req = await (await fetch(
-                    fields[0].url,
-                    {
-                        credentials: "include",
-                    }
-                )).json()
-                setSchool(cleanDataSchool(req.data))
-            } else {
-                setSchool([])
-            }
+            event.target.checked === true ? setSchool(true) : setSchool(false)
         }
 
-        //para facultades
         if (event.target.id === "faculty") {
-            if (event.target.checked) {
-                const req = await (await fetch(
-                    fields[1].url,
-                    {
-                        credentials: "include",
-                    }
-                )).json()
-                setFaculty(cleanDataFaculty(req.data))
-            } else {
-                setFaculty([])
-            }
+            event.target.checked === true ? setFaculty(true) : setFaculty(false)
         }
-        //para carreras 
-        if (event.target.id !== "carrer") {
-            if (event.target.checked) {
-                const req = await (await fetch(
-                    fields[2].url,
-                    {
-                        credentials: "include",
-                    }
-                )).json()
-                setCarrer(cleanDataCarreer(req.data))
-            } else {
-                setCarrer([])
-            }
+
+        if (event.target.id === "carrer") {
+            event.target.checked === true ? setCarrer(true) : setCarrer(false)
         }
-        //para profesores
-        if (event.target.id !== "profesor") {
-            if (event.target.checked) {
-                const req = await (await fetch(
-                    fields[3].url,
-                    {
-                        credentials: "include",
-                    }
-                )).json()
-                setProfesor(req.data)
-            } else {
-                setProfesor([])
-            }
+
+        if (event.target.id === "profesor") {
+            event.target.checked === true ? setProfesor(true) : setProfesor(false)
         }
-        //para usuarios
-        if (event.target.id !== "user") {
-            if (event.target.checked) {
-                const req = await (await fetch(
-                    fields[4].url,
-                    {
-                        credentials: "include",
-                    }
-                )).json()
-                setUser(req.data)
-            } else {
-                setUser([])
-            }
+
+        if (event.target.id === "user") {
+            event.target.checked === true ? setUser(true) : setUser(false)
         }
-        //para planes de estudio
-        if (event.target.id !== "study-plan") {
-            if (event.target.checked) {
-                const req = await (await fetch(
-                    fields[5].url,
-                    {
-                        credentials: "include",
-                    }
-                )).json()
-                setStudyPlan(req.data)
-            } else {
-                setStudyPlan([])
-            }
+
+        if (event.target.id === "study-plan") {
+            event.target.checked === true ? setStudyPlan(true) : setStudyPlan(false)
         }
-        //para programas del curso
-        if (event.target.id !== "course-program") {
-            if (event.target.checked) {
-                const req = await (await fetch(
-                    fields[6].url,
-                    {
-                        credentials: "include",
-                    }
-                )).json()
-                setCourseProgram(req.data)
-            } else {
-                setCourseProgram([])
-            }
+
+        if (event.target.id === "course-program") {
+            event.target.checked === true ? setCourseProgram(true) : setCourseProgram(false)
         }
     }
+
+    useEffect(() => {
+        setData([])
+        if (school || faculty || carrer || profesor || user || studyPlan || courseProgram) {
+            fetchItems();
+        }
+    }, [school, faculty, carrer, profesor, user, studyPlan, courseProgram])
+
+    async function fetchItems() {
+        const params = new URLSearchParams();
+
+        if (school) params.append("school", "0");
+        if (faculty) params.append("faculty", "0");
+        if (carrer) params.append("carrer", "0");
+        if (profesor) params.append("teacher", "0");
+        if (user) params.append("user", "0");
+        if (studyPlan) params.append("study", "0");
+        if (courseProgram) params.append("course", "0");
+
+        const url = `http://localhost:3001/recyclebin?${params.toString()}`;
+
+        try {
+            const response = await fetch(url, { "credentials": 'include' });
+            if (!response.ok) throw new Error("Network response was not ok");
+            const data = await response.json();
+            console.log("datos fetch", data)
+            setData(data.data)
+        } catch (error) {
+            console.error("Error fetching items:", error);
+        }
+    }
+
 
     return (
         <div className='bg-UNA-Blue-Dark w-[100%] flex rounded-[0.5vh] items-center text-white mt-[3vh] p-[1vh] justify-around'>
