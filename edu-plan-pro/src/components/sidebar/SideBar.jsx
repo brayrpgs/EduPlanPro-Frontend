@@ -7,12 +7,18 @@ import { useNavigate } from "react-router-dom";
 import ShowMore from "../icons/AsideIcons/ShowMore";
 import ShowLess from "../icons/AsideIcons/ShowLess";
 
+import { useAtom } from "jotai";
+import { userAtom } from "../validatelogin/ValidateLogin";
+
 const SideBar = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [showPeople, setShowPeople] = useState(false);
   const [showAdminModules, setShowAdminModules] = useState(false);
   const [showPeopleIcon, setShowPeopleIcon] = useState(false);
   const [showAdminModulesIcon, setShowAdminModulesIcon] = useState(false);
+
+  const [user] = useAtom(userAtom);
+
 
   const [iconColor, setIconColor] = useState({
     people: "black",
@@ -75,7 +81,7 @@ const SideBar = () => {
           });
           navigate("/login");
           window.location.reload();
-         
+
         } else {
           Swal.fire(
             "Error",
@@ -100,9 +106,8 @@ const SideBar = () => {
       </button>
 
       <div
-        className={`${
-          !isOpen && "hidden"
-        } bg-gray-600/50 min-h-screen w-full flex fixed top-0 right-0 left-0 backdrop-blur-[0.2vh]`}
+        className={`${!isOpen && "hidden"
+          } bg-gray-600/50 min-h-screen w-full flex fixed top-0 right-0 left-0 backdrop-blur-[0.2vh]`}
         onClick={() => {
           setIsOpen(false);
           setShowPeople(false);
@@ -113,11 +118,10 @@ const SideBar = () => {
       ></div>
 
       <div
-        className={`${
-          isOpen
+        className={`${isOpen
             ? "w-[17vw] border-[0.3vh] transition-[width] duration-300 border-UNA-Blue-Light/80 "
             : "w-[0%] transition-[width] duration-300"
-        } bg-white min-h-screen top-0 right-0 fixed select-none transition-[width] duration-300`}
+          } bg-white min-h-screen top-0 right-0 fixed select-none transition-[width] duration-300`}
       >
         <div className={`${!isOpen && "hidden"}`}>
           <div className="flex fixed w-[2vw] h-[3vh] right-[2vh] top-[2.5vh]">
@@ -140,16 +144,18 @@ const SideBar = () => {
             </div>
 
             <div className="flex justify-center overflow-hidden w-[80%] transition-none">
-              <h1 className="text-[1.3vw] truncate">Usuario Administrador</h1>
+              <h1 className="text-[1.3vw] truncate">
+                Usuario {user?.ROLE_NAME ?? "desconocido"}
+              </h1>
             </div>
           </div>
 
           <div
-  className="transition-none text-center text-[1vw] cursor-pointer py-[1vh] mt-[2vh] hover:bg-UNA-Red hover:text-white"
-  onClick={() => navigate("/profile")}
->
-  Mi perfil
-</div>
+            className="transition-none text-center text-[1vw] cursor-pointer py-[1vh] mt-[2vh] hover:bg-UNA-Red hover:text-white"
+            onClick={() => navigate("/profile")}
+          >
+            Mi perfil
+          </div>
 
           <div
             className="transition-none text-center text-[1vw] cursor-pointer py-[1vh] mt-[1vh] hover:bg-UNA-Red hover:text-white"
