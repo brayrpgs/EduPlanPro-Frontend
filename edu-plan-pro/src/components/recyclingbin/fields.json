@@ -8,16 +8,12 @@
         "name": "Facultad"
     },
     {
-        "id": "carrer",
+        "id": "carreer",
         "name": "Carrera"
     },
     {
         "id": "profesor",
         "name": "Docente"
-    },
-    {
-        "id": "user",
-        "name": "Usuario"
     },
     {
         "id": "study-plan",

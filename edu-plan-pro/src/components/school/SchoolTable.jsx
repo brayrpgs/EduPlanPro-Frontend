@@ -191,6 +191,7 @@ const SchoolTable = () => {
                           fields={[
                             { field: "ID_SCHOOL", value: "id" },
                             { field: "NOMBRE ESCUELA", value: "desc" },
+                            { field: "ID_FACULTY", value: "facu" }
                           ]}
                           items={schools}
                           setItems={setSchools}

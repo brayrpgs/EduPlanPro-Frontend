@@ -43,7 +43,7 @@ export const RecyclingBinHead = ({ setData, datas }) => {
             event.target.checked === true ? setFaculty(true) : setFaculty(false)
         }
 
-        if (event.target.id === "carrer") {
+        if (event.target.id === "carreer") {
             event.target.checked === true ? setCarrer(true) : setCarrer(false)
         }
 

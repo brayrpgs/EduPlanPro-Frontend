@@ -1,7 +1,6 @@
 import React from 'react'
 import FilterOffIcon from '../icons/MainIcons/FilterOffIcon'
 import MainSearch from '../search/MainSearch'
-import DeleteForever from '../icons/recyclingBinIcons/DeleteForever'
 
 export const RecyclingBinSearch = () => {
     return (
@@ -18,9 +17,6 @@ export const RecyclingBinSearch = () => {
                 onClick={() => { }}
             >
                 <FilterOffIcon />
-            </div>
-            <div title='Destruir todos los elementos'>
-                <DeleteForever color={"#A31E32"}/>
             </div>
         </div>
     )
