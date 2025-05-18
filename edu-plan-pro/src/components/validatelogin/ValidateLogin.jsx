@@ -39,10 +39,10 @@ const ValidateLogin = ({ Component }) => {
         console.log(" Respuesta de sesión:", response);
     
         if (response.code === "200") {
-          const roleFromMessage = response.message.split(",")[1]?.trim().toLowerCase(); // extrae "root" o "admin"
+          const roleFromMessage = response.message.user.ROLE_NAME // extrae "root" o "admin"
     
           setUser({
-            ID_USER: response.data.ID_USER,//guarda el id de uusuario
+            ID_USER: response.message.user.ID_USER,//guarda el id de uusuario
             ROLE_NAME: roleFromMessage, //  guarda el rol también
           });
     

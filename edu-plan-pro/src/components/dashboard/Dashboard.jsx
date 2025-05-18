@@ -122,7 +122,10 @@ function Dashboard() {
       "Programas del Curso"
     ];
     if (adminOnlyModules.includes(module.title)) {
-      return user?.ROLE_NAME === "root" || user?.ROLE_NAME === "admin";
+      console.log(user?.ROLE_NAME);
+      console.log(user);
+      return user?.ROLE_NAME === "ROOT" || user?.ROLE_NAME === "ADMIN";
+      
     }
     return true; // los demás módulos se muestran siempre
   })
