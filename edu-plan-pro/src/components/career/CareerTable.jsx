@@ -195,12 +195,16 @@ const CareerTable = () => {
                           loadData={loadCareerData}
                         />
                         <DeleteModal
-                          deleteMethod={"DELETE"}
+                          deleteMethod={"PATCH"}
                           item={career}
                           itemName={"NOMBRE DE CARRERA"}
                           fields={[
-                            { field: "NOMBRE DE CARRERA", value: "desc" },
-                            { field: "ID_CAREER", value: "id" },
+                            { field: "NOMBRE DE CARRERA", value: "DSC_CARRER" },
+                            { field: "CODIGO DE CARRERA", value: "DSC_CODE" },
+                            { field: "ID_SCHOOL", value: "ID_SCHOOL"},
+                            { field: "STATE", value: "" },
+                            { field: "ID_CAREER", value: "ID_CAREER" }
+
                           ]}
                           items={careers}
                           setItems={setCareers}

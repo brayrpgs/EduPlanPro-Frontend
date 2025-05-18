@@ -12,6 +12,7 @@ import Backup from "../backup/Backup.jsx"
 import { useState } from "react"
 import BackupIcon from "../icons/DashboardIcons/BackupIcon.jsx"
 import CarrearIcon from "../icons/DashboardIcons/CarrearIcon.jsx"
+import RecycleIcon from "../icons/DashboardIcons/RecycleIcon.jsx"
 
 
 function Dashboard() {
@@ -38,7 +39,7 @@ function Dashboard() {
       icon: CarrearIcon,
       description: "Gestionar información de las Carreras",
       path: "/career", //cambiar a carrera
-      iconBg: "bg-green-100",
+      iconBg: "bg-lime-100",
     },
     {
       title: "Docentes",
@@ -82,6 +83,13 @@ function Dashboard() {
       description: "Gestionar los respaldos del sistema",
       path: "backup",
       iconBg: "bg-pink-100",
+    }
+    , {
+      title: "Papelera",
+      icon: RecycleIcon,
+      description: "Recupera la informacion antes de ser eliminada definitivamente",
+      path: "/recyclingbin",
+      iconBg: "bg-emerald-100",
     }
 
   ]

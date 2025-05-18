@@ -1,0 +1,26 @@
+[
+    {
+        "id": "school",
+        "name": "Escuela"
+    },
+    {
+        "id": "faculty",
+        "name": "Facultad"
+    },
+    {
+        "id": "carreer",
+        "name": "Carrera"
+    },
+    {
+        "id": "profesor",
+        "name": "Docente"
+    },
+    {
+        "id": "study-plan",
+        "name": "Plan de estudio"
+    },
+    {
+        "id": "course-program",
+        "name": "Programa de cursos"
+    }
+]
