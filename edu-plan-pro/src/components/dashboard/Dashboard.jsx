@@ -12,12 +12,16 @@ import Backup from "../backup/Backup.jsx"
 import { useState } from "react"
 import BackupIcon from "../icons/DashboardIcons/BackupIcon.jsx"
 import CarrearIcon from "../icons/DashboardIcons/CarrearIcon.jsx"
+import { useAtom } from "jotai"
+import { userAtom } from "../validatelogin/ValidateLogin.jsx"
 import RecycleIcon from "../icons/DashboardIcons/RecycleIcon.jsx"
 
 
 function Dashboard() {
   const navigate = useNavigate()
   const [showBackup, setShowBackup] = useState(false);
+  const [user] = useAtom(userAtom);
+
   const modules = [
     {
       title: "Escuela",
@@ -33,13 +37,13 @@ function Dashboard() {
       path: "/faculty",
       iconBg: "bg-green-100",
     },
-    //echo por david para probar
     {
       title: "Carreras",
       icon: CarrearIcon,
       description: "Gestionar información de las Carreras",
       path: "/career", //cambiar a carrera
       iconBg: "bg-lime-100",
+
     },
     {
       title: "Docentes",
@@ -62,7 +66,6 @@ function Dashboard() {
       path: "/studyplans",
       iconBg: "bg-red-100",
     },
-
     {
       title: "Programas del Curso",
       icon: CourseProgramIcon,
@@ -84,6 +87,7 @@ function Dashboard() {
       path: "backup",
       iconBg: "bg-pink-100",
     }
+
     , {
       title: "Papelera",
       icon: RecycleIcon,
@@ -106,35 +110,52 @@ function Dashboard() {
         <div className="max-w-[70vw] mx-auto">
           <div className="mb-[1.5vh]">
             <h1 className="text-[2vw] font-bold">Inicio</h1>
-
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-[1.5vw]">
-            {modules.map((module) => (
-              <div
-                key={module.path}
-                className="border rounded-[0.5vh] p-[1.5vh] bg-white shadow-sm hover:shadow-md transition-shadow cursor-pointer"
-                onClick={() => module.path.includes("backup") ? setShowBackup(true) : handleNavigate(module.path)}
-              >
-                <div className={`icon rounded-full ${module.iconBg} flex items-center justify-center mb-[1vh]`}>
-                  <module.icon />
-                </div>
-                <h2 className="text-[1.2vw] font-semibold mb-[0.5vh]">{module.title}</h2>
-                <p className="text-gray-600 mb-[1vh] text-[0.9vw]">{module.description}</p>
-                <div className="flex items-center text-blue-600 font-medium text-[0.9vw]">
-                  Administrar {module.title.toLowerCase()}
-                  <svg className="w-[1vw] h-[1vw] ml-[0.25vw]" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                    <path
-                      d="M5 12H19M19 12L12 5M19 12L12 19"
-                      stroke="currentColor"
-                      strokeWidth="2"
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                    />
-                  </svg>
-                </div>
-              </div>
-            ))}
+          {modules
+  .filter((module) => {
+    const adminOnlyModules = [
+      "Respaldos",
+      "Reportes",
+      "Planes de estudio",
+      "Programas del Curso"
+    ];
+    if (adminOnlyModules.includes(module.title)) {
+      return user?.ROLE_NAME === "root" || user?.ROLE_NAME === "admin";
+    }
+    return true; // los demás módulos se muestran siempre
+  })
+  .map((module) => (
+    <div
+      key={module.path}
+      className="border rounded-[0.5vh] p-[1.5vh] bg-white shadow-sm hover:shadow-md transition-shadow cursor-pointer"
+      onClick={() =>
+        module.path.includes("backup")
+          ? setShowBackup(true)
+          : handleNavigate(module.path)
+      }
+    >
+      <div className={`icon rounded-full ${module.iconBg} flex items-center justify-center mb-[1vh]`}>
+        <module.icon />
+      </div>
+      <h2 className="text-[1.2vw] font-semibold mb-[0.5vh]">{module.title}</h2>
+      <p className="text-gray-600 mb-[1vh] text-[0.9vw]">{module.description}</p>
+      <div className="flex items-center text-blue-600 font-medium text-[0.9vw]">
+        Administrar {module.title.toLowerCase()}
+        <svg className="w-[1vw] h-[1vw] ml-[0.25vw]" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path
+            d="M5 12H19M19 12L12 5M19 12L12 19"
+            stroke="currentColor"
+            strokeWidth="2"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+          />
+        </svg>
+      </div>
+    </div>
+))}
+
           </div>
         </div>
         {showBackup && <Backup isOpen={showBackup} setOpen={setShowBackup} />}
@@ -144,6 +165,5 @@ function Dashboard() {
     </div>
   )
 }
-
 
 export default Dashboard

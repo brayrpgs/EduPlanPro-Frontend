@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import OpenSideBar from "../icons/AsideIcons/OpenSideBar";
 import CloseSideBar from "../icons/AsideIcons/CloseSideBar";
 import AccountCircleAdmin from "../icons/AsideIcons/AccountCircleAdmin";
@@ -6,8 +6,15 @@ import Swal from "sweetalert2";
 import { useNavigate } from "react-router-dom";
 import ShowMore from "../icons/AsideIcons/ShowMore";
 import ShowLess from "../icons/AsideIcons/ShowLess";
+
+import { FetchValidate } from "../../utilities/FetchValidate";
+
+import { useAtom } from "jotai";
+import { userAtom } from "../validatelogin/ValidateLogin";
+
 import ForgotPassword from "../password/forgotPassword";
 import ForgotPasswordIntern from "../password/forgotPasswordIntern";
+
 
 const SideBar = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -16,6 +23,43 @@ const SideBar = () => {
   const [showPeopleIcon, setShowPeopleIcon] = useState(false);
   const [showAdminModulesIcon, setShowAdminModulesIcon] = useState(false);
   const [isOpenPass, setIsOpenPass] = useState(false);
+
+  const [user] = useAtom(userAtom);
+  const [fullName, setFullName] = useState("");
+  const navigate = useNavigate();
+
+
+  useEffect(() => {
+    const loadFullName = async () => {
+      if (!user?.ID_USER) return;
+
+      try {
+        const response = await FetchValidate(
+          "http://localhost:3001/searchuser",
+          {
+            method: "POST",
+            credentials: "include",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({ id: user.ID_USER }),
+          },
+          navigate
+        );
+
+        if (response?.data?.length) {
+          const data = response.data[0];
+          setFullName(`${data.NOMBRE} ${data.APELLIDOS}`);
+        }
+      } catch (error) {
+        console.error("Error al obtener nombre:", error);
+      }
+    };
+
+    loadFullName();
+  }, [user, navigate]);
+
+
 
   const [iconColor, setIconColor] = useState({
     people: "black",
@@ -36,7 +80,7 @@ const SideBar = () => {
     }));
   };
 
-  const navigate = useNavigate();
+
 
   const handleLogout = async () => {
     const result = await Swal.fire({
@@ -116,8 +160,10 @@ const SideBar = () => {
 
       <div
         className={`${isOpen
+
             ? "w-[17vw] border-[0.3vh] transition-[width] duration-300 border-UNA-Blue-Light/80 "
             : "w-[0%] transition-[width] duration-300"
+
           } bg-white min-h-screen top-0 right-0 fixed select-none transition-[width] duration-300`}
       >
         <div className={`${!isOpen && "hidden"}`}>
@@ -140,14 +186,19 @@ const SideBar = () => {
               <AccountCircleAdmin />
             </div>
 
-            <div className="flex justify-center overflow-hidden w-[80%] transition-none">
-              <h1 className="text-[1.3vw] truncate">Usuario Administrador</h1>
-            </div>
+            <h1 className="text-[1.3vw] truncate">
+              {fullName ? `${fullName}` : "Cargando..."}
+            </h1>
+
           </div>
 
-          <div className="transition-none text-center text-[1vw] cursor-pointer py-[1vh] mt-[2vh] hover:bg-UNA-Red hover:text-white">
+          <div
+            className="transition-none text-center text-[1vw] cursor-pointer py-[1vh] mt-[2vh] hover:bg-UNA-Red hover:text-white"
+            onClick={() => navigate("/profile")}
+          >
             Mi perfil
           </div>
+
           <div
             className="transition-none text-center text-[1vw] cursor-pointer py-[1vh] mt-[1vh] hover:bg-UNA-Red hover:text-white"
             onClick={() => navigate("/preference")}

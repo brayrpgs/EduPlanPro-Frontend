@@ -8,7 +8,9 @@ import Loading from "../componentsgeneric/Loading";
 import { FetchValidate } from "../../utilities/FetchValidate";
 import { useNavigate } from "react-router-dom";
 import TeacherUpdate from "./TeacherUpdate";
-import TeacherAdd from "./TeacherAdd"
+import TeacherAdd from "./TeacherAdd";
+import { useAtom } from "jotai";
+import { userAtom } from "../validatelogin/ValidateLogin.jsx";
 
 const TeacherTable = () => {
   const [teachers, setTeachers] = useState([]);
@@ -29,13 +31,13 @@ const TeacherTable = () => {
   const [loading, setLoading] = useState(false);
 
   const navigate = useNavigate();
+  const [user] = useAtom(userAtom);
+  const hasPermission = user?.ROLE_NAME?.toLowerCase() === "admin" || user?.ROLE_NAME?.toLowerCase() === "root";
 
   const loadTeacherData = useCallback(
     async (page) => {
       setCurrentPage(page);
-      const searchQuery = searchTerms
-        ? `&nameTeach=${searchTerms["nameTeach"]}&secName=${searchTerms["secName"]}&idCard=${searchTerms["idCard"]}&email=${searchTerms["email"]}`
-        : "&nameTeach=&secName=&idCard=&email=";
+      const searchQuery = `&nameTeach=${searchTerms.nameTeach}&secName=${searchTerms.secName}&idCard=${searchTerms.idCard}&email=${searchTerms.email}`;
 
       const url = `http://localhost:3001/searchteacher?name=search-page&numPage=${page}${searchQuery}`;
       const options = {
@@ -46,15 +48,11 @@ const TeacherTable = () => {
       try {
         setLoading(true);
         const response = await FetchValidate(url, options, navigate);
-        if (!response) {
-          console.error("Error en la solicitud");
-          return;
-        }
-
+        if (!response) return;
         setFilteredTeacher(response.data.rows || []);
         setTotalItems(response.data.totalMatches || 0);
       } catch (error) {
-        setLoading(false);
+        console.error("Error al cargar profesores:", error);
       } finally {
         setLoading(false);
       }
@@ -66,32 +64,17 @@ const TeacherTable = () => {
     loadTeacherData(currentPage);
   }, [currentPage, loadTeacherData]);
 
-  const handlePageChange = (page) => {
-    setCurrentPage(page);
-  };
+  const handlePageChange = (page) => setCurrentPage(page);
 
   const handleSearch = (value, type = "main") => {
     if (type === "main") {
-      if (nameFilter.trim() !== "") {
-        setNameFilter("");
-      }
-      setSearchTerms((prevState) => ({
-        ...prevState,
-        nameTeach: value,
-      }));
+      if (nameFilter.trim() !== "") setNameFilter("");
+      setSearchTerms((prev) => ({ ...prev, nameTeach: value }));
     } else if (type === "nameTeach") {
-      if (mainFilter.trim() !== "") {
-        setMainFilter("");
-      }
-      setSearchTerms((prevState) => ({
-        ...prevState,
-        nameTeach: value,
-      }));
+      if (mainFilter.trim() !== "") setMainFilter("");
+      setSearchTerms((prev) => ({ ...prev, nameTeach: value }));
     } else if (["secName", "idCard", "email"].includes(type)) {
-      setSearchTerms((prevState) => ({
-        ...prevState,
-        [`${type}`]: value,
-      }));
+      setSearchTerms((prev) => ({ ...prev, [type]: value }));
     }
 
     setCurrentPage(1);
@@ -99,36 +82,36 @@ const TeacherTable = () => {
 
   const handleClearFilters = () => {
     setSearchTerms({ nameTeach: "", secName: "", idCard: "", email: "" });
-    setCurrentPage(1);
     setMainFilter("");
     setNameFilter("");
     setSecNameFilter("");
     setIdCardFilter("");
     setEmailFilter("");
+    setCurrentPage(1);
   };
 
   return (
     <main>
       <div className="mt-[3vh] justify-start flex pr-[15vw] pl-[15vw]">
-        <div className="bg-UNA-Blue-Dark w-full max-w-screens flex rounded-[0.5vh] items-center md">
-          <h1 className="ml-[1vw] my-[0.5vh] text-[2vw] text-white">
-            Administrar profesores
-          </h1>
-          <div className="flex ml-auto justify-end mr-[1vw]">
-            <TeacherAdd
-              totalItems={totalItems}
-              currentPage={currentPage}
-              loadData={loadTeacherData}
-              textToAdd={"Agregar profesor"}
-            />
-          </div>
+        <div className="bg-UNA-Blue-Dark w-full max-w-screens flex rounded-[0.5vh] items-center">
+          <h1 className="ml-[1vw] my-[0.5vh] text-[2vw] text-white">Administrar profesores</h1>
+          {hasPermission && (
+            <div className="flex ml-auto justify-end mr-[1vw]">
+              <TeacherAdd
+                totalItems={totalItems}
+                currentPage={currentPage}
+                loadData={loadTeacherData}
+                textToAdd="Agregar profesor"
+              />
+            </div>
+          )}
         </div>
       </div>
 
       <div className="flex flex-col justify-center items-center w-full pl-[15vw] pr-[15vw]">
         <div className="flex flex-row w-full items-center justify-end gap-[0.3vw]">
           <MainSearch
-            placeholder={"Ingrese el nombre de un profesor"}
+            placeholder="Ingrese el nombre de un profesor"
             onSearch={(value) => handleSearch(value, "main")}
             mainFilter={mainFilter}
             setMainFilter={setMainFilter}
@@ -141,16 +124,14 @@ const TeacherTable = () => {
             <FilterOffIcon />
           </div>
         </div>
+
         <div className="flex justify-center items-center mt-0 w-full overflow-x-auto">
           <table className="w-full table-auto">
             <thead>
               <tr>
                 <th className="border-[0.1vh] border-gray-400 px-[1vw] py-[1vh] text-center text-[1vw] text-UNA-Red">
                   Nombre
-                  <div
-                    className="w-full flex flex-col "
-                    title="Filtrar por nombre."
-                  >
+                  <div title="Filtrar por nombre">
                     <SearchInput
                       onSearch={(value) => handleSearch(value, "nameTeach")}
                       filter={nameFilter}
@@ -161,10 +142,7 @@ const TeacherTable = () => {
                 </th>
                 <th className="border-[0.1vh] border-gray-400 px-[1vw] py-[1vh] text-center text-[1vw] text-UNA-Red">
                   Apellidos
-                  <div
-                    className="w-full flex flex-col "
-                    title="Filtrar por apellidos."
-                  >
+                  <div title="Filtrar por apellidos">
                     <SearchInput
                       onSearch={(value) => handleSearch(value, "secName")}
                       filter={secNameFilter}
@@ -175,10 +153,7 @@ const TeacherTable = () => {
                 </th>
                 <th className="border-[0.1vh] border-gray-400 px-[1vw] py-[1vh] text-center text-[1vw] text-UNA-Red">
                   Cédula
-                  <div
-                    className="w-full flex flex-col "
-                    title="Filtrar por cédula."
-                  >
+                  <div title="Filtrar por cédula">
                     <SearchInput
                       onSearch={(value) => handleSearch(value, "idCard")}
                       filter={idCardFilter}
@@ -189,10 +164,7 @@ const TeacherTable = () => {
                 </th>
                 <th className="border-[0.1vh] border-gray-400 px-[1vw] py-[1vh] text-center text-[1vw] text-UNA-Red">
                   Correo electrónico
-                  <div
-                    className="w-full flex flex-col "
-                    title="Filtrar por correo electrónico."
-                  >
+                  <div title="Filtrar por correo">
                     <SearchInput
                       onSearch={(value) => handleSearch(value, "email")}
                       filter={emailFilter}
@@ -201,64 +173,67 @@ const TeacherTable = () => {
                     />
                   </div>
                 </th>
-                <th className="border-[0.1vh] border-gray-400 px-[1vw] py-[1vh] w-[10vw] text-[1vw] text-UNA-Red">
-                  Acciones
-                </th>
+                {hasPermission && (
+                  <th className="border-[0.1vh] border-gray-400 px-[1vw] py-[1vh] w-[10vw] text-[1vw] text-UNA-Red">
+                    Acciones
+                  </th>
+                )}
               </tr>
             </thead>
             <tbody>
               {filteredTeacher.length > 0 ? (
                 filteredTeacher.map((teacher) => (
                   <tr key={teacher.ID_TEACHER}>
-                    <td className="border-[0.1vh] border-gray-400 px-[1vw] py-[1.5vh] text-[0.9vw] text-center items-center break-words whitespace-normal max-w-[15vw]">
+                    <td className="border-[0.1vh] border-gray-400 px-[1vw] py-[1.5vh] text-[0.9vw] text-center break-words max-w-[15vw]">
                       {teacher["NOMBRE"]}
                     </td>
-                    <td className="border-[0.1vh] border-gray-400 px-[1vw] py-[1.5vh] text-[0.9vw] text-center items-center break-words whitespace-normal max-w-[15vw]">
+                    <td className="border-[0.1vh] border-gray-400 px-[1vw] py-[1.5vh] text-[0.9vw] text-center break-words max-w-[15vw]">
                       {teacher["APELLIDOS"]}
                     </td>
-                    <td className="border-[0.1vh] border-gray-400 px-[1vw] py-[1.5vh] text-[0.9vw] text-center items-center break-words whitespace-normal max-w-[15vw]">
+                    <td className="border-[0.1vh] border-gray-400 px-[1vw] py-[1.5vh] text-[0.9vw] text-center break-words max-w-[15vw]">
                       {teacher["IDENTIFICACION"]}
                     </td>
-                    <td className="border-[0.1vh] border-gray-400 px-[1vw] py-[1.5vh] text-[0.9vw] text-center items-center break-words whitespace-normal max-w-[15vw]">
+                    <td className="border-[0.1vh] border-gray-400 px-[1vw] py-[1.5vh] text-[0.9vw] text-center break-words max-w-[15vw]">
                       {teacher["CORREO"]}
                     </td>
-                    <td className="border-[0.1vh] border-gray-400 px-[1vw] py-[1vh] text-[0.9vw]">
-                      <div className="flex items-center flex-row justify-center w-full h-full gap-[0.2vw]">
-                      <TeacherUpdate
-                          teacher={teacher}
-                          loadData={loadTeacherData}
-                          currentPage={currentPage}
-                        />
-                        <DeleteModal
-                          deleteMethod={"PATCH"}
-                          item={teacher}
-                          itemName={"NOMBRE"}
-                          fields={[
-                            { field: "ID_TEACHER", value: "id" },
-                            { field: "NOMBRE", value: "name" },
-                            { field: "APELLIDOS", value: "secName" },
-                            { field: "IDENTIFICACION", value: "idcard" },
-                            { field: "CORREO", value: "email" },
-                          ]}
-                          items={teachers}
-                          setItems={setTeachers}
-                          totalItems={totalItems}
-                          currentPage={currentPage}
-                          loadData={loadTeacherData}
-                          destination={"teacher"}
-                          componentName={"profesor"}
-                          componentPrefix={"el"}
-                        />
-                        
-                      </div>
-                    </td>
+                    {hasPermission && (
+                      <td className="border-[0.1vh] border-gray-400 px-[1vw] py-[1vh] text-[0.9vw]">
+                        <div className="flex items-center flex-row justify-center w-full h-full gap-[0.2vw]">
+                          <TeacherUpdate
+                            teacher={teacher}
+                            loadData={loadTeacherData}
+                            currentPage={currentPage}
+                          />
+                          <DeleteModal
+                            deleteMethod={"PATCH"}
+                            item={teacher}
+                            itemName={"NOMBRE"}
+                            fields={[
+                              { field: "ID_TEACHER", value: "id" },
+                              { field: "NOMBRE", value: "name" },
+                              { field: "APELLIDOS", value: "secName" },
+                              { field: "IDENTIFICACION", value: "idcard" },
+                              { field: "CORREO", value: "email" },
+                            ]}
+                            items={teachers}
+                            setItems={setTeachers}
+                            totalItems={totalItems}
+                            currentPage={currentPage}
+                            loadData={loadTeacherData}
+                            destination={"teacher"}
+                            componentName={"profesor"}
+                            componentPrefix={"el"}
+                          />
+                        </div>
+                      </td>
+                    )}
                   </tr>
                 ))
               ) : (
                 <tr>
                   <td
-                    colSpan={5}
-                    className="px-[1vw] py-[1vh] text-[0.9vw] text-center items-center pt-[3.5vh]"
+                    colSpan={hasPermission ? 5 : 4}
+                    className="px-[1vw] py-[1vh] text-[0.9vw] text-center pt-[3.5vh]"
                   >
                     No se encontraron profesores registrados.
                   </td>
@@ -270,7 +245,7 @@ const TeacherTable = () => {
         <div className="w-full h-[8vh] flex justify-center items-center">
           <Pagination
             totalItems={totalItems}
-            itemsPerPage={"8"}
+            itemsPerPage="8"
             currentPage={currentPage}
             onPageChange={handlePageChange}
           />
