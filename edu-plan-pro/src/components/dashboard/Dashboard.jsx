@@ -14,6 +14,8 @@ import BackupIcon from "../icons/DashboardIcons/BackupIcon.jsx"
 import CarrearIcon from "../icons/DashboardIcons/CarrearIcon.jsx"
 import { useAtom } from "jotai"
 import { userAtom } from "../validatelogin/ValidateLogin.jsx"
+import RecycleIcon from "../icons/DashboardIcons/RecycleIcon.jsx"
+
 
 function Dashboard() {
   const navigate = useNavigate()
@@ -39,8 +41,9 @@ function Dashboard() {
       title: "Carreras",
       icon: CarrearIcon,
       description: "Gestionar información de las Carreras",
-      path: "/career",
-      iconBg: "bg-green-100",
+      path: "/career", //cambiar a carrera
+      iconBg: "bg-lime-100",
+
     },
     {
       title: "Docentes",
@@ -84,6 +87,15 @@ function Dashboard() {
       path: "backup",
       iconBg: "bg-pink-100",
     }
+
+    , {
+      title: "Papelera",
+      icon: RecycleIcon,
+      description: "Recupera la informacion antes de ser eliminada definitivamente",
+      path: "/recyclingbin",
+      iconBg: "bg-emerald-100",
+    }
+
   ]
 
   const handleNavigate = (path) => {

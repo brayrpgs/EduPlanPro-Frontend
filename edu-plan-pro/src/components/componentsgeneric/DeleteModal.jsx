@@ -69,7 +69,7 @@ const DeleteModal = ({
       dataToSend[value] =
         item[field] !== undefined ? item[field] : defaultValue;
     });
-
+    
     const url = `http://localhost:3001/${destination}`;
 
     const options = {

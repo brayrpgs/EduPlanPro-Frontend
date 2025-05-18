@@ -6,10 +6,15 @@ import Swal from "sweetalert2";
 import { useNavigate } from "react-router-dom";
 import ShowMore from "../icons/AsideIcons/ShowMore";
 import ShowLess from "../icons/AsideIcons/ShowLess";
+
 import { FetchValidate } from "../../utilities/FetchValidate";
 
 import { useAtom } from "jotai";
 import { userAtom } from "../validatelogin/ValidateLogin";
+
+import ForgotPassword from "../password/forgotPassword";
+import ForgotPasswordIntern from "../password/forgotPasswordIntern";
+
 
 const SideBar = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -17,6 +22,7 @@ const SideBar = () => {
   const [showAdminModules, setShowAdminModules] = useState(false);
   const [showPeopleIcon, setShowPeopleIcon] = useState(false);
   const [showAdminModulesIcon, setShowAdminModulesIcon] = useState(false);
+  const [isOpenPass, setIsOpenPass] = useState(false);
 
   const [user] = useAtom(userAtom);
   const [fullName, setFullName] = useState("");
@@ -154,8 +160,10 @@ const SideBar = () => {
 
       <div
         className={`${isOpen
-          ? "w-[17vw] border-[0.3vh] transition-[width] duration-300 border-UNA-Blue-Light/80 "
-          : "w-[0%] transition-[width] duration-300"
+
+            ? "w-[17vw] border-[0.3vh] transition-[width] duration-300 border-UNA-Blue-Light/80 "
+            : "w-[0%] transition-[width] duration-300"
+
           } bg-white min-h-screen top-0 right-0 fixed select-none transition-[width] duration-300`}
       >
         <div className={`${!isOpen && "hidden"}`}>
@@ -222,7 +230,13 @@ const SideBar = () => {
               </ul>
             </div>
           )}
-
+          <div
+            className="transition-none text-center text-[1vw] cursor-pointer py-[1vh] mt-[1vh] hover:bg-UNA-Red hover:text-white"
+            onClick={() => setIsOpenPass(true)}
+          >
+            Olvide mi contraseña
+          </div>
+          
           <div
             className="transition-none text-center text-[1vw] cursor-pointer py-[1vh] mt-[1vh] hover:bg-UNA-Red hover:text-white"
             onClick={handleLogout}
@@ -230,6 +244,7 @@ const SideBar = () => {
             Salir
           </div>
         </div>
+        {isOpenPass && <ForgotPasswordIntern isOpen={isOpenPass} setIsOpen={setIsOpenPass} />}
       </div>
     </div>
   );

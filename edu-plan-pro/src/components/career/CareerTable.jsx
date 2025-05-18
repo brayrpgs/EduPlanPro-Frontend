@@ -165,6 +165,7 @@ const CareerTable = () => {
                     <td className="border-[0.1vh] border-gray-400 px-[1vw] py-[1.5vh] text-[0.9vw] text-center break-words max-w-[15vw]">
                       {career["NOMBRE DE LA ESCUELA"]}
                     </td>
+
                     {hasPermission && (
                       <td className="border-[0.1vh] border-gray-400 px-[1vw] py-[1vh] text-[0.9vw]">
                         <div className="flex justify-center items-center gap-[0.2vw]">
@@ -173,26 +174,31 @@ const CareerTable = () => {
                             currentPage={currentPage}
                             loadData={loadCareerData}
                           />
-                          <DeleteModal
-                            deleteMethod={"DELETE"}
-                            item={career}
-                            itemName={"NOMBRE DE CARRERA"}
-                            fields={[
-                              { field: "NOMBRE DE CARRERA", value: "desc" },
-                              { field: "ID_CAREER", value: "id" },
-                            ]}
-                            items={careers}
-                            setItems={setCareers}
-                            totalItems={totalItems}
-                            currentPage={currentPage}
-                            loadData={loadCareerData}
-                            destination={"carreer"}
-                            componentName={"carrera"}
-                            componentPrefix={"la"}
-                          />
+                           <DeleteModal
+                          deleteMethod={"PATCH"}
+                          item={career}
+                          itemName={"NOMBRE DE CARRERA"}
+                          fields={[
+                            { field: "NOMBRE DE CARRERA", value: "DSC_CARRER" },
+                            { field: "CODIGO DE CARRERA", value: "DSC_CODE" },
+                            { field: "ID_SCHOOL", value: "ID_SCHOOL"},
+                            { field: "STATE", value: "" },
+                            { field: "ID_CAREER", value: "ID_CAREER" }
+
+                          ]}
+                          items={careers}
+                          setItems={setCareers}
+                          totalItems={totalItems}
+                          currentPage={currentPage}
+                          loadData={loadCareerData}
+                          destination={"carreer"}
+                          componentName={"carrera"}
+                          componentPrefix={"la"}
+                        />
                         </div>
                       </td>
                     )}
+
                   </tr>
                 ))
               ) : (

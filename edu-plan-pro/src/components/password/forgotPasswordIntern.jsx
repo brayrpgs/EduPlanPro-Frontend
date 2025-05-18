@@ -1,0 +1,259 @@
+import React, { useEffect, useState } from "react";
+import Swal from "sweetalert2";
+import { useNavigate } from "react-router-dom";
+import { FetchValidate } from "../../utilities/FetchValidate";
+import Loading from "../componentsgeneric/Loading";
+import CancelActionIcon from "../icons/MainIcons/CancelActionIcon";
+
+
+const ForgotPasswordIntern = ({ isOpen, setIsOpen }) => {
+  const [userId, setUserId] = useState(null);
+  const [loading, setLoading] = useState(false);
+  const navigate = useNavigate();
+
+
+
+  useEffect(() => {
+
+    const fetchUser = async () => {
+      try {
+        const req = await fetch("http://localhost:3001/session", { credentials: "include" })
+        console.log(req);
+        const res = await req.json()
+        console.log(res);
+        setUserId(res.message.user.ID_USER)
+      } catch (error) {
+        console.log(error);
+      }
+    }
+    fetchUser()
+  }, [])
+
+  const [passwordData, setPasswordData] = useState({
+    newPassword: "",
+    newPasswordConfirmation: "",
+    ID_USER: userId,
+  });
+
+  function closeActions() {
+    setIsOpen(false);
+  }
+
+  const handlePasswordChange = (e) => {
+    const { name, value } = e.target;
+    setPasswordData({
+      ...passwordData,
+      [name]: value,
+      ID_USER: userId, // Always include the user ID
+    });
+  };
+
+  function validatePasswords() {
+    if (!passwordData.newPassword || !passwordData.newPasswordConfirmation) {
+      Swal.fire({
+        icon: "error",
+        iconColor: "#A31E32",
+        title: "Información incompleta",
+        text: "Por favor, completa ambos campos de contraseña antes de continuar.",
+        confirmButtonText: "Aceptar",
+        confirmButtonColor: "#A31E32",
+      });
+      return false;
+    }
+
+    if (passwordData.newPassword !== passwordData.newPasswordConfirmation) {
+      Swal.fire({
+        icon: "error",
+        iconColor: "#A31E32",
+        title: "Las contraseñas no coinciden",
+        text: "Verifica que ambas contraseñas sean iguales antes de continuar.",
+        confirmButtonText: "Aceptar",
+        confirmButtonColor: "#A31E32",
+      });
+      return false;
+    }
+
+    return true;
+  }
+
+  function validateClose() {
+    Swal.fire({
+      title: "¿Deseas salir del cambio de contraseña?",
+      text: "Se cancelará la acción y se perderá la información ingresada.",
+      icon: "warning",
+      iconColor: "#A31E32",
+      showCancelButton: true,
+      confirmButtonText: "Cancelar",
+      cancelButtonText: "Regresar",
+      confirmButtonColor: "#A31E32",
+      cancelButtonColor: "#2b3843",
+    }).then((result) => {
+      if (result.isConfirmed) {
+        closeActions();
+      }
+    });
+  }
+
+  const handlePasswordUpdate = async () => {
+    const url = "http://localhost:3001/changepassword";
+
+    const options = {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(passwordData),
+      credentials: "include",
+    };
+
+    if (validatePasswords()) {
+      try {
+        setLoading(true);
+        const response = await FetchValidate(url, options, navigate);
+
+        if (!response) {
+          console.error("Error en la solicitud");
+          return;
+        }
+
+        if (response.code === "200") {
+          Swal.fire({
+            icon: "success",
+            iconColor: "#7cda24",
+            title: "Contraseña actualizada",
+            text: "Tu contraseña ha sido actualizada correctamente.",
+            confirmButtonText: "Aceptar",
+            confirmButtonColor: "#A31E32",
+          }).then(() => {
+            closeActions();
+            setPasswordData({
+              newPassword: "",
+              newPasswordConfirmation: "",
+              ID_USER: "",
+            });
+          });
+        } else {
+          Swal.fire({
+            icon: "error",
+            iconColor: "#a31e32",
+            title: "Error al actualizar",
+            text: "No se pudo actualizar la contraseña. Por favor inténtalo de nuevo.",
+            confirmButtonText: "Aceptar",
+            confirmButtonColor: "#A31E32",
+          }).then(() => {
+            closeActions();
+          });
+        }
+      } catch (error) {
+        setLoading(false);
+        Swal.fire({
+          icon: "error",
+          title: "Error al actualizar",
+          text: "Intenta de nuevo más tarde.",
+          confirmButtonColor: "#A31E32",
+        }).then(() => {
+          closeActions();
+        });
+        console.error(error);
+      } finally {
+        setLoading(false);
+      }
+    }
+  };
+
+  return (
+    <div>
+      {/* Second Modal - Password Change */}
+      <div
+        className={`${!isOpen && "hidden"
+          } bg-gray-600/50 min-h-screen w-full z-40 flex fixed top-0 right-0 left-0 backdrop-blur-[0.3vh]`}
+        onClick={() => validateClose()}
+      ></div>
+
+      <div
+        className={`${isOpen
+          ? "w-[35vw] min-h-[30vh] overflow-hidden bg-white fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 z-50 flex flex-col items-center justify-start border-[-1vh] border-gray-400 rounded-[1vh] transition-[width] duration-300"
+          : "w-[15%]"
+          }`}
+      >
+        {isOpen && (
+          <div className="w-full flex flex-col justify-center items-center ">
+            <div className="bg-UNA-Red w-full h-[7vh] flex top-0 fixed border-white z-50 rounded-t-[1vh] text-start items-center">
+              <h1 className="text-[3vh] ml-[1vw] text-white">
+                Cambiar contraseña
+              </h1>
+              <div className="w-[5vw] right-0 h-full absolute flex text-center justify-center items-center">
+                <button
+                  className="flex w-[60%] h-[60%] bg-UNA-Pink-Light rounded-[0.5vh] items-center justify-center"
+                  onClick={() => validateClose()}
+                >
+                  <div className="flex w-[75%] h-[75%] ">
+                    <CancelActionIcon />
+                  </div>
+                </button>
+              </div>
+            </div>
+            <div className="w-full max-w-full mt-[7vh] mb-[7vh] flex flex-col items-start relative">
+              <label
+                className="text-left ml-[1vw] mt-[3vh] font-bold text-[1.2vw]"
+                htmlFor="newPassword"
+              >
+                Nueva contraseña
+              </label>
+              <input
+                className="w-[94%] mt-[1.1vh] text-[0.9vw] ml-[1vw] h-[5vh] px-[1vw] focus:border-UNA-Red rounded-[1vh] outline-none border-[0.1vh]"
+                autoComplete="off"
+                spellCheck="false"
+                placeholder="Ingresa tu nueva contraseña"
+                value={passwordData.newPassword}
+                onChange={handlePasswordChange}
+                name="newPassword"
+                id="newPassword"
+                type="password"
+              />
+
+              <label
+                className="text-left ml-[1vw] mt-[2vh] font-bold text-[1.2vw]"
+                htmlFor="newPasswordConfirmation"
+              >
+                Confirmar contraseña
+              </label>
+              <input
+                className="w-[94%] mt-[1.1vh] text-[0.9vw] ml-[1vw] h-[5vh] px-[1vw] focus:border-UNA-Red rounded-[1vh] outline-none border-[0.1vh]"
+                autoComplete="off"
+                spellCheck="false"
+                placeholder="Confirma tu nueva contraseña"
+                value={passwordData.newPasswordConfirmation}
+                onChange={handlePasswordChange}
+                name="newPasswordConfirmation"
+                id="newPasswordConfirmation"
+                type="password"
+              />
+            </div>
+
+            {loading && (
+              <div className="absolute top-0 left-0 w-full h-full flex justify-center items-center bg-gray-500 bg-opacity-50 z-60">
+                <Loading />
+              </div>
+            )}
+
+            <div className="w-full h-[7vh] flex bottom-0 fixed border-white z-50 text-center justify-center items-center">
+              <button
+                className="border-[0.1vh] bg-UNA-Red text-white text-[0.9vw] rounded-[0.3vw] h-[60%] border-black w-[50%] ml-[1vw] mr-[0.1vw]"
+                onClick={() => handlePasswordUpdate()}
+              >
+                Actualizar
+              </button>
+              <button
+                className="border-[0.1vh] bg-UNA-Blue-Dark text-white text-[0.9vw] rounded-[0.3vw] h-[60%] border-black w-[50%] ml-[0.1vw] mr-[1vw]"
+                onClick={() => validateClose()}
+              >
+                Cancelar
+              </button>
+            </div>
+          </div>
+        )}
+      </div>
+    </div>
+  );
+};
+
+export default ForgotPasswordIntern;

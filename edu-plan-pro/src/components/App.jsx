@@ -17,17 +17,20 @@ import ServerError from "./validatelogin/ServerError.jsx";
 import PageNotFound from "./componentsgeneric/PageNotFound.jsx";
 import CoursesProgram from "./coursesprogram/CoursesProgram.jsx";
 import { useThemePreferences } from './preference/useThemePreferences.jsx';
+
 import Profile from "./profile/Profile.jsx";
+import { RecyclingBin } from "./recyclingbin/RecyclingBin.jsx";
+
 
 
 function App() {
   useThemePreferences();
   return (
-    
+
     <BrowserRouter>
 
       <Routes>
-        
+
         <Route path="/" element={<Navigate to="/login" />} />
         <Route path="/login" element={<ValidateMain Login={Login} />} />
         <Route path="/coursesProgram" element={<ValidateLogin Component={CoursesProgram} />} />
@@ -42,7 +45,8 @@ function App() {
         <Route path="/pagination" element={<ValidateLogin Component={Pagination} />} />
         <Route path="/preference" element={<ValidateLogin Component={Preference} />} />
         <Route path="/profile" element={<ValidateLogin Component={Profile} />} />
-        <Route path="/serverError" element={<ServerError/>} />
+        <Route path="/recyclingbin" element={<ValidateLogin Component={RecyclingBin} />} />
+        <Route path="/serverError" element={<ServerError />} />
         <Route path="*" Component={PageNotFound} />
       </Routes>
 

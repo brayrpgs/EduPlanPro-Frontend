@@ -166,6 +166,7 @@ const SchoolTable = () => {
                     <td className="border-[0.1vh] border-gray-400 px-[1vw] py-[1.5vh] text-[0.9vw] text-center items-center break-words whitespace-normal max-w-[15vw]">
                       {school["NOMBRE FACULTAD"]}
                     </td>
+
                     {hasPermission && (
                       <td className="border-[0.1vh] border-gray-400 px-[1vw] py-[1vh] text-[0.9vw]">
                         <div className="flex items-center flex-row justify-center w-full h-full gap-[0.2vw]">
@@ -175,22 +176,23 @@ const SchoolTable = () => {
                             currentPage={currentPage}
                           />
                           <DeleteModal
-                            deleteMethod={"PATCH"}
-                            item={school}
-                            itemName="NOMBRE ESCUELA"
-                            fields={[
-                              { field: "ID_SCHOOL", value: "id" },
-                              { field: "NOMBRE ESCUELA", value: "desc" },
-                            ]}
-                            items={schools}
-                            setItems={setSchools}
-                            totalItems={totalItems}
-                            currentPage={currentPage}
-                            loadData={loadSchoolData}
-                            destination="school"
-                            componentName="escuela"
-                            componentPrefix="la"
-                          />
+                          deleteMethod={"PATCH"}
+                          item={school}
+                          itemName="NOMBRE ESCUELA"
+                          fields={[
+                            { field: "ID_SCHOOL", value: "id" },
+                            { field: "NOMBRE ESCUELA", value: "desc" },
+                            { field: "ID_FACULTY", value: "facu" }
+                          ]}
+                          items={schools}
+                          setItems={setSchools}
+                          totalItems={totalItems}
+                          currentPage={currentPage}
+                          loadData={loadSchoolData}
+                          destination="school"
+                          componentName="escuela"
+                          componentPrefix="la"
+                        />
                         </div>
                       </td>
                     )}
