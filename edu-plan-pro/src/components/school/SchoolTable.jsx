@@ -9,15 +9,13 @@ import { FetchValidate } from "../../utilities/FetchValidate";
 import { useNavigate } from "react-router-dom";
 import SchoolUpdate from "./SchoolUpdate";
 import SchoolAdd from "./SchoolAdd";
+import { useAtom } from "jotai";
+import { userAtom } from "../validatelogin/ValidateLogin.jsx";
 
 const SchoolTable = () => {
-  // State Management
   const [schools, setSchools] = useState([]);
   const [filteredSchools, setFilteredSchools] = useState([]);
-  const [searchTerms, setSearchTerms] = useState({
-    desc: "",
-    faculty: "",
-  });
+  const [searchTerms, setSearchTerms] = useState({ desc: "", faculty: "" });
   const [currentPage, setCurrentPage] = useState(1);
   const [totalItems, setTotalItems] = useState(0);
   const [mainFilter, setMainFilter] = useState("");
@@ -25,8 +23,9 @@ const SchoolTable = () => {
   const [facultyFilter, setFacultyFilter] = useState("");
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
+  const [user] = useAtom(userAtom);
+  const hasPermission = user?.ROLE_NAME === "root" || user?.ROLE_NAME === "admin";
 
- 
   const loadSchoolData = useCallback(async (page) => {
     setCurrentPage(page);
     const searchQuery = searchTerms
@@ -42,12 +41,10 @@ const SchoolTable = () => {
     try {
       setLoading(true);
       const response = await FetchValidate(url, options, navigate);
-
       if (!response) {
         console.error("Error in request");
         return;
       }
-
       setFilteredSchools(response.data.rows || []);
       setTotalItems(response.data.totalMatches || 0);
     } catch (error) {
@@ -61,7 +58,6 @@ const SchoolTable = () => {
     loadSchoolData(currentPage);
   }, [currentPage, loadSchoolData]);
 
- 
   const handlePageChange = (page) => {
     setCurrentPage(page);
   };
@@ -71,25 +67,15 @@ const SchoolTable = () => {
       if (nameFilter.trim() !== "") {
         setNameFilter("");
       }
-      setSearchTerms((prevState) => ({
-        ...prevState,
-        desc: value,
-      }));
+      setSearchTerms((prevState) => ({ ...prevState, desc: value }));
     } else if (type === "desc") {
       if (mainFilter.trim() !== "") {
         setMainFilter("");
       }
-      setSearchTerms((prevState) => ({
-        ...prevState,
-        desc: value,
-      }));
+      setSearchTerms((prevState) => ({ ...prevState, desc: value }));
     } else if (["faculty"].includes(type)) {
-      setSearchTerms((prevState) => ({
-        ...prevState,
-        [type]: value,
-      }));
+      setSearchTerms((prevState) => ({ ...prevState, [type]: value }));
     }
-
     setCurrentPage(1);
   };
 
@@ -99,7 +85,6 @@ const SchoolTable = () => {
     setMainFilter("");
     setNameFilter("");
     setFacultyFilter("");
-
   };
 
   return (
@@ -110,12 +95,14 @@ const SchoolTable = () => {
             Administrar escuelas
           </h1>
           <div className="flex ml-auto justify-end mr-[1vw]">
-            <SchoolAdd
-              totalItems={totalItems}
-              currentPage={currentPage}
-              loadData={loadSchoolData}
-              textToAdd="Agregar escuela"
-            />
+            {hasPermission && (
+              <SchoolAdd
+                totalItems={totalItems}
+                currentPage={currentPage}
+                loadData={loadSchoolData}
+                textToAdd="Agregar escuela"
+              />
+            )}
           </div>
         </div>
       </div>
@@ -162,9 +149,11 @@ const SchoolTable = () => {
                     />
                   </div>
                 </th>
-                <th className="border-[0.1vh] border-gray-400 px-[1vw] py-[1vh] w-[10vw] text-[1vw] text-UNA-Red">
-                  Acciones
-                </th>
+                {hasPermission && (
+                  <th className="border-[0.1vh] border-gray-400 px-[1vw] py-[1vh] w-[10vw] text-[1vw] text-UNA-Red">
+                    Acciones
+                  </th>
+                )}
               </tr>
             </thead>
             <tbody>
@@ -177,20 +166,23 @@ const SchoolTable = () => {
                     <td className="border-[0.1vh] border-gray-400 px-[1vw] py-[1.5vh] text-[0.9vw] text-center items-center break-words whitespace-normal max-w-[15vw]">
                       {school["NOMBRE FACULTAD"]}
                     </td>
-                    <td className="border-[0.1vh] border-gray-400 px-[1vw] py-[1vh] text-[0.9vw]">
-                      <div className="flex items-center flex-row justify-center w-full h-full gap-[0.2vw]">
-                        <SchoolUpdate
-                          school={school}
-                          loadData={loadSchoolData}
-                          currentPage={currentPage}
-                        />
-                        <DeleteModal
+
+                    {hasPermission && (
+                      <td className="border-[0.1vh] border-gray-400 px-[1vw] py-[1vh] text-[0.9vw]">
+                        <div className="flex items-center flex-row justify-center w-full h-full gap-[0.2vw]">
+                          <SchoolUpdate
+                            school={school}
+                            loadData={loadSchoolData}
+                            currentPage={currentPage}
+                          />
+                          <DeleteModal
                           deleteMethod={"PATCH"}
                           item={school}
                           itemName="NOMBRE ESCUELA"
                           fields={[
                             { field: "ID_SCHOOL", value: "id" },
                             { field: "NOMBRE ESCUELA", value: "desc" },
+                            { field: "ID_FACULTY", value: "facu" }
                           ]}
                           items={schools}
                           setItems={setSchools}
@@ -201,8 +193,9 @@ const SchoolTable = () => {
                           componentName="escuela"
                           componentPrefix="la"
                         />
-                      </div>
-                    </td>
+                        </div>
+                      </td>
+                    )}
                   </tr>
                 ))
               ) : (

@@ -5,6 +5,7 @@ import { FetchValidate } from "../../utilities/FetchValidate";
 import Loading from "../componentsgeneric/Loading";
 import CancelActionIcon from "../icons/MainIcons/CancelActionIcon";
 
+
 const ForgotPassword = ({ isOpen, setIsOpen }) => {
   const [isPasswordChangeOpen, setIsPasswordChangeOpen] = useState(false);
   const [isOpenBlur, setIsOpenBlur] = useState(true);

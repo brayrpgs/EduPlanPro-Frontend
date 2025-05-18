@@ -9,6 +9,8 @@ import CareerUpdate from "./CareerUpdate";
 import Loading from "../componentsgeneric/Loading";
 import { FetchValidate } from "../../utilities/FetchValidate";
 import { useNavigate } from "react-router-dom";
+import { useAtom } from "jotai";
+import { userAtom } from "../validatelogin/ValidateLogin";
 
 const CareerTable = () => {
   const [careers, setCareers] = useState([]);
@@ -23,27 +25,19 @@ const CareerTable = () => {
   const [loading, setLoading] = useState(false);
 
   const navigate = useNavigate();
+  const [user] = useAtom(userAtom);
+  const hasPermission = user?.ROLE_NAME?.toLowerCase() === "admin" || user?.ROLE_NAME?.toLowerCase() === "root";
 
   const loadCareerData = useCallback(
     async (page) => {
       setCurrentPage(page);
-
-      const searchQuery = searchTerms
-      ? `&data=${searchTerms["data"]}&data2=${searchTerms["data2"]}&data3=${searchTerms["data3"]}&data4=${searchTerms["data4"]}`
-      : "&data=&data2=&data3=&data4=";
-
+      const searchQuery = `&data=${searchTerms.data}&data2=${searchTerms.data2}&data3=${searchTerms.data3}&data4=${searchTerms.data4}`;
       const url = `http://localhost:3001/searchcarreer?name=search-page&numPage=${page}${searchQuery}`;
-      console.log("URL:", url); // Debugging line
-      const options = {
-        method: "GET",
-        credentials: "include",
-      };
 
       try {
         setLoading(true);
-        const response = await FetchValidate(url, options, navigate);
+        const response = await FetchValidate(url, { method: "GET", credentials: "include" }, navigate);
         if (!response) return;
-        console.log("Response:", response);
         setFilteredCareers(response.data.rows || []);
         setTotalItems(response.data.totalMatches || 0);
       } catch (error) {
@@ -63,28 +57,14 @@ const CareerTable = () => {
 
   const handleSearch = (value, type = "main") => {
     if (type === "main") {
-      if (careerFilter.trim() !== "") {
-        setCareerFilter("");
-      }
-      setSearchTerms((prevState) => ({
-        ...prevState,
-        data: value,
-      }));
+      if (careerFilter.trim() !== "") setCareerFilter("");
+      setSearchTerms((prev) => ({ ...prev, data: value }));
     } else if (type === "data") {
-      if (mainFilter.trim() !== "") {
-        setMainFilter("");
-      }
-      setSearchTerms((prevState) => ({
-        ...prevState,
-        data: value, 
-      }));
-    } else if (["data2" , "data3"].includes(type)) {
-      setSearchTerms((prevState) => ({
-        ...prevState,
-        [type]: value,
-      }));
+      if (mainFilter.trim() !== "") setMainFilter("");
+      setSearchTerms((prev) => ({ ...prev, data: value }));
+    } else if (["data2", "data3"].includes(type)) {
+      setSearchTerms((prev) => ({ ...prev, [type]: value }));
     }
-
     setCurrentPage(1);
   };
 
@@ -104,14 +84,16 @@ const CareerTable = () => {
           <h1 className="ml-[1vw] my-[0.5vh] text-[2vw] text-white">
             Administrar carreras
           </h1>
-          <div className="flex ml-auto justify-end mr-[1vw]">
-            <CareerAdd
-              totalItems={totalItems}
-              currentPage={currentPage}
-              loadData={loadCareerData}
-              textToAdd={"Agregar carrera"}
-            />
-          </div>
+          {hasPermission && (
+            <div className="flex ml-auto justify-end mr-[1vw]">
+              <CareerAdd
+                totalItems={totalItems}
+                currentPage={currentPage}
+                loadData={loadCareerData}
+                textToAdd={"Agregar carrera"}
+              />
+            </div>
+          )}
         </div>
       </div>
 
@@ -138,40 +120,36 @@ const CareerTable = () => {
               <tr>
                 <th className="border-[0.1vh] border-gray-400 px-[1vw] py-[1vh] text-center text-[1vw] text-UNA-Red">
                   Carrera
-                  <div title="Filtrar por carrera">
-                    <SearchInput
-                      onSearch={(value) => handleSearch(value, "data")}
-                      filter={careerFilter}
-                      setFilter={setCareerFilter}
-                      className="bg-transparent text-black w-full outline-none border-b-[0.2vh] text-[0.9vw] border-solid border-UNA-Red"
-                    />
-                  </div>
+                  <SearchInput
+                    onSearch={(value) => handleSearch(value, "data")}
+                    filter={careerFilter}
+                    setFilter={setCareerFilter}
+                    className="bg-transparent text-black w-full outline-none border-b-[0.2vh] text-[0.9vw] border-solid border-UNA-Red"
+                  />
                 </th>
                 <th className="border-[0.1vh] border-gray-400 px-[1vw] py-[1vh] text-center text-[1vw] text-UNA-Red">
                   Código
-                  <div title="Filtrar por código">
-                    <SearchInput
-                      onSearch={(value) => handleSearch(value, "data2")}
-                      filter={data2Filter}
-                      setFilter={setData2Filter}
-                      className="bg-transparent text-black w-full outline-none border-b-[0.2vh] text-[0.9vw] border-solid border-UNA-Red"
-                    />
-                  </div>
+                  <SearchInput
+                    onSearch={(value) => handleSearch(value, "data2")}
+                    filter={data2Filter}
+                    setFilter={setData2Filter}
+                    className="bg-transparent text-black w-full outline-none border-b-[0.2vh] text-[0.9vw] border-solid border-UNA-Red"
+                  />
                 </th>
                 <th className="border-[0.1vh] border-gray-400 px-[1vw] py-[1vh] text-center text-[1vw] text-UNA-Red">
                   Escuela
-                  <div title="Filtrar por escuela">
-                    <SearchInput
-                      onSearch={(value) => handleSearch(value, "data3")}
-                      filter={data3Filter}
-                      setFilter={setData3Filter}
-                      className="bg-transparent text-black w-full outline-none border-b-[0.2vh] text-[0.9vw] border-solid border-UNA-Red"
-                    />
-                  </div>
+                  <SearchInput
+                    onSearch={(value) => handleSearch(value, "data3")}
+                    filter={data3Filter}
+                    setFilter={setData3Filter}
+                    className="bg-transparent text-black w-full outline-none border-b-[0.2vh] text-[0.9vw] border-solid border-UNA-Red"
+                  />
                 </th>
-                <th className="border-[0.1vh] border-gray-400 px-[1vw] py-[1vh] w-[10vw] text-[1vw] text-UNA-Red">
-                  Acciones
-                </th>
+                {hasPermission && (
+                  <th className="border-[0.1vh] border-gray-400 px-[1vw] py-[1vh] w-[10vw] text-[1vw] text-UNA-Red">
+                    Acciones
+                  </th>
+                )}
               </tr>
             </thead>
             <tbody>
@@ -187,20 +165,26 @@ const CareerTable = () => {
                     <td className="border-[0.1vh] border-gray-400 px-[1vw] py-[1.5vh] text-[0.9vw] text-center break-words max-w-[15vw]">
                       {career["NOMBRE DE LA ESCUELA"]}
                     </td>
-                    <td className="border-[0.1vh] border-gray-400 px-[1vw] py-[1vh] text-[0.9vw]">
-                      <div className="flex justify-center items-center gap-[0.2vw]">
-                        <CareerUpdate
-                          career={career}
-                          currentPage={currentPage}
-                          loadData={loadCareerData}
-                        />
-                        <DeleteModal
-                          deleteMethod={"DELETE"}
+
+                    {hasPermission && (
+                      <td className="border-[0.1vh] border-gray-400 px-[1vw] py-[1vh] text-[0.9vw]">
+                        <div className="flex justify-center items-center gap-[0.2vw]">
+                          <CareerUpdate
+                            career={career}
+                            currentPage={currentPage}
+                            loadData={loadCareerData}
+                          />
+                           <DeleteModal
+                          deleteMethod={"PATCH"}
                           item={career}
                           itemName={"NOMBRE DE CARRERA"}
                           fields={[
-                            { field: "NOMBRE DE CARRERA", value: "desc" },
-                            { field: "ID_CAREER", value: "id" },
+                            { field: "NOMBRE DE CARRERA", value: "DSC_CARRER" },
+                            { field: "CODIGO DE CARRERA", value: "DSC_CODE" },
+                            { field: "ID_SCHOOL", value: "ID_SCHOOL"},
+                            { field: "STATE", value: "" },
+                            { field: "ID_CAREER", value: "ID_CAREER" }
+
                           ]}
                           items={careers}
                           setItems={setCareers}
@@ -211,13 +195,18 @@ const CareerTable = () => {
                           componentName={"carrera"}
                           componentPrefix={"la"}
                         />
-                      </div>
-                    </td>
+                        </div>
+                      </td>
+                    )}
+
                   </tr>
                 ))
               ) : (
                 <tr>
-                  <td colSpan={4} className="px-[1vw] py-[1vh] text-[0.9vw] text-center pt-[3.5vh]">
+                  <td
+                    colSpan={hasPermission ? 4 : 3}
+                    className="px-[1vw] py-[1vh] text-[0.9vw] text-center pt-[3.5vh]"
+                  >
                     No se encontraron carreras registradas.
                   </td>
                 </tr>
