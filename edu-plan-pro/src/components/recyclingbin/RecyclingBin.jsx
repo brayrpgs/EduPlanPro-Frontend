@@ -13,7 +13,7 @@ export const RecyclingBin = () => {
             <Header />
             <div className='pr-[15vw] pl-[15vw]'>
                 <RecyclingBinHead setData={setData} datas={data}/>
-                <RecyclingBinSearch />
+                <RecyclingBinSearch data={data} setFilteredData={setData} />
                 <RecyclingBinTable data={data} setData={setData} />
             </div>
             <Footer />

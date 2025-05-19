@@ -24,7 +24,7 @@ const SchoolTable = () => {
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
   const [user] = useAtom(userAtom);
-  const hasPermission = user?.ROLE_NAME === "root" || user?.ROLE_NAME === "admin";
+  const hasPermission = user?.ROLE_NAME === "ROOT" || user?.ROLE_NAME === "ADMIN";
 
   const loadSchoolData = useCallback(async (page) => {
     setCurrentPage(page);
