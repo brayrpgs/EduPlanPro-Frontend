@@ -26,16 +26,16 @@ const CareerUpdate = ({ career, loadData, currentPage }) => {
     const fetchSchools = async () => {
       try {
         const response = await fetch(
-          "http://localhost:3001/searchschool?name=search-page&numPage=1&search=&search2=",
+          "http://localhost:3001/school",
           { method: "GET", credentials: "include" }
         );
         const data = await response.json();
 
         if (data.code === "200") {
-          setSchools(data.data.rows);
+          setSchools(data.data);
 
           // Buscar ID de escuela a partir del nombre
-          const found = data.data.rows.find(
+          const found = data.data.find(
             (school) => school["NOMBRE ESCUELA"] === career["NOMBRE DE LA ESCUELA"]
           );
           if (found) {

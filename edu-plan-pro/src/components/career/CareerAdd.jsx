@@ -21,11 +21,12 @@ const CareerAdd = ({ totalItems, currentPage, loadData, textToAdd }) => {
 
   const fetchSchools = async () => {
     try {
-      const url = `http://localhost:3001/searchschool?name=search-page&numPage=1&search=&search2=`;
+      const url = `http://localhost:3001/school`; 
       const options = { method: "GET", credentials: "include" };
       const response = await FetchValidate(url, options, navigate);
+
       if (response && response.code === "200") {
-        setSchoolList(response.data.rows);
+        setSchoolList(response.data);
       }
     } catch (error) {
       console.error("Error al cargar escuelas:", error);
