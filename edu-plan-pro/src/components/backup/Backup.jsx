@@ -127,7 +127,7 @@ export default function Backup({ isOpen, setOpen }) {
                          * este es el encabezado de la ventana popUp
                          */}
                         <div className="bg-UNA-Red w-full h-[7vh] flex top-0 fixed border-white z-50 rounded-t-[1vh] text-start items-center">
-                            <h1 className="text-[3vh] ml-[1vw] text-white">Gestionar los respaldos del sistema</h1>
+                            <h2 className="text-[3vh] ml-[1vw] text-white">Gestionar los respaldos del sistema</h2>
                             <div className="w-[5vw] right-0 h-full absolute flex text-center justify-center items-center">
                                 <button
                                     className="flex w-[60%] h-[60%] bg-UNA-Pink-Light rounded-[0.5vh] items-center justify-center"

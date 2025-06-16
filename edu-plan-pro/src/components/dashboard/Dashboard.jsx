@@ -24,18 +24,18 @@ function Dashboard() {
 
   const modules = [
     {
-      title: "Escuela",
-      icon: SchoolIcon,
-      description: "Gestionar información de las escuelas",
-      path: "/school",
-      iconBg: "bg-blue-100",
-    },
-    {
       title: "Facultad",
       icon: FacultyIcon,
       description: "Gestionar información de las facultades",
       path: "/faculty",
       iconBg: "bg-green-100",
+    },
+    {
+      title: "Escuela",
+      icon: SchoolIcon,
+      description: "Gestionar información de las escuelas",
+      path: "/school",
+      iconBg: "bg-blue-100",
     },
     {
       title: "Carreras",
@@ -44,20 +44,6 @@ function Dashboard() {
       path: "/career", //cambiar a carrera
       iconBg: "bg-lime-100",
 
-    },
-    {
-      title: "Docentes",
-      icon: TeacherIcon,
-      description: "Gestionar información de los docentes",
-      path: "/teacher",
-      iconBg: "bg-yellow-100",
-    },
-    {
-      title: "Usuarios",
-      icon: UserIcon,
-      description: "Gestionar información de las usuarios",
-      path: "/user",
-      iconBg: "bg-purple-100",
     },
     {
       title: "Planes de estudio",
@@ -72,6 +58,20 @@ function Dashboard() {
       description: "Gestionar información de los programas del curso",
       path: "/coursesprogram",
       iconBg: "bg-cyan-100",
+    },
+    {
+      title: "Docentes",
+      icon: TeacherIcon,
+      description: "Gestionar información de los docentes",
+      path: "/teacher",
+      iconBg: "bg-yellow-100",
+    },
+    {
+      title: "Usuarios",
+      icon: UserIcon,
+      description: "Gestionar información de las usuarios",
+      path: "/user",
+      iconBg: "bg-purple-100",
     },
     {
       title: "Reportes",

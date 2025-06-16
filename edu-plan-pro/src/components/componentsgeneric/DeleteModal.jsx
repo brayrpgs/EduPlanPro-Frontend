@@ -150,9 +150,9 @@ const DeleteModal = ({
         {isOpen && (
           <div className="w-full flex flex-col justify-center items-center">
             <div className="bg-UNA-Red w-full h-[7vh] flex top-0 absolute border-white z-50 rounded-t-[1vh] text-start items-center">
-              <h1 className="text-[3vh] ml-[1vw] text-white">
+              <h2 className="text-[4vh] ml-[1vw] text-white">
                 Eliminar {componentName}
-              </h1>
+              </h2>
               <div className="w-[5vw] right-0 h-full absolute flex text-center justify-center items-center">
                 <button
                   className="flex w-[60%] h-[60%] bg-UNA-Pink-Light rounded-[0.5vh] items-center justify-center"
@@ -168,14 +168,14 @@ const DeleteModal = ({
               </div>
             </div>
 
-            <h1 className="text-[1.1vw] flex items-center text-center ">
+            <h2 className="text-[1.1vw] flex items-center text-center ">
               ¿Estás seguro que deseas eliminar {componentPrefix} siguiente{" "}
               {componentName}?
-            </h1>
+            </h2>
             <div className="w-full flex flex-wrap items-center text-center justify-center">
-              <p className="ml-[1vw] mr-[1vw] text-[1.0vw] text-center break-words mt-[3vh] max-w-full overflow-auto max-h-[6vh]">
-                {itemToDelete[itemName]}
-              </p>
+              <h3 className="ml-[1vw] mr-[1vw] text-[1.1vw] text-center break-words mt-[1vh] max-w-full overflow-auto max-h-[6vh]">
+              {itemToDelete[itemName]}
+              </h3>
             </div>
 
             <div className="w-full h-[7vh] flex bottom-0 absolute border-white z-50 text-center justify-center items-center">

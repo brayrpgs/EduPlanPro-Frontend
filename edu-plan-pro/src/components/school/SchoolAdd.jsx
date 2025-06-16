@@ -210,7 +210,7 @@ const SchoolAdd = ({ totalItems, currentPage, loadData, textToAdd }) => {
         {isOpen && (
           <div className="w-full flex flex-col justify-center items-center ">
             <div className="bg-UNA-Red w-full h-[7vh] flex top-0 fixed border-white z-50 rounded-t-[1vh] text-start items-center">
-              <h1 className="text-[3vh] ml-[1vw] text-white">Agregar Escuela</h1>
+              <h1 className="text-[3vh] ml-[1vw] text-white">Agregar escuela</h1>
               <div className="w-[5vw] right-0 h-full absolute flex text-center justify-center items-center">
                 <button
                   className="flex w-[60%] h-[60%] bg-UNA-Pink-Light rounded-[0.5vh] items-center justify-center"

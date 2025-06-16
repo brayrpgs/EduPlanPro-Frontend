@@ -253,7 +253,7 @@ const CoursesProgramUpdate = ({
       <div
         className={`${
           isOpen
-            ? "w-[35vw] min-h-[30vh] max-h-[77.5vh] scrollbar-hidden overflow-y-auto bg-white fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 z-50 flex flex-col items-center justify-start border-[-1vh] border-gray-400 rounded-[1vh] transition-[width] duration-300"
+            ? "w-[35vw] min-h-[30vh] max-h-[77vh] scrollbar-hidden overflow-y-auto bg-white fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 z-50 flex flex-col items-center justify-start border-[-1vh] border-gray-400 rounded-[1vh] transition-[width] duration-300"
             : "w-[15%]"
         }`}
       >
@@ -440,7 +440,7 @@ const CoursesProgramUpdate = ({
                 onClick={modalChargePDF}
               />
             </div>
-            <div className=" w-full h-[7vh] flex -bottom-[34vh] fixed border-white z-50 text-center justify-center items-center">
+            <div className=" w-full h-[7vh] flex bottom-[4vh] relative border-white z-50 text-center justify-center items-center">
               <button
                 className="border-[0.1vh] bg-UNA-Red text-white text-[0.9vw] rounded-[0.3vw] h-[60%] border-black w-[50%] ml-[1vw] mr-[0.1vw]
               "
