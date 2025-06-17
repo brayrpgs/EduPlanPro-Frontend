@@ -10,16 +10,16 @@ import UpdateIcon from "../icons/CrudIcons/UpdateIcon";
 const StudyPlansUpdate = ({ studyPlan, currentPage, loadData }) => {
   const [isOpen, setIsOpen] = useState(false);
   const [isChargePDF, setIsChargePDF] = useState(false);
-  const [carrerId, setCarrerId] = useState("")
-  const [newCarrerId, setNewCarrerId] = useState("")
+  const [carrerId, setCarrerId] = useState("");
+  const [newCarrerId, setNewCarrerId] = useState("");
   const [studyPlanData, setStudyPlanData] = useState({
     DSC_NAME: studyPlan["NOMBRE DEL PLAN DE ESTUDIO"],
     DAT_INIT: studyPlan["FECHA INICIAL"].split("T")[0],
     DAT_MAX: studyPlan["FECHA MAXIMA"].split("T")[0],
     ID_CAREER: "",
     PDF_URL: studyPlan["PDF"],
-    STATE : "1",
-    ID_STUDY_PLAN : studyPlan["ID_STUDY_PLAN"]
+    STATE: "1",
+    ID_STUDY_PLAN: studyPlan["ID_STUDY_PLAN"],
   });
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
@@ -27,7 +27,6 @@ const StudyPlansUpdate = ({ studyPlan, currentPage, loadData }) => {
   const [carreers, setCarreers] = React.useState([]);
 
   React.useEffect(() => {
-    
     fetch("http://localhost:3001/carreer", {
       method: "GET",
       headers: {
@@ -46,14 +45,12 @@ const StudyPlansUpdate = ({ studyPlan, currentPage, loadData }) => {
 
   useEffect(() => {
     if (carreers.length > 0 && studyPlan["CARRERA"]) {
-        
       const carrer = carreers.find(
-        (carreer) => carreer["NOMBRE DE LA CARRERA"] === studyPlan["CARRERA"],
-        
+        (carreer) => carreer["NOMBRE DE LA CARRERA"] === studyPlan["CARRERA"]
       );
 
-      setCarrerId(carrer ? carrer["ID_CAREER"] : ""); 
-      setNewCarrerId(carrer ? carrer["ID_CAREER"] : ""); 
+      setCarrerId(carrer ? carrer["ID_CAREER"] : "");
+      setNewCarrerId(carrer ? carrer["ID_CAREER"] : "");
     }
   }, [carreers]);
 
@@ -63,7 +60,6 @@ const StudyPlansUpdate = ({ studyPlan, currentPage, loadData }) => {
       ID_CAREER: newCarrerId,
     }));
   }, [newCarrerId]);
-
 
   const modalChargePDF = () => {
     setIsChargePDF(!isChargePDF);
@@ -79,14 +75,14 @@ const StudyPlansUpdate = ({ studyPlan, currentPage, loadData }) => {
     setIsOpen(false);
     setIsChargePDF(false);
     setStudyPlanData({
-        DSC_NAME: studyPlan["NOMBRE DEL PLAN DE ESTUDIO"],
-        DAT_INIT: studyPlan["FECHA INICIAL"].split("T")[0],
-        DAT_MAX: studyPlan["FECHA MAXIMA"].split("T")[0],
-        ID_CARREER: carrerId,
-        PDF_URL: studyPlan["PDF"],
+      DSC_NAME: studyPlan["NOMBRE DEL PLAN DE ESTUDIO"],
+      DAT_INIT: studyPlan["FECHA INICIAL"].split("T")[0],
+      DAT_MAX: studyPlan["FECHA MAXIMA"].split("T")[0],
+      ID_CARREER: carrerId,
+      PDF_URL: studyPlan["PDF"],
     });
 
-    setNewCarrerId(carrerId)
+    setNewCarrerId(carrerId);
   }
 
   const handleChange = (e) => {
@@ -95,18 +91,19 @@ const StudyPlansUpdate = ({ studyPlan, currentPage, loadData }) => {
       ...studyPlanData,
       [name]: value,
     });
-    
-    if(name === "ID_CAREER"){
-        setNewCarrerId(value)
-        
+
+    if (name === "ID_CAREER") {
+      setNewCarrerId(value);
     }
-    
   };
+
+  const truncate = (text, maxLength = 50) =>
+    text.length > maxLength ? text.slice(0, maxLength) + "..." : text;
 
   function validateData() {
     const patternString = /^[A-Za-zÁ-ÿ\s]*$/;
     const optionSelected = document.getElementById("ID_CAREER");
-    
+
     if (
       studyPlanData.DSC_NAME === "" ||
       studyPlanData.DAT_INIT === "" ||
@@ -331,8 +328,12 @@ const StudyPlansUpdate = ({ studyPlan, currentPage, loadData }) => {
               >
                 <option value="">Seleccione una carrera</option>
                 {carreers.map((carreer) => (
-                  <option key={carreer.ID_CAREER} value={carreer.ID_CAREER}>
-                    {carreer["NOMBRE DE LA CARRERA"]}
+                  <option
+                    key={carreer.ID_CAREER}
+                    value={carreer.ID_CAREER}
+                    title={carreer["NOMBRE DE LA CARRERA"]}
+                  >
+                    {truncate(carreer["NOMBRE DE LA CARRERA"])}
                   </option>
                 ))}
               </select>

@@ -157,6 +157,9 @@ const CoursesProgramUpdate = ({
     }
   }
 
+  const truncate = (text, maxLength = 50) =>
+    text.length > maxLength ? text.slice(0, maxLength) + "..." : text;
+
   const handleUpdate = async () => {
     const url = "http://localhost:3001/courseprogram";
 
@@ -332,12 +335,17 @@ const CoursesProgramUpdate = ({
                   <option
                     key={studyPlans.ID_STUDY_PLAN}
                     value={studyPlans.ID_STUDY_PLAN}
+                    title={`${studyPlans.DSC_NAME} ${formatDate(
+                      studyPlans.DAT_INIT
+                    )} → ${formatDate(studyPlans.DAT_MAX)}`}
                   >
-                    {studyPlans["DSC_NAME"] +
-                      " " +
-                      formatDate(studyPlans["DAT_INIT"]) +
-                      " → " +
-                      formatDate(studyPlans["DAT_MAX"])}
+                    {truncate(
+                      studyPlans.DSC_NAME +
+                        " " +
+                        formatDate(studyPlans.DAT_INIT) +
+                        " → " +
+                        formatDate(studyPlans.DAT_MAX)
+                    )}
                   </option>
                 ))}
               </select>

@@ -106,6 +106,9 @@ const SchoolAdd = ({ totalItems, currentPage, loadData, textToAdd }) => {
     }
   }
   
+  const truncate = (text, maxLength = 75) =>
+    text.length > maxLength ? text.slice(0, maxLength) + "..." : text;
+
   const handleAdd = async () => {
     const url = "http://localhost:3001/school";
 
@@ -254,8 +257,8 @@ const SchoolAdd = ({ totalItems, currentPage, loadData, textToAdd }) => {
               >
                 <option value="">Seleccione una facultad</option>
                 {faculties.map((faculty) => (
-                  <option key={faculty.ID_FACULTY} value={faculty.ID_FACULTY}>
-                    {faculty["NOMBRE FACULTAD"]}
+                  <option key={faculty.ID_FACULTY} value={faculty.ID_FACULTY} title={faculty["NOMBRE FACULTAD"]}>
+                    {truncate(faculty["NOMBRE FACULTAD"])}
                   </option>
                 ))}
               </select>

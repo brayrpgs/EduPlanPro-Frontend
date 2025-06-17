@@ -53,6 +53,9 @@ const CareerUpdate = ({ career, loadData, currentPage }) => {
     if (isOpen) fetchSchools();
   }, [isOpen, career]);
 
+  const truncate = (text, maxLength = 80) =>
+    text.length > maxLength ? text.slice(0, maxLength) + "..." : text;
+
   const handleChange = (e) => {
     const { name, value } = e.target;
     setCareerData((prev) => ({ ...prev, [name]: value }));
@@ -211,8 +214,8 @@ const CareerUpdate = ({ career, loadData, currentPage }) => {
               >
                 <option value="">Seleccione una escuela</option>
                 {schools.map((s) => (
-                  <option key={s.ID_SCHOOL} value={String(s.ID_SCHOOL)}>
-                    {s["NOMBRE ESCUELA"]}
+                  <option key={s.ID_SCHOOL} value={String(s.ID_SCHOOL)} title={s["NOMBRE ESCUELA"]}>
+                    {truncate(s["NOMBRE ESCUELA"])}
                   </option>
                 ))}
               </select>

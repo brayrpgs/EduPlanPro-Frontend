@@ -44,6 +44,9 @@ const CareerAdd = ({ totalItems, currentPage, loadData, textToAdd }) => {
     setSchoolId("");
   };
 
+  const truncate = (text, maxLength = 80) =>
+    text.length > maxLength ? text.slice(0, maxLength) + "..." : text;
+
   const validateData = () => {
     if (!name || !code || !schoolId) {
       Swal.fire({
@@ -210,8 +213,8 @@ const CareerAdd = ({ totalItems, currentPage, loadData, textToAdd }) => {
               >
                 <option value="">Seleccione una escuela</option>
                 {schoolList.map((school) => (
-                  <option key={school.ID_SCHOOL} value={school.ID_SCHOOL}>
-                    {school["NOMBRE ESCUELA"]}
+                  <option key={school.ID_SCHOOL} value={school.ID_SCHOOL} title={school["NOMBRE ESCUELA"]}>
+                    {truncate(school["NOMBRE ESCUELA"])}
                   </option>
                 ))}
               </select>

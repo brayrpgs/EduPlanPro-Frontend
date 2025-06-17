@@ -35,6 +35,9 @@ const CoursesProgramAdd = ({
     setIsChargePDF(!isChargePDF);
   };
 
+  const truncate = (text, maxLength = 50) =>
+    text.length > maxLength ? text.slice(0, maxLength) + "..." : text;
+
   function finallyActions() {
     const remainingItems = totalItems + 1;
     const lastPage = Math.ceil(remainingItems / 8);
@@ -336,7 +339,7 @@ const CoursesProgramAdd = ({
                 Plan de estudio
               </label>
               <select
-                className="cursor-pointer appearance-none w-[94%] mt-[1.1vh] text-[0.9vw] ml-[1vw] h-[5vh] px-[1vw] focus:border-UNA-Red rounded-[1vh] outline-none border-[0.1vh]"
+                className="cursor-pointer appearance-none w-[94%] mt-[1.1vh] text-[0.9vw] ml-[1vw] h-[5vh] px-[1vw] focus:border-UNA-Red rounded-[1vh] outline-none border-[0.1vh] overflow-hidden text-ellipsis whitespace-nowrap"
                 title="Seleccione la carrera. Asegúrate de elegir una opción válida."
                 name="ID_STUDY_PLAN"
                 id="ID_STUDY_PLAN"
@@ -349,12 +352,17 @@ const CoursesProgramAdd = ({
                   <option
                     key={studyPlans.ID_STUDY_PLAN}
                     value={studyPlans.ID_STUDY_PLAN}
+                    title={`${studyPlans.DSC_NAME} ${formatDate(
+                      studyPlans.DAT_INIT
+                    )} → ${formatDate(studyPlans.DAT_MAX)}`}
                   >
-                    {studyPlans["DSC_NAME"] +
-                      " " +
-                      formatDate(studyPlans["DAT_INIT"]) +
-                      " → " +
-                      formatDate(studyPlans["DAT_MAX"])}
+                    {truncate(
+                      studyPlans.DSC_NAME +
+                        " " +
+                        formatDate(studyPlans.DAT_INIT) +
+                        " → " +
+                        formatDate(studyPlans.DAT_MAX)
+                    )}
                   </option>
                 ))}
               </select>

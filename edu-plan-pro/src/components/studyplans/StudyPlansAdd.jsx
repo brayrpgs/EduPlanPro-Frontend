@@ -39,6 +39,9 @@ const StudyPlansAdd = ({ totalItems, currentPage, loadData, textToAdd }) => {
       .catch((error) => console.error("Error al cargar las carreras:", error));
   }, []);
 
+  const truncate = (text, maxLength = 50) =>
+    text.length > maxLength ? text.slice(0, maxLength) + "..." : text;
+
   const modalChargePDF = () => {
     setIsChargePDF(!isChargePDF);
   };
@@ -143,8 +146,6 @@ const StudyPlansAdd = ({ totalItems, currentPage, loadData, textToAdd }) => {
       body: JSON.stringify(studyPlanData),
       credentials: "include",
     };
-
-
 
     if (validateData()) {
       try {
@@ -318,8 +319,12 @@ const StudyPlansAdd = ({ totalItems, currentPage, loadData, textToAdd }) => {
               >
                 <option value="">Seleccione una carrera</option>
                 {carreers.map((carreer) => (
-                  <option key={carreer.ID_CAREER} value={carreer.ID_CAREER}>
-                    {carreer["NOMBRE DE LA CARRERA"]}
+                  <option
+                    key={carreer.ID_CAREER}
+                    value={carreer.ID_CAREER}
+                    title={carreer["NOMBRE DE LA CARRERA"]}
+                  >
+                    {truncate(carreer["NOMBRE DE LA CARRERA"])}
                   </option>
                 ))}
               </select>
@@ -344,10 +349,13 @@ const StudyPlansAdd = ({ totalItems, currentPage, loadData, textToAdd }) => {
                 onClick={modalChargePDF}
               />
 
-              {isChargePDF && <ChargePDF setIsChargePDF = {setIsChargePDF} 
-                    title = {"Cargar PDF del plan de estudio"}
-                    handleChange={handleChange}
-              />}
+              {isChargePDF && (
+                <ChargePDF
+                  setIsChargePDF={setIsChargePDF}
+                  title={"Cargar PDF del plan de estudio"}
+                  handleChange={handleChange}
+                />
+              )}
             </div>
             <div className="w-full h-[7vh] flex bottom-0 fixed border-white z-50 text-center justify-center items-center">
               <button
